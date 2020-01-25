@@ -1,0 +1,3 @@
+[submodule "src/main/java/org/hotutilites"]
+	path = src/main/java/org/hotutilites
+	url = https://github.com/davidMoiseev/HotUtilites.git
