@@ -1,20 +1,19 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import org.hotutilites.hotInterfaces.IHotSensedActuator;
-import org.hotutilites.hotInterfaces.IRobotState;
 
-public class DriveTrain implements IHotSensedActuator {
+public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandProvider, Integer > {
     private TalonFX driveRightLeader;
     private TalonFX driveRightFollower;
     private TalonFX driveLeftLeader;
     private TalonFX driveLeftFollower;
+    private RobotState robotState;
 
-    public DriveTrain() {
+    public DriveTrain(RobotState robotState) {
         driveRightLeader = new TalonFX(Calibrations.CAN_ID.driveRight1);
         driveRightFollower = new TalonFX(Calibrations.CAN_ID.driveRight2);
         driveLeftLeader = new TalonFX(Calibrations.CAN_ID.driveLeft1);
@@ -25,17 +24,18 @@ public class DriveTrain implements IHotSensedActuator {
 
         driveLeftFollower.follow(driveLeftLeader);
         driveRightFollower.follow(driveRightLeader);
+
+        this.robotState = robotState;
     }
 
     @Override
-    public void updateState(IRobotState IrobotState) {
-        RobotState robotState = (RobotState)IrobotState;
+    public void updateState() {
         robotState.setDriveDistanceRight(driveRightLeader.getSelectedSensorPosition());
         robotState.setDriveDistanceLeft(driveLeftLeader.getSelectedSensorPosition());
     }
 
     @Override
-    public void preformAction(RobotCommandProvider commander, IRobotState robotState) {
+    public void preformAction(RobotCommandProvider commander, RobotState robotState) {
         driveRightLeader.set(ControlMode.PercentOutput,commander.getDriveCommand() + commander.getTurnCommand());
         driveLeftLeader.set(ControlMode.PercentOutput,commander.getDriveCommand() - commander.getTurnCommand());
     }
@@ -53,5 +53,25 @@ public class DriveTrain implements IHotSensedActuator {
         driveRightFollower.setSelectedSensorPosition(0);
         driveLeftLeader.setSelectedSensorPosition(0);
         driveLeftFollower.setSelectedSensorPosition(0);
+    }
+
+    @Override
+    public void setRobotState(RobotState robotState) {
+        this.robotState = robotState;
+    }
+
+    @Override
+    public void setSensorVaule(Integer vaule) {
+        driveRightLeader.setSelectedSensorPosition(vaule);
+        driveRightFollower.setSelectedSensorPosition(vaule);
+        driveLeftLeader.setSelectedSensorPosition(vaule);
+        driveLeftFollower.setSelectedSensorPosition(vaule);
+    }
+
+    public void setSensorVaule(int left, int right) {
+        driveRightLeader.setSelectedSensorPosition(right);
+        driveRightFollower.setSelectedSensorPosition(right);
+        driveLeftLeader.setSelectedSensorPosition(left);
+        driveLeftFollower.setSelectedSensorPosition(left);
     }
 }

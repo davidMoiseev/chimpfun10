@@ -1,11 +1,10 @@
 package frc.robot;
 
-import org.hotutilites.hotInterfaces.IRobotState;
 import org.hotutilites.hotlogger.HotLogger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class RobotState implements IRobotState {
+public class RobotState {
     private double theta; // Degrees
     private double driveDistanceLeft; // Meters
     private double driveDistanceRight; // Meters

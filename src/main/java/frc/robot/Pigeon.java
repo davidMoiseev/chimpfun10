@@ -3,32 +3,41 @@ package frc.robot;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import org.hotutilites.hotInterfaces.IHotSensor;
-import org.hotutilites.hotInterfaces.IRobotState;
-import org.hotutilites.hotlogger.HotLogger;
 
-public class Pigeon implements IHotSensor
+public class Pigeon implements IHotSensor<RobotState, Double>
 {
     PigeonIMU pigeonIMU;
+    private RobotState robotState;
 
-public Pigeon() {
+public Pigeon(RobotState robotState) {
     pigeonIMU = new PigeonIMU(Calibrations.CAN_ID.pigeon);
+    this.robotState = robotState;
 }
 
 @Override
-public void updateState(IRobotState robotState) {
-    double[] ypr_deg = null;
-    pigeonIMU.getYawPitchRoll(ypr_deg);
-    ((RobotState)robotState).setTheta(ypr_deg[0]);
+public void updateState() { 
+        double[] ypr_deg = {0,0,0};
+        pigeonIMU.getYawPitchRoll(ypr_deg);
+        robotState.setTheta(ypr_deg[0]);
 }
 
 public void setSensorValue(double value) {
-
     pigeonIMU.setYaw(value, 100);
 }
 
     @Override
     public void zeroSensor() {
         pigeonIMU.setYaw(0, 100);
+    }
+
+    @Override
+    public void setSensorVaule(Double vaule) {
+    robotState.setTheta(vaule);
+    }
+
+    @Override
+    public void setRobotState(RobotState robotState) {
+        this.robotState = robotState;
     }
 
 }

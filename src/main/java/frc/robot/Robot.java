@@ -9,7 +9,6 @@ package frc.robot;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import org.hotutilites.hotInterfaces.IRobotState;
 import org.hotutilites.hotcontroller.HotController;
 import org.hotutilites.hotlogger.HotLogger;
 
@@ -28,7 +27,7 @@ public class Robot extends TimedRobot {
    * for any initialization code.
    */
 
-   private IRobotState robotState;
+   private RobotState robotState;
    private DriveTrain drivetrain;
    private Pigeon pigeon;
    private HotController driver;
@@ -39,18 +38,18 @@ public class Robot extends TimedRobot {
     HotLogger.Setup("theta","Drive_Distance_Right","Drive_Distance_Left");
     driver = new HotController(0, false);
     robotState = new RobotState();    
-    drivetrain = new DriveTrain();
+    drivetrain = new DriveTrain(robotState);
     commander = new TeleopCommandProvider(driver);
-    //pigeon = new Pigeon();
+    pigeon = new Pigeon(robotState);
 
     drivetrain.zeroSensor();
-    //pigeon.zeroSensor();
+    pigeon.zeroSensor();
   }
 
   @Override
   public void robotPeriodic() {
-    drivetrain.updateState(robotState);
-   // pigeon.updateState(robotState);
+    drivetrain.updateState();
+    pigeon.updateState();
   }
 
   @Override
