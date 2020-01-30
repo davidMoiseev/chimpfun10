@@ -31,7 +31,7 @@ public void setSensorValue(double value) {
     }
 
     @Override
-    public void setSensorVaule(Double vaule) {
+    public void setSensorValue(Double vaule) {
     robotState.setTheta(vaule);
     }
 

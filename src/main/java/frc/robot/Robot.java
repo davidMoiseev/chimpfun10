@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    drivetrain.preformAction(commander, robotState);
+    drivetrain.performAction(commander, robotState);
   }
 
   @Override
