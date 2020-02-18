@@ -7,12 +7,12 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
-
 import org.hotutilites.hotcontroller.HotController;
 import org.hotutilites.hotlogger.HotLogger;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.BallSupervisor.BallSupervisorState;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,22 +32,29 @@ public class Robot extends TimedRobot {
    private Pigeon pigeon;
    private HotController driver;
    private RobotCommandProvider commander;
+   private BallSupervisor ballSupervisor;
+   private HotController operator;
 
   @Override
   public void robotInit() {
     HotLogger.Setup("theta","Drive_Distance_Right","Drive_Distance_Left");
     driver = new HotController(0, false);
+    operator = new HotController(1, false);
     robotState = new RobotState();    
     drivetrain = new DriveTrain(robotState);
-    commander = new TeleopCommandProvider(driver);
+    commander = new TeleopCommandProvider(driver,operator,robotState);
     pigeon = new Pigeon(robotState);
-
+    ballSupervisor = new BallSupervisor(robotState);
+    
     drivetrain.zeroSensor();
     pigeon.zeroSensor();
+
+    ballSupervisor.zeroSensor();
   }
 
   @Override
   public void robotPeriodic() {
+    ballSupervisor.updateState();
     drivetrain.updateState();
     pigeon.updateState();
   }
@@ -62,11 +69,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    ballSupervisor.zeroSensor();
   }
 
   @Override
   public void teleopPeriodic() {
-    drivetrain.performAction(commander, robotState);
+    //drivetrain.performAction(commander, robotState);
+    commander.chooseBallCommand();
+    ballSupervisor.performAction(commander, robotState);
+    
   }
 
   @Override
@@ -75,6 +86,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
+  
   }
 
 }
