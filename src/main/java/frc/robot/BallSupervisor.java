@@ -64,9 +64,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
     public void performAction(final RobotCommandProvider commander, final RobotState robotState) {
         shooter.Display();
         conveyor.display();
-        SmartDashboard.putNumber("Target RPM", robotState.getShooterTargetRPM());
-        SmartDashboard.putNumber("ShooterOutputStatus", 1);
-        SmartDashboard.putNumber("ConveyerOutputStatus",0);
         conveyor.updateStatusLight();
         switch(commander.getBallSupervisorState()){
             case intakeIn: //Once we are commanded by teleopcommander to run the intake we execute this case which powers the intake

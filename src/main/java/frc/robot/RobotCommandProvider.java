@@ -5,6 +5,8 @@ public abstract class RobotCommandProvider {
     private BallSupervisor.hoodPos hoodPosition;
 
     public abstract double getDriveCommand();
+    public abstract boolean getAimingEnabled();
+    public abstract boolean getRangeEnabled();
 
     public BallSupervisor.hoodPos getHoodPosition() {
         return hoodPosition;

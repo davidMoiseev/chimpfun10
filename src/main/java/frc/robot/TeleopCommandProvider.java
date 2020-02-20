@@ -36,6 +36,13 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         return driver.getStickRX();
     }
 
+    public boolean getAimingEnabled(){
+        return driver.getButtonB();
+    }
+    public boolean getRangeEnabled(){
+        return driver.getButtonX();
+    }
+
     private void setDriver(HotController driver) {
         this.driver = driver;
     }
@@ -47,17 +54,14 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         }else if (operator.getButtonX()){ //config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(3800);
-            //robotState.setShooterTargetRPM(0);
             setHoodPosition(hoodPos.autoshot);
         }else if(operator.getButtonB()){//config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(4800);
-            //robotState.setShooterTargetRPM(0);
             setHoodPosition(hoodPos.trench);
         }else if(operator.getButtonA()){
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(2800);
-            //robotState.setShooterTargetRPM(0);
             setHoodPosition(hoodPos.wallShot);
         }else if(operator.getButtonY()){
             setBallSupervisorState(BallSupervisorState.reject);

@@ -6,12 +6,19 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import org.hotutilites.hotInterfaces.IHotSensedActuator;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
+
 public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandProvider, Integer > {
     private TalonFX driveRightLeader;
     private TalonFX driveRightFollower;
     private TalonFX driveLeftLeader;
     private TalonFX driveLeftFollower;
     private RobotState robotState;
+
+    private PIDController pidControllerSteering, pidControllerDistance;
+    private double steeringAdjust, distanceAdjust;
+    private double headingError;
+    private double currentDistanceFromTarget, desiredDistanceFromTarget, distanceError;
 
     public DriveTrain(RobotState robotState) {
         driveRightLeader = new TalonFX(Calibrations.CAN_ID.driveRight1);
@@ -26,6 +33,10 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
         driveRightFollower.follow(driveRightLeader);
 
         this.robotState = robotState;
+
+        pidControllerSteering = new PIDController(Calibrations.Vision.kP, Calibrations.Vision.kI, Calibrations.Vision.kD);
+        pidControllerDistance = new PIDController(Calibrations.Vision.kP, Calibrations.Vision.kI, Calibrations.Vision.kD);
+
     }
 
     @Override
@@ -38,6 +49,25 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
     public void performAction(RobotCommandProvider commander, RobotState robotState) {
         driveRightLeader.set(ControlMode.PercentOutput,commander.getDriveCommand() + commander.getTurnCommand());
         driveLeftLeader.set(ControlMode.PercentOutput,commander.getDriveCommand() - commander.getTurnCommand());
+        if (commander.getAimingEnabled()){
+            headingError = robotState.getLimelightXTheta();    
+            if (Math.abs(headingError) > Calibrations.Vision.deadband) {
+                steeringAdjust = pidControllerSteering.calculate(headingError);
+            } else {
+                steeringAdjust = 0;
+            }
+            driveLeftLeader.set(ControlMode.PercentOutput, steeringAdjust);
+            driveRightLeader.set(ControlMode.PercentOutput, -steeringAdjust);
+        
+    }
+    if (commander.getRangeEnabled()){
+        currentDistanceFromTarget = robotState.getDistanceFromTarget();
+        desiredDistanceFromTarget = 2.2;
+        distanceError = desiredDistanceFromTarget - currentDistanceFromTarget;
+        distanceAdjust = pidControllerDistance.calculate(distanceError);
+        driveLeftLeader.set(ControlMode.PercentOutput, distanceAdjust);
+        driveRightLeader.set(ControlMode.PercentOutput, distanceAdjust);
+    }
     }
 
     public void zeroActuators() {
