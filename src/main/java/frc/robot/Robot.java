@@ -48,7 +48,6 @@ public class Robot extends TimedRobot {
     
     drivetrain.zeroSensor();
     pigeon.zeroSensor();
-
     ballSupervisor.zeroSensor();
   }
 
@@ -60,7 +59,13 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void disabledInit() {
+    robotState.setRobotEnabled(false);
+  }
+
+  @Override
   public void autonomousInit() {
+    robotState.setRobotEnabled(true);
   }
 
   @Override
@@ -70,16 +75,16 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     ballSupervisor.zeroSensor();
+    robotState.setRobotEnabled(true);
   }
 
   @Override
   public void teleopPeriodic() {
-    //drivetrain.performAction(commander, robotState);
+    drivetrain.performAction(commander, robotState);
     commander.chooseBallCommand();
     ballSupervisor.performAction(commander, robotState);
     
   }
-
   @Override
   public void testInit() {
   }

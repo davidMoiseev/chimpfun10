@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -90,10 +89,10 @@ public class shooter {
     }
 
     public void PowerCheck(){
-        if(powerPannel.getVoltage() < 8.5 && lowVoltage == false){
+        if(powerPannel.getVoltage() < 8.25 && lowVoltage == false){
             lowVoltage = true;
             lowVoltageLockoutCnt++;
-        }else if (powerPannel.getVoltage() > 9.75 && lowVoltage == true && lowVoltageLockout == false){
+        }else if (powerPannel.getVoltage() > 9.25 && lowVoltage == true && lowVoltageLockout == false){
             lowVoltage = false;
         }
         if (lowVoltageLockoutCnt > 150 && lowVoltageLockout == false){
@@ -155,6 +154,7 @@ public class shooter {
     public enum HoodPosition{
         goingUnder,
         trench,
+        wallShot,
         autoshot
     }
     public void setHood(HoodPosition pos){
@@ -166,6 +166,10 @@ public class shooter {
             case trench:
                 hood1.set(true); //short 
                 hood2.set(false); //long
+            break;
+            case wallShot:
+                hood1.set(false); //short 
+                hood2.set(true); //long
             break;
             case autoshot:
                 hood1.set(false); //short 

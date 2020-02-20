@@ -20,11 +20,11 @@ public class Calibrations
         public final static int pcm = 0;
      }
     public class shooter_PID{
-        public final static double kP = 1e-3; 
+        public final static double kP = 1.1e-3; 
         public final static double kI = 3e-6;
         public final static double kD = 2e-7; 
-        public final static double kIz = 225; 
-        public final static double kFF = 0.000137862*1.3; 
+        public final static double kIz = 200; 
+        public final static double kFF = 0.000137862*1.6; 
         public final static double kMaxOutput = 1; 
         public final static double kMinOutput = -0.15;
     }
@@ -45,6 +45,19 @@ public class Calibrations
         public final static int shooterCurrentLimit = 40;
         public final static int intakeArmCurrentLimit = 30;
         public final static double intakeStandardPower = 0.75;
-        public final static double indexerPower = 0.75;
+        public final static double indexerPower = 0.40;
     }
+    public class Vision {
+        public static final double kP = 0.027;
+        public static final double kI = 0.03;
+        public static final double kD = 0.001;
+        public static final double kPDistance = 0.05;
+        public static final double kIDistance = 0;
+        public static final double kDistance = 0;
+        public static final double kLimelightDistanceFromFront = 0; // In recording distance minus distance by how far back limelight is from front of robot
+        public static final double deadband = .05;
+        public static final double kHeight = (2.7114 - .17); // Height of Target - Height of Camera
+        public static final double kMountedAngle = 41.1;
+    }
+
 }

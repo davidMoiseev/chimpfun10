@@ -12,6 +12,8 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     private HotController driver;
     private HotController operator;
     private RobotState robotState;
+    private int rumbleTime = -1
+    ;
     public TeleopCommandProvider(HotController driver, HotController operator,RobotState robotState) {
         this.setDriver(driver);
         this.setOperator(operator);
@@ -45,12 +47,19 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         }else if (operator.getButtonX()){ //config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(3800);
+            //robotState.setShooterTargetRPM(0);
             setHoodPosition(hoodPos.autoshot);
-        }else if(operator.getButtonY()){//config for trench shot
+        }else if(operator.getButtonB()){//config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(4800);
+            //robotState.setShooterTargetRPM(0);
             setHoodPosition(hoodPos.trench);
         }else if(operator.getButtonA()){
+            setBallSupervisorState(BallSupervisorState.prime);
+            robotState.setShooterTargetRPM(2800);
+            //robotState.setShooterTargetRPM(0);
+            setHoodPosition(hoodPos.wallShot);
+        }else if(operator.getButtonY()){
             setBallSupervisorState(BallSupervisorState.reject);
         }else if(operator.getButtonLeftBumper()){
             setBallSupervisorState(BallSupervisorState.intakeIn); 
@@ -63,6 +72,19 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);
         }
+
+        if(robotState.getInventory() >= 5 && rumbleTime <= -1){
+            rumbleTime = 75;
+        }else{
+            rumbleTime = -1;
+        }
+
+        // if(rumbleTime > 0){
+        //     //operator.rumble(true);
+        //     rumbleTime--;
+        // }else{
+        //     operator.rumble(false);
+        // }
     }
 
         

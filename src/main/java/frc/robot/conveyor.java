@@ -12,7 +12,7 @@ public class conveyor {
     private boolean carouselFull = false;
     private boolean shouldStage;
     private double carouselPower = 0.75;
-    private double conveyorPower = 0.70;
+    private double conveyorPower = 0.78;
     private double coveyorPowerStandered = 0.7;
     private double carouselOutPut = 0;
     private double conveyorOutPut = 0;
@@ -229,6 +229,7 @@ public class conveyor {
         reset
     }
     public void stage(feedModes mode){
+        warning = false;
         switch(mode){
             case autoFill:
                 this.count(true);
@@ -243,10 +244,8 @@ public class conveyor {
             break;
             case shoot:
                 this.count(true);
-                this.shootPower(-0.75);
-                ballStored = 0;
-                inConveyor = 0;
-                carouselPos = 3;
+                this.shootPower(-0.55);
+                this.shotFired();
             break;
             case reject:
                 this.count(false);
@@ -257,14 +256,15 @@ public class conveyor {
                 this.shootPower(0);
             break;
             case confirm:
-                this.confirmInventory();
+                //this.confirmInventory();
             break;
             case reset:
-                this.confirmInventory();
-                // ballStored = 0;
-                // inConveyor = 0;
+                //this.confirmInventory();
+                ballStored = 0;
+                inConveyor = 0;
                 carouselOutPut = 0;
-                //carouselPos = 3;
+
+                carouselPos = 3;
                 shouldStage = false;
                 IntakeCountLockout = false;
                 conveyorBounceBack = false;
@@ -305,11 +305,11 @@ public class conveyor {
 
         if(reverseTime_1 > 0){
             conveyorOutPut = 0;
-            StatusLightState = 0;
+            warning = true;
         }
         if(reverseTime_2 > 0){
             carouselPower = 0;
-            StatusLightState = 0;
+            warning = true;
             conveyorOutPut = 0;
         }
     }
@@ -383,7 +383,7 @@ public class conveyor {
         if(pos4Sensor.get()) ballStored++;
         if(pos5Sensor.get()) ballStored++;
         bCarPos = 0; //ByteBased Carousel Position
-        if(pos1Sensor.get() == false) bCarPos = bCarPos + 1;
+        // if(pos1Sensor.get() == false) bCarPos = bCarPos + 1;
         if(pos2Sensor.get() == false) bCarPos = bCarPos + 3;
         if(pos3Sensor.get()) bCarPos = bCarPos + 5;
 
@@ -421,7 +421,7 @@ public class conveyor {
             break;
         case 1: //1,0,0
             dropSpotOccupide = true;
-            carouselPos = -1;
+            carouselPos = 3;
             inConveyor = ballStored - 1;
             break;
         case 0: //0,0,0
