@@ -64,9 +64,17 @@ public class shooter {
         m_mator.follow(m_motor, true);
     }
 
+    public void manual(double pwr){
+        m_pidController.setReference(pwr, ControlType.kDutyCycle);
+        PIDTarget = 0;
+    }
+
+
     public boolean isInFault() {
         if(lowVoltageLockout || lowVoltage){
             inFault = true;
+        }else{
+            inFault = false;
         }
         return inFault;
     }
@@ -96,30 +104,13 @@ public class shooter {
             lowVoltage = false;
         }
         if (lowVoltageLockoutCnt > 150 && lowVoltageLockout == false){
-            lowVoltageLockout = true;
+            lowVoltageLockout = false;
         }        
     }
 
     public void LockoutReset(){
         lowVoltageLockout = false;
         lowVoltageLockoutCnt = 0;
-    }
-    public boolean lastStabalizerState;
-    public boolean shotFired(){
-        if (shootin){
-            if (Ready != lastStabalizerState){
-                lastStabalizerState = Ready;
-                if(Ready == false){
-                    return true;
-                }else{
-                    return false;
-                }
-            }else{
-                return false;
-            }
-        }else{ 
-            return false;
-        }
     }
 
     public boolean isShooterStable(){        
@@ -140,12 +131,12 @@ public class shooter {
         rpm = Math.abs(m_encoder.getVelocity() * (36.0/24.0));
         rpm2 = Math.abs(m_encoder2.getVelocity() * (36.0/24.0));
         IAccum = m_pidController.getIAccum();
-        if ((Math.abs(PIDTarget*(36.0/24.0)-rpm)) < 15){
+        if ((Math.abs(PIDTarget*(36.0/24.0)-rpm)) < 50){
             Stabalizer++;
         }else{
             Stabalizer = 0;
         }
-        if(Stabalizer > 25){
+        if(Stabalizer > 10){
             Ready = true;
         }else{
             Ready = false;
@@ -176,6 +167,20 @@ public class shooter {
                 hood2.set(false); //long
             break;
         }
+    }
+
+    public void updateStatus(){
+        int status = 0;
+        if(lowVoltage){
+            status = 0;
+        }else if(Ready && PIDTarget != 0){
+            status = 3;
+        }else if(PIDTarget != 0){
+            status = 2;
+        }else{
+            status = 1;
+        }
+        SmartDashboard.putNumber("ShooterOutputStatus", status);
     }
 
     public void Display(){

@@ -47,8 +47,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
     @Override
     public void performAction(RobotCommandProvider commander, RobotState robotState) {
-        driveRightLeader.set(ControlMode.PercentOutput,commander.getDriveCommand() + commander.getTurnCommand());
-        driveLeftLeader.set(ControlMode.PercentOutput,commander.getDriveCommand() - commander.getTurnCommand());
+        driveRightLeader.set(ControlMode.PercentOutput,-commander.getDriveCommand() + commander.getTurnCommand());
+        driveLeftLeader.set(ControlMode.PercentOutput,-commander.getDriveCommand() - commander.getTurnCommand());
         if (commander.getAimingEnabled()){
             headingError = robotState.getLimelightXTheta();    
             if (Math.abs(headingError) > Calibrations.Vision.deadband) {

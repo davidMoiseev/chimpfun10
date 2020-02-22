@@ -12,8 +12,8 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     private HotController driver;
     private HotController operator;
     private RobotState robotState;
-    private int rumbleTime = -1
-    ;
+    private boolean setModeEdge;
+    private boolean manaulMode;
     public TeleopCommandProvider(HotController driver, HotController operator,RobotState robotState) {
         this.setDriver(driver);
         this.setOperator(operator);
@@ -43,13 +43,28 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         return driver.getButtonX();
     }
 
+    public boolean getManualMode(){
+        return manaulMode;
+    }
+
     private void setDriver(HotController driver) {
         this.driver = driver;
     }
 
+    public void setManualMode(){
+        if(operator.getButtonBack() != setModeEdge){
+            if(operator.getButtonBack()){
+                manaulMode = !manaulMode;
+            }
+        }
+        setModeEdge = operator.getButtonBack();
+    }
+
     @Override
     public void chooseBallCommand() {
-        if(driver.getRightTrigger() > 0.5){
+        if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
+            setBallSupervisorState(BallSupervisorState.shootNsuck);
+        }else if(driver.getRightTrigger() > 0.5){
             setBallSupervisorState(BallSupervisorState.shoot);
         }else if (operator.getButtonX()){ //config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
@@ -69,26 +84,15 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.intakeIn); 
         }else if(operator.getButtonRightBumper()){
             setBallSupervisorState(BallSupervisorState.intakeOut); 
-        }else if(operator.getButtonStart()){
+        }else if(operator.getButtonRightStick()){
             setBallSupervisorState(BallSupervisorState.reset);
+        }else if(operator.getButtonStart()){
+            setBallSupervisorState(BallSupervisorState.confirm);
         }else{
             setBallSupervisorState(BallSupervisorState.intakeStop); 
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);
         }
-
-        if(robotState.getInventory() >= 5 && rumbleTime <= -1){
-            rumbleTime = 75;
-        }else{
-            rumbleTime = -1;
-        }
-
-        // if(rumbleTime > 0){
-        //     //operator.rumble(true);
-        //     rumbleTime--;
-        // }else{
-        //     operator.rumble(false);
-        // }
     }
 
         

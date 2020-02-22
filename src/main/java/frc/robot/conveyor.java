@@ -12,7 +12,7 @@ public class conveyor {
     private boolean carouselFull = false;
     private boolean shouldStage;
     private double carouselPower = 0.75;
-    private double conveyorPower = 0.78;
+    private double conveyorPower = 0.75;
     private double coveyorPowerStandered = 0.7;
     private double carouselOutPut = 0;
     private double conveyorOutPut = 0;
@@ -58,6 +58,11 @@ public class conveyor {
 
     public void setIntakeOn(boolean intakeOn) {
         this.IntakeOn = intakeOn;
+    }
+
+    public void setManualInputs(double conveyorPwr, double carouselPwr){
+        conveyorOutPut = conveyorPwr;
+        carouselOutPut = carouselPwr;
     }
 
     public void conveyorAutoFeed() {
@@ -211,9 +216,10 @@ public class conveyor {
         }
         if(pos4Sensor.get() != Pos4lastState){
             if(pos4Sensor.get() != true){
-                inConveyor--;
-                carouselPos++;
+                ///inConveyor--;
+                //carouselPos++;
             }
+            inConveyor = 0;
         }
         Pos1lastState = pos1Sensor.get();
         Pos4lastState = pos4Sensor.get();
@@ -226,7 +232,8 @@ public class conveyor {
         reject,
         confirm,
         stop,
-        reset
+        reset,
+        manual
     }
     public void stage(feedModes mode){
         warning = false;
@@ -256,18 +263,19 @@ public class conveyor {
                 this.shootPower(0);
             break;
             case confirm:
-                //this.confirmInventory();
+                this.confirmInventory();
             break;
             case reset:
-                //this.confirmInventory();
                 ballStored = 0;
                 inConveyor = 0;
                 carouselOutPut = 0;
-
                 carouselPos = 3;
                 shouldStage = false;
                 IntakeCountLockout = false;
                 conveyorBounceBack = false;
+            break;
+            case manual:
+                
             break;
         }
         runMotors();

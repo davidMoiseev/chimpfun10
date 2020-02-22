@@ -4,7 +4,7 @@ public class Calibrations
 {
 
     public class CAN_ID {
-        public final static int pigeon = 20;
+        public final static int pigeon = 30;
         public final static int driveLeft1 = 3;
         public final static int driveLeft2 = 4;
         public final static int driveRight1 = 1;
@@ -18,6 +18,7 @@ public class Calibrations
         public final static int intakeMotor2 = 10;
         public final static int intakeLifter = 14;
         public final static int pcm = 0;
+        public final static int CANifier = 20;
      }
     public class shooter_PID{
         public final static double kP = 1.1e-3; 
@@ -45,7 +46,9 @@ public class Calibrations
         public final static int shooterCurrentLimit = 40;
         public final static int intakeArmCurrentLimit = 30;
         public final static double intakeStandardPower = 0.75;
-        public final static double indexerPower = 0.40;
+        public final static double indexerPower = 0.70;
+        public final static double ledCycleTime = 15;
+        public final static double ledDutyCycle = 0.5;
     }
     public class Vision {
         public static final double kP = 0.027;
@@ -55,7 +58,7 @@ public class Calibrations
         public static final double kIDistance = 0;
         public static final double kDistance = 0;
         public static final double kLimelightDistanceFromFront = 0; // In recording distance minus distance by how far back limelight is from front of robot
-        public static final double deadband = .05;
+        public static final double deadband = .04;
         public static final double kHeight = (2.7114 - .17); // Height of Target - Height of Camera
         public static final double kMountedAngle = 41.1;
     }

@@ -34,32 +34,38 @@ public class Robot extends TimedRobot {
    private RobotCommandProvider commander;
    private BallSupervisor ballSupervisor;
    private HotController operator;
+   private LEDController lEDController;
+   private Limelight limelite;
 
   @Override
   public void robotInit() {
     HotLogger.Setup("theta","Drive_Distance_Right","Drive_Distance_Left");
     driver = new HotController(0, false);
     operator = new HotController(1, false);
-    robotState = new RobotState();    
+    robotState = new RobotState();
+    limelite = new Limelight(robotState);    
     drivetrain = new DriveTrain(robotState);
     commander = new TeleopCommandProvider(driver,operator,robotState);
     pigeon = new Pigeon(robotState);
     ballSupervisor = new BallSupervisor(robotState);
-    
+    lEDController = new LEDController(robotState);
     drivetrain.zeroSensor();
     pigeon.zeroSensor();
     ballSupervisor.zeroSensor();
   }
+
 
   @Override
   public void robotPeriodic() {
     ballSupervisor.updateState();
     drivetrain.updateState();
     pigeon.updateState();
+    limelite.updateState();
+    lEDController.updateState();
   }
 
   @Override
-  public void disabledInit() {
+  public void disabledPeriodic() {
     robotState.setRobotEnabled(false);
   }
 
@@ -83,7 +89,7 @@ public class Robot extends TimedRobot {
     drivetrain.performAction(commander, robotState);
     commander.chooseBallCommand();
     ballSupervisor.performAction(commander, robotState);
-    
+    commander.setManualMode();
   }
   @Override
   public void testInit() {

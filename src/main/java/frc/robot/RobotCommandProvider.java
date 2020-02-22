@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.hotutilites.hotcontroller.HotController;
+
 public abstract class RobotCommandProvider {
     private BallSupervisor.BallSupervisorState ballSupervisorState;
     private BallSupervisor.hoodPos hoodPosition;
@@ -24,6 +26,8 @@ public abstract class RobotCommandProvider {
         this.ballSupervisorState = ballSupervisorState;
     }
 
+    public abstract void setManualMode();
+    public abstract HotController getOperator();
     public abstract double getTurnCommand();
     public abstract void chooseBallCommand();
 }

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Limelight implements IHotSensor<RobotState, Double> {
 
     private NetworkTable limelight;
-    private NetworkTableEntry tx, ty, tv, tl;
+    private NetworkTableEntry tx, ty, tv, tl, ledMode;
     private double canSeeTarget; // 0 is no, 1 is yes
     private RobotState robotState;
 
@@ -23,6 +23,7 @@ public class Limelight implements IHotSensor<RobotState, Double> {
         ty = limelight.getEntry("ty");
         tv = limelight.getEntry("tv");
         tl = limelight.getEntry("tl");
+        ledMode = limelight.getEntry("ledMode");
         this.robotState = robotState;
     }
 
@@ -35,19 +36,26 @@ public class Limelight implements IHotSensor<RobotState, Double> {
         robotState.setLimelightXTheta(xTheta);
         robotState.setLimelightYTheta(yTheta);
         robotState.setDistanceFromTarget(getDistanceFromTarget());
+  
+        if (robotState.isRobotEnabled()){
+            ledMode.setNumber(3);
+        } else {
+            ledMode.setNumber(1);
+        }
+
 
         if(latency > 1000){
-            SmartDashboard.putNumber("visionOutputStatus", 0);
-        }
-        if(canSeeTarget > 1){
-            SmartDashboard.putNumber("visionOutputStatus", 2);
+            SmartDashboard.putNumber("VisionOutputStatus", 0);
+            robotState.setVisionOutputStatus(0);
+        }else if(xTheta > Calibrations.Vision.deadband){
+            SmartDashboard.putNumber("VisionOutputStatus", 3);
+            robotState.setVisionOutputStatus(3);
+        }else if(canSeeTarget == 1){
+            SmartDashboard.putNumber("VisionOutputStatus", 2);
+            robotState.setVisionOutputStatus(2);
         }else{
-            SmartDashboard.putNumber("visionOutputStatus", 1);
-        }
-        if(xTheta > Calibrations.Vision.deadband){
-            SmartDashboard.putNumber("visionOutputStatus", 3);
-        } else {
-            SmartDashboard.putNumber("visionOutputStatus", 2);
+            SmartDashboard.putNumber("VisionOutputStatus", 1);
+            robotState.setVisionOutputStatus(1);
         }
     }
     
