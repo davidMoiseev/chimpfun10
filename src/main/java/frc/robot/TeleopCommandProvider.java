@@ -35,6 +35,10 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         return driver.getStickRX();
     }
 
+    public double getArmOutput(){    //for testing, normally disable
+        return -operator.getStickLY();
+    }
+
     public boolean getAimingEnabled(){
         return driver.getButtonB();
     }
@@ -63,7 +67,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     public void chooseBallCommand() {
         if(this.getManualMode()){
             setBallSupervisorState(BallSupervisorState.manual);
-            
+            setArmPosition(ArmPositions.manual);
         }else if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
             setBallSupervisorState(BallSupervisorState.shootNsuck);
         }else if(driver.getRightTrigger() > 0.5){

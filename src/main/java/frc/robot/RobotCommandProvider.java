@@ -40,4 +40,5 @@ public abstract class RobotCommandProvider {
     public abstract HotController getOperator();
     public abstract double getTurnCommand();
     public abstract void chooseBallCommand();
+    public abstract double getArmOutput();
 }

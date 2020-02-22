@@ -42,11 +42,10 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         armMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 40);
     
      
-        // armMotor.configPeakCurrentLimit(40, 20); //Limit of 45 amps
-        // armMotor.configPeakCurrentDuration(500, 20); //For 500ms
-        // armMotor.configContinuousCurrentLimit(30, 20); //Limit of 30 amps cont
+        armMotor.configPeakCurrentLimit(40, 20); //Limit of 45 amps
+        armMotor.configPeakCurrentDuration(500, 20); //For 500ms
+        armMotor.configContinuousCurrentLimit(30, 20); //Limit of 30 amps cont
 
-    
         armMotor.configNominalOutputForward(0, 0);
 		armMotor.configNominalOutputReverse(0, 0);
 		armMotor.configPeakOutputForward(1, 0);
@@ -78,6 +77,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         autoshot,
         trenchshot,
         ground,
+        manual,
         noCommand
     }
 
@@ -99,7 +99,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         SmartDashboard.putNumber("motion magc error", armMotor.getClosedLoopError(0));
         
   
-        // armMotor.set(ControlMode.PercentOutput, commander.getArmOutput());
+        
 
         //if (!commander.getArmReset() && hasReset) {
         
@@ -129,9 +129,12 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
                   armMotor.set(ControlMode.MotionMagic, Calibrations.ArmPositions.groundPickupAngle*Calibrations.ARM.ticksPerDegree);
                // armMotor.set(ControlMode.MotionMagic, Calibrations.ARM.groundAngleSetPoint*Calibrations.ARM.ticksPerDegree, DemandType.ArbitraryFeedForward, calcArbFF()); 
             break;
-            
+            case manual:
+                armMotor.set(ControlMode.PercentOutput, commander.getArmOutput());
+            break;
             case noCommand:
-                break;
+
+            break;
             }
 
             
