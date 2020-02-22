@@ -2,7 +2,6 @@ package frc.robot;
 
 public class Calibrations
 {
-
     public class CAN_ID {
         public final static int pigeon = 30;
         public final static int driveLeft1 = 3;
@@ -61,6 +60,25 @@ public class Calibrations
         public static final double deadband = .04;
         public static final double kHeight = (2.7114 - .17); // Height of Target - Height of Camera
         public static final double kMountedAngle = 41.1;
+    }
+    public class ArmPositions{
+        public static final double packagedAngle = 20;  
+        public static final double trenchShotAngle = 45;
+        public static final double autoShotAngle = 35;
+        public static final double wallShotAngle = 10;
+        public static final double groundPickupAngle = 0;
+    }
+    public class ARM{
+        public static final double kP = 1.5;
+        public static final double kI = 0.01  * 2 /3;
+        public static final double kD = 0;
+        public static final double kF = 0;
+        public static final int acc = 1600;
+        public static final int vel = 1600;
+        public static final double ticksPerDegree = 118;
+        public static final double maxGravityFF = 0.139;
+        public static final double measuredTicksHorizontal = 82;
+        public static final int averageCurrentDraw = 40;  //amps, log motion magic to get value      
     }
 
 }

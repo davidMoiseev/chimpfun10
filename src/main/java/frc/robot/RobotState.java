@@ -19,9 +19,18 @@ public class RobotState {
     private double limelightXTheta; // Degrees
     private double limelightYTheta; // Degrees
     private double distanceFromTarget; // Meters
+    private boolean manual;
 
     public double getTheta() {
         return theta;
+    }
+
+    public boolean isManual() {
+        return manual;
+    }
+
+    public void setManual(boolean manual) {
+        this.manual = manual;
     }
 
     public double getDistanceFromTarget() {

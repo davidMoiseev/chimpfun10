@@ -4,8 +4,7 @@ import org.hotutilites.hotcontroller.HotController;
 
 import frc.robot.BallSupervisor.BallSupervisorState;
 import frc.robot.BallSupervisor.hoodPos;
-import frc.robot.BallSupervisor.intakePosition;
-
+import frc.robot.Arm.ArmPositions;
 
 public class TeleopCommandProvider extends RobotCommandProvider {
 
@@ -62,7 +61,10 @@ public class TeleopCommandProvider extends RobotCommandProvider {
 
     @Override
     public void chooseBallCommand() {
-        if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
+        if(this.getManualMode()){
+            setBallSupervisorState(BallSupervisorState.manual);
+            
+        }else if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
             setBallSupervisorState(BallSupervisorState.shootNsuck);
         }else if(driver.getRightTrigger() > 0.5){
             setBallSupervisorState(BallSupervisorState.shoot);
@@ -70,18 +72,22 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(3800);
             setHoodPosition(hoodPos.autoshot);
+            setArmPosition(ArmPositions.autoshot);
         }else if(operator.getButtonB()){//config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(4800);
             setHoodPosition(hoodPos.trench);
-        }else if(operator.getButtonA()){
+            setArmPosition(ArmPositions.trenchshot);
+        }else if(operator.getButtonA()){ //Prime for wallshot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(2800);
             setHoodPosition(hoodPos.wallShot);
+            setArmPosition(ArmPositions.wallshot);
         }else if(operator.getButtonY()){
             setBallSupervisorState(BallSupervisorState.reject);
         }else if(operator.getButtonLeftBumper()){
             setBallSupervisorState(BallSupervisorState.intakeIn); 
+            setArmPosition(ArmPositions.ground);
         }else if(operator.getButtonRightBumper()){
             setBallSupervisorState(BallSupervisorState.intakeOut); 
         }else if(operator.getButtonRightStick()){
@@ -92,6 +98,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.intakeStop); 
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);
+            setArmPosition(ArmPositions.ground);
         }
     }
 

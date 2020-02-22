@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
    private BallSupervisor ballSupervisor;
    private HotController operator;
    private LEDController lEDController;
+   private Arm arm;
    private Limelight limelite;
 
   @Override
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
     pigeon = new Pigeon(robotState);
     ballSupervisor = new BallSupervisor(robotState);
     lEDController = new LEDController(robotState);
+    arm = new Arm();
     drivetrain.zeroSensor();
     pigeon.zeroSensor();
     ballSupervisor.zeroSensor();
@@ -87,6 +89,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drivetrain.performAction(commander, robotState);
+    arm.performAction(commander, robotState);
     commander.chooseBallCommand();
     ballSupervisor.performAction(commander, robotState);
     commander.setManualMode();

@@ -348,7 +348,7 @@ public class conveyor {
 
 
     public void runMotors(){
-        carouselMotor.set(ControlMode.PercentOutput, carouselOutPut);
+        carouselMotor.set(ControlMode.PercentOutput, -carouselOutPut);
         conveyorMotor.set(ControlMode.PercentOutput, conveyorOutPut);
     }
 

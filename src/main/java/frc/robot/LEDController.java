@@ -28,10 +28,10 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 				canifier.setLEDOutput(1*dimmer, CANifier.LEDChannel.LEDChannelB);  //Red
 				canifier.setLEDOutput(1*dimmer, CANifier.LEDChannel.LEDChannelC);  //Blue
 			break;
-			case 4: //Orange
-				canifier.setLEDOutput(0.25*dimmer, CANifier.LEDChannel.LEDChannelA);  //Green
+			case 4: //Purple
+				canifier.setLEDOutput(0*dimmer, CANifier.LEDChannel.LEDChannelA);  //Green
 				canifier.setLEDOutput(1*dimmer, CANifier.LEDChannel.LEDChannelB);  //Red
-				canifier.setLEDOutput(0*dimmer, CANifier.LEDChannel.LEDChannelC);  //Blue
+				canifier.setLEDOutput(1*dimmer, CANifier.LEDChannel.LEDChannelC);  //Blue
 			break;
 			case 3: //green
 				canifier.setLEDOutput(1*dimmer, CANifier.LEDChannel.LEDChannelA);  //Green
