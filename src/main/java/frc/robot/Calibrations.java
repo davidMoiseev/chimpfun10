@@ -51,7 +51,7 @@ public class Calibrations
     }
     public class Vision {
         public static final double kP = 0.027;
-        public static final double kI = 0.03;
+        public static final double kI = 0.06;
         public static final double kD = 0.001;
         public static final double kPDistance = 0.05;
         public static final double kIDistance = 0;
@@ -62,11 +62,11 @@ public class Calibrations
         public static final double kMountedAngle = 41.1;
     }
     public class ArmPositions{
-        public static final double packagedAngle = 20;  
-        public static final double trenchShotAngle = 45;
-        public static final double autoShotAngle = 35;
+        public static final double packagedAngle = 90;  
+        public static final double trenchShotAngle = 70;
+        public static final double autoShotAngle = 62;
         public static final double wallShotAngle = 10;
-        public static final double groundPickupAngle = 0;
+        public static final double groundPickupAngle = 0.1;
     }
     public class ARM{
         public static final double kP = 1.5;
@@ -78,7 +78,9 @@ public class Calibrations
         public static final double ticksPerDegree = 118;
         public static final double maxGravityFF = 0.139;
         public static final double measuredTicksHorizontal = 82;
-        public static final int averageCurrentDraw = 40;  //amps, log motion magic to get value      
+        public static final double averageCurrentDraw = 40;  //amps, log motion magic to get value      
+		public static final double ticksAt90 = 0; //configure  by measuring ticks when arm is level using level
+		public static final double limelightHeightAtArm90 = 0; //configure, from ground
     }
 
 }

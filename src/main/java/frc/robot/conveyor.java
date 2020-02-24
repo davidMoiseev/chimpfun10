@@ -220,6 +220,7 @@ public class conveyor {
                 //carouselPos++;
             }
             inConveyor = 0;
+            carouselPos = 3;
         }
         Pos1lastState = pos1Sensor.get();
         Pos4lastState = pos4Sensor.get();
@@ -237,6 +238,7 @@ public class conveyor {
     }
     public void stage(feedModes mode){
         warning = false;
+        carouselOutPut = 0;
         switch(mode){
             case autoFill:
                 this.count(true);
@@ -275,7 +277,9 @@ public class conveyor {
                 conveyorBounceBack = false;
             break;
             case manual:
-                
+                //carouselOutPut = 0;
+                // ballStored = 0;
+                // inConveyor = 0;
             break;
         }
         runMotors();
@@ -305,7 +309,7 @@ public class conveyor {
         }else{
             reverseTime_1--;
         }
-        if(powerPannel.getCurrent(6) > 25 + 1.875){
+        if(powerPannel.getCurrent(6) > 30 + 1.875){
             reverseTime_2 = 100;
         }else{
             reverseTime_2--;
@@ -316,7 +320,7 @@ public class conveyor {
             warning = true;
         }
         if(reverseTime_2 > 0){
-            carouselPower = 0;
+            carouselOutPut = 0;
             warning = true;
             conveyorOutPut = 0;
         }

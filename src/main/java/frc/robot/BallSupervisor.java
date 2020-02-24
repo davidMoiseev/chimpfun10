@@ -12,6 +12,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
     conveyor conveyor = new conveyor();
     private HotController operator;
     private RobotState robotState;
+    private boolean wasInManual;
     private boolean alreadyShooting;
     public BallSupervisor(final RobotState robotState) {
         this.robotState = robotState;
@@ -71,6 +72,11 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         conveyor.updateStatusLight();
         shooter.updateStatus();
         operator = commander.getOperator();
+        if(commander.getBallSupervisorState() != BallSupervisorState.manual && wasInManual){
+            commander.setBallSupervisorState(BallSupervisorState.reset);
+            wasInManual = false;
+        }
+
         switch(commander.getBallSupervisorState()){
             case shootNsuck:
                 robotState.setLEDColorState(3);
@@ -181,6 +187,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 conveyor.stage(feedModes.reset);
             break;
             case manual:
+                wasInManual = true;
                 robotState.setManual(true);
                 robotState.setLEDColorState(2);
                 robotState.setLEDFlash(true);
@@ -196,6 +203,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 intake.consume(intakin);
                 conveyor.setManualInputs(convey, carousel);
                 conveyor.stage(feedModes.manual);
+                //conveyor.stage(feedModes.stop);
             break;   
         }    
         //Don't forget to comment this out cause davids stuff no work 

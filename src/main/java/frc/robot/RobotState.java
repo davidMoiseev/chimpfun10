@@ -3,6 +3,7 @@ package frc.robot;
 import org.hotutilites.hotlogger.HotLogger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Arm.ArmStates;
 
 public class RobotState {
     private double theta; // Degrees
@@ -20,6 +21,8 @@ public class RobotState {
     private double limelightYTheta; // Degrees
     private double distanceFromTarget; // Meters
     private boolean manual;
+    private ArmStates armState;
+    private double armDegreesFrom90;
 
     public double getTheta() {
         return theta;
@@ -128,7 +131,7 @@ public class RobotState {
     public void setDriveDistanceRight(double driveDistanceRight) {
         this.driveDistanceRight = driveDistanceRight;
         HotLogger.Log("Drive_Distance_Right", driveDistanceRight);
-        SmartDashboard.putNumber("Drive_Distance_Right", driveDistanceRight);
+      
     }
 
     public double getDriveDistanceLeft() {
@@ -138,12 +141,29 @@ public class RobotState {
     public void setDriveDistanceLeft(double driveDistanceLeft) {
         this.driveDistanceLeft = driveDistanceLeft;
         HotLogger.Log("Drive_Distance_Left", driveDistanceLeft);
-        SmartDashboard.putNumber("Drive_Distance_Left", driveDistanceLeft);
+     
     }
 
     public void setTheta(double theta) {
         this.theta = theta;
         HotLogger.Log("theta", theta);
         SmartDashboard.putNumber("theta", theta);
+    }
+
+    public void setArmState(ArmStates armState){
+        this.armState = armState;
+        SmartDashboard.putString("arm state", armState.toString());
+    }
+
+	public void setArmAngleDegreesFrom90(double armDegreesFrom90) {
+        this.armDegreesFrom90 = armDegreesFrom90;
+    }
+    
+    public double getArmAngleDegreesFrom90() {
+        return armDegreesFrom90;
+	}
+
+	public double getLimelightHeight() {  //trig- opp = tangent*sin(armangle)
+        return Calibrations.ARM.limelightHeightAtArm90 * Math.sin(Math.toRadians(180 - getArmAngleDegreesFrom90()));
     }
 }

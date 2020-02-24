@@ -11,7 +11,6 @@ import org.hotutilites.hotcontroller.HotController;
 import org.hotutilites.hotlogger.HotLogger;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.robot.BallSupervisor.BallSupervisorState;
 
 
 /**
@@ -50,7 +49,7 @@ public class Robot extends TimedRobot {
     pigeon = new Pigeon(robotState);
     ballSupervisor = new BallSupervisor(robotState);
     lEDController = new LEDController(robotState);
-    arm = new Arm();
+    arm = new Arm(robotState);
     drivetrain.zeroSensor();
     pigeon.zeroSensor();
     ballSupervisor.zeroSensor();
@@ -82,6 +81,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    arm.zeroSensor();
     ballSupervisor.zeroSensor();
     robotState.setRobotEnabled(true);
   }
@@ -89,9 +89,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drivetrain.performAction(commander, robotState);
-    arm.performAction(commander, robotState);
     commander.chooseBallCommand();
     ballSupervisor.performAction(commander, robotState);
+    arm.performAction(commander, robotState);
     commander.setManualMode();
   }
   @Override

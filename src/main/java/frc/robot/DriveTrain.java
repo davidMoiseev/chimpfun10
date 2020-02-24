@@ -47,8 +47,7 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
     @Override
     public void performAction(RobotCommandProvider commander, RobotState robotState) {
-        driveRightLeader.set(ControlMode.PercentOutput,-commander.getDriveCommand() + commander.getTurnCommand());
-        driveLeftLeader.set(ControlMode.PercentOutput,-commander.getDriveCommand() - commander.getTurnCommand());
+        
         if (commander.getAimingEnabled()){
             headingError = robotState.getLimelightXTheta();    
             if (Math.abs(headingError) > Calibrations.Vision.deadband) {
@@ -58,16 +57,21 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
             }
             driveLeftLeader.set(ControlMode.PercentOutput, steeringAdjust);
             driveRightLeader.set(ControlMode.PercentOutput, -steeringAdjust);
-        
-    }
-    if (commander.getRangeEnabled()){
-        currentDistanceFromTarget = robotState.getDistanceFromTarget();
-        desiredDistanceFromTarget = 2.2;
-        distanceError = desiredDistanceFromTarget - currentDistanceFromTarget;
-        distanceAdjust = pidControllerDistance.calculate(distanceError);
-        driveLeftLeader.set(ControlMode.PercentOutput, distanceAdjust);
-        driveRightLeader.set(ControlMode.PercentOutput, distanceAdjust);
-    }
+        }
+
+        else if (commander.getRangeEnabled()){
+            currentDistanceFromTarget = robotState.getDistanceFromTarget();
+            desiredDistanceFromTarget = 2.2;
+            distanceError = desiredDistanceFromTarget - currentDistanceFromTarget;
+            distanceAdjust = pidControllerDistance.calculate(distanceError);
+            driveLeftLeader.set(ControlMode.PercentOutput, distanceAdjust);
+            driveRightLeader.set(ControlMode.PercentOutput, distanceAdjust);
+        }
+
+        else{   //changed into else so motors are never commanded more than once -S
+            driveRightLeader.set(ControlMode.PercentOutput,-commander.getDriveCommand() + commander.getTurnCommand());
+            driveLeftLeader.set(ControlMode.PercentOutput,-commander.getDriveCommand() - commander.getTurnCommand());
+        }
     }
 
     public void zeroActuators() {

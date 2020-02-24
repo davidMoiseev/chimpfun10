@@ -13,6 +13,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     private RobotState robotState;
     private boolean setModeEdge;
     private boolean manaulMode;
+    private double turn;
     public TeleopCommandProvider(HotController driver, HotController operator,RobotState robotState) {
         this.setDriver(driver);
         this.setOperator(operator);
@@ -32,7 +33,13 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     }
 
     public double getTurnCommand() {
-        return driver.getStickRX();
+        turn = driver.getStickRX();
+        if(turn < 0){
+            return -Math.pow(Math.abs(turn), 2);
+        }
+        else{
+            return Math.pow(turn, 2);
+        }
     }
 
     public double getArmOutput(){    //for testing, normally disable
@@ -40,7 +47,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     }
 
     public boolean getAimingEnabled(){
-        return driver.getButtonB();
+        return driver.getButtonA();
     }
     public boolean getRangeEnabled(){
         return driver.getButtonX();
@@ -50,13 +57,19 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         return manaulMode;
     }
 
+    public void rezeroArm(){
+        if(operator.getButtonBack()){
+            setArmPosition(ArmPositions.reset);
+        }
+    }
+
     private void setDriver(HotController driver) {
         this.driver = driver;
     }
 
     public void setManualMode(){
-        if(operator.getButtonBack() != setModeEdge){
-            if(operator.getButtonBack()){
+        if(operator.getButtonLeftStick() != setModeEdge){
+            if(operator.getButtonLeftStick()){
                 manaulMode = !manaulMode;
             }
         }
@@ -79,7 +92,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setArmPosition(ArmPositions.autoshot);
         }else if(operator.getButtonB()){//config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(4800);
+            robotState.setShooterTargetRPM(5200);
             setHoodPosition(hoodPos.trench);
             setArmPosition(ArmPositions.trenchshot);
         }else if(operator.getButtonA()){ //Prime for wallshot

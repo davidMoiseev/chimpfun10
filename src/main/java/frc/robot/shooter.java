@@ -28,10 +28,7 @@ public class shooter {
     public double rpm;
     public double rpm2;
     public PowerDistributionPanel powerPannel;
-    public boolean lowVoltage = false;
-    public int lowVoltageLockoutCnt = 0;
-    public boolean lowVoltageLockout = false;
-    private boolean shootin;
+    public double lowVoltage;
 
     public shooter() {
         compressor = new Compressor(Calibrations.CAN_ID.pcm);
@@ -71,12 +68,11 @@ public class shooter {
 
 
     public boolean isInFault() {
-        if(lowVoltageLockout || lowVoltage){
-            inFault = true;
+        if(lowVoltage < 0.95){
+            return true;
         }else{
-            inFault = false;
+            return false;
         }
-        return inFault;
     }
 
     public void stopPIDMotor() {
@@ -87,30 +83,16 @@ public class shooter {
     
     public void PIDmotor(double rpm){ 
         rpm = rpm * 24.0/36.0;
-        if (lowVoltage == false){      
-            m_pidController.setOutputRange(kMinOutput, kMaxOutput);
-            PIDTarget = rpm;
-            m_pidController.setReference(rpm, ControlType.kVelocity,0);
-        }else{
-            this.stopPIDMotor();
-        }
+        m_pidController.setOutputRange(kMinOutput, lowVoltage);
+        PIDTarget = rpm;
+        m_pidController.setReference(rpm, ControlType.kVelocity,0);
     }
 
     public void PowerCheck(){
-        if(powerPannel.getVoltage() < 8.25 && lowVoltage == false){
-            lowVoltage = true;
-            lowVoltageLockoutCnt++;
-        }else if (powerPannel.getVoltage() > 9.25 && lowVoltage == true && lowVoltageLockout == false){
-            lowVoltage = false;
-        }
-        if (lowVoltageLockoutCnt > 150 && lowVoltageLockout == false){
-            lowVoltageLockout = false;
-        }        
-    }
-
-    public void LockoutReset(){
-        lowVoltageLockout = false;
-        lowVoltageLockoutCnt = 0;
+        if(powerPannel.getVoltage() < 9.5){
+			lowVoltage = (powerPannel.getVoltage() - 7.3) / 2.2;
+			if(lowVoltage < 0) lowVoltage = 0;
+		}      
     }
 
     public boolean isShooterStable(){        
@@ -119,11 +101,6 @@ public class shooter {
 
     public void indexPower(double pwr){
         m_feeder.set(ControlMode.PercentOutput,pwr);
-        if(pwr > 0){
-            shootin = true;
-        }else{
-            shootin = false;
-        }
     }
 
     public void read(){
@@ -171,7 +148,7 @@ public class shooter {
 
     public void updateStatus(){
         int status = 0;
-        if(lowVoltage){
+        if(lowVoltage < 0.9){
             status = 0;
         }else if(Ready && PIDTarget != 0){
             status = 3;
@@ -186,8 +163,7 @@ public class shooter {
     public void Display(){
         SmartDashboard.putNumber("I accumlator", IAccum);
         SmartDashboard.putNumber("Amp Draw",m_motor.getOutputCurrent());
-        SmartDashboard.putBoolean("Voltage Stopped", lowVoltage);
-        SmartDashboard.putBoolean("Voltage Lockout", lowVoltageLockout);
+        SmartDashboard.putNumber("Voltage Stopped", lowVoltage);
         SmartDashboard.putNumber("Encoder Position", m_encoder.getPosition());
         SmartDashboard.putNumber("Encoder Velocity", rpm);
         SmartDashboard.putNumber("Encoder Velocity2", rpm2);

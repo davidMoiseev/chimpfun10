@@ -47,7 +47,7 @@ public class Limelight implements IHotSensor<RobotState, Double> {
         if(latency > 1000){
             SmartDashboard.putNumber("VisionOutputStatus", 0);
             robotState.setVisionOutputStatus(0);
-        }else if(xTheta > Calibrations.Vision.deadband){
+        }else if(Math.abs(xTheta) < Calibrations.Vision.deadband + 1 && canSeeTarget >= 1){
             SmartDashboard.putNumber("VisionOutputStatus", 3);
             robotState.setVisionOutputStatus(3);
         }else if(canSeeTarget == 1){
@@ -81,10 +81,11 @@ public class Limelight implements IHotSensor<RobotState, Double> {
     public double getDistanceFromTarget(){
         sensorAngle = yTheta;
         distanceFromTarget = (Calibrations.Vision.kHeight / (Math.tan(Math.toRadians(sensorAngle + Calibrations.Vision.kMountedAngle)))) - Calibrations.Vision.kLimelightDistanceFromFront;
+        distanceFromTarget = (robotState.getLimelightHeight() / (Math.tan(Math.toRadians(sensorAngle + (180- robotState.getArmAngleDegreesFrom90())))) - Calibrations.Vision.kLimelightDistanceFromFront);
         return distanceFromTarget;
     }
 
-    // public double config(){
+    // public double config(){  //using distance to calc mounted angle
     //     kMountedAngle = Math.toDegrees(Math.atan(kHeight / 2.32)) - sensorAngle; // 2.12 = distance from target, change later for real robot
     //     return kMountedAngle;
         
