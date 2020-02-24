@@ -68,7 +68,7 @@ public class shooter {
 
 
     public boolean isInFault() {
-        if(lowVoltage < 0.95){
+        if(lowVoltage < 0.85){
             return true;
         }else{
             return false;
@@ -92,7 +92,9 @@ public class shooter {
         if(powerPannel.getVoltage() < 9.5){
 			lowVoltage = (powerPannel.getVoltage() - 7.3) / 2.2;
 			if(lowVoltage < 0) lowVoltage = 0;
-		}      
+		}else{
+            lowVoltage = 1;
+        }      
     }
 
     public boolean isShooterStable(){        

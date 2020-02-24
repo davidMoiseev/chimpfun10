@@ -68,8 +68,8 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     }
 
     public void setManualMode(){
-        if(operator.getButtonLeftStick() != setModeEdge){
-            if(operator.getButtonLeftStick()){
+        if(operator.getButtonBack() != setModeEdge){
+            if(operator.getButtonBack()){
                 manaulMode = !manaulMode;
             }
         }
