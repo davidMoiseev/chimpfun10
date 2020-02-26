@@ -222,7 +222,6 @@ public class conveyor {
     }
     public void stage(feedModes mode){
         warning = false;
-        carouselOutPut = 0;
         switch(mode){
             case autoFill:
                 this.count(true);
@@ -242,6 +241,7 @@ public class conveyor {
                 this.shotFired();
             break;
             case reject:
+                this.antiJam();
                 this.count(false);
                 this.shootPower(0.5);
             break;
@@ -256,14 +256,11 @@ public class conveyor {
                 this.reset();
             break;
             case manual:
-                //carouselOutPut = 0;
-                // ballStored = 0;
-                // inConveyor = 0;
             break;
         }
         runMotors();
         if (carouselPos < -2) carouselPos = 2;
-    
+        if (carouselPos < 2) carouselPos = -2;
     }
 
     public void reset(){
@@ -298,7 +295,7 @@ public class conveyor {
         }else{
             reverseTime_1--;
         }
-        if(powerPannel.getCurrent(6) > 30 + 1.875){
+        if(powerPannel.getCurrent(6) > 25 + 1.875){
             reverseTime_2 = 75;
         }else{
             reverseTime_2--;

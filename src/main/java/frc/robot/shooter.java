@@ -29,6 +29,8 @@ public class shooter {
     public double rpm2;
     public PowerDistributionPanel powerPannel;
     public double lowVoltage;
+    public double lowVoltageCnt;
+    public double lowVoltageLockout;
 
     public shooter() {
         compressor = new Compressor(Calibrations.CAN_ID.pcm);
@@ -68,7 +70,7 @@ public class shooter {
 
 
     public boolean isInFault() {
-        if(lowVoltage < 0.85){
+        if(lowVoltage < 0.95){
             return true;
         }else{
             return false;
@@ -90,11 +92,16 @@ public class shooter {
 
     public void PowerCheck(){
         if(powerPannel.getVoltage() < 9.5){
-			lowVoltage = (powerPannel.getVoltage() - 7.3) / 2.2;
-			if(lowVoltage < 0) lowVoltage = 0;
+			lowVoltageCnt = (powerPannel.getVoltage() - 7.4) / 2.2;
+			if(lowVoltageCnt < lowVoltage){
+                lowVoltage = lowVoltageCnt;
+            }else{
+                lowVoltage = lowVoltage + 0.05;
+            }
 		}else{
-            lowVoltage = 1;
+            lowVoltage = lowVoltage + 0.05;
         }      
+        if(lowVoltage >= 1) lowVoltage = 1;
     }
 
     public boolean isShooterStable(){        
@@ -165,7 +172,7 @@ public class shooter {
     public void Display(){
         SmartDashboard.putNumber("I accumlator", IAccum);
         SmartDashboard.putNumber("Amp Draw",m_motor.getOutputCurrent());
-        SmartDashboard.putNumber("Voltage Stopped", lowVoltage);
+        SmartDashboard.putNumber("Voltage Modfyer", lowVoltage);
         SmartDashboard.putNumber("Encoder Position", m_encoder.getPosition());
         SmartDashboard.putNumber("Encoder Velocity", rpm);
         SmartDashboard.putNumber("Encoder Velocity2", rpm2);

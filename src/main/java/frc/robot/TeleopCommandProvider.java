@@ -1,37 +1,48 @@
 package frc.robot;
 
 import org.hotutilites.hotcontroller.HotController;
-
 import frc.robot.BallSupervisor.BallSupervisorState;
 import frc.robot.BallSupervisor.hoodPos;
 import frc.robot.Arm.ArmPositions;
 
 public class TeleopCommandProvider extends RobotCommandProvider {
-
     private HotController driver;
     private HotController operator;
     private RobotState robotState;
     private boolean setModeEdge;
+    private boolean setModeEdge2;
     private boolean manaulMode;
+    private boolean lowPowerMode;
     private double turn;
-    public TeleopCommandProvider(HotController driver, HotController operator,RobotState robotState) {
+
+    public TeleopCommandProvider(HotController driver, HotController operator, RobotState robotState) {
         this.setDriver(driver);
         this.setOperator(operator);
         this.robotState = robotState;
     }
 
+    public boolean isLowPowerMode() {
+        return lowPowerMode;
+    }
+    
+    public void setLowPowerMode() {
+        if(driver.getButtonBack() != setModeEdge2){
+            if(driver.getButtonBack()){
+                lowPowerMode = !lowPowerMode;
+            }
+        }
+        setModeEdge2 = driver.getButtonBack();
+    }
+
     public HotController getOperator() {
         return operator;
     }
-
     public void setOperator(HotController operator) {
         this.operator = operator;
     }
-
     public double getDriveCommand() {
         return driver.getStickLY();
     }
-
     public double getTurnCommand() {
         turn = driver.getStickRX();
         if(turn < 0){
@@ -41,20 +52,21 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             return Math.pow(turn, 2);
         }
     }
-
     public double getArmOutput(){    //for testing, normally disable
         return -operator.getStickLY();
     }
-
     public boolean getAimingEnabled(){
         return driver.getButtonA();
     }
     public boolean getRangeEnabled(){
         return driver.getButtonX();
     }
-
     public boolean getManualMode(){
         return manaulMode;
+    }
+   
+    public void lockManualMode(boolean mode){
+        manaulMode = mode;
     }
 
     public void rezeroArm(){
@@ -62,11 +74,9 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setArmPosition(ArmPositions.reset);
         }
     }
-
     private void setDriver(HotController driver) {
         this.driver = driver;
     }
-
     public void setManualMode(){
         if(operator.getButtonBack() != setModeEdge){
             if(operator.getButtonBack()){
@@ -75,19 +85,22 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         }
         setModeEdge = operator.getButtonBack();
     }
+    
 
     @Override
     public void chooseBallCommand() {
         if(this.getManualMode()){
             setBallSupervisorState(BallSupervisorState.manual);
             setArmPosition(ArmPositions.manual);
+        }else if(this.isLowPowerMode()){
+            setBallSupervisorState(BallSupervisorState.stop);
         }else if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
             setBallSupervisorState(BallSupervisorState.shootNsuck);
         }else if(driver.getRightTrigger() > 0.5){
             setBallSupervisorState(BallSupervisorState.shoot);
         }else if (operator.getButtonX()){ //config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(3800);
+            robotState.setShooterTargetRPM(3600);
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
         }else if(operator.getButtonB()){//config for trench shot
@@ -118,8 +131,5 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setArmPosition(ArmPositions.ground);
         }
     }
-
         
 }
-
-

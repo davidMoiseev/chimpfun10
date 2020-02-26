@@ -5,6 +5,7 @@ import com.ctre.phoenix.CANifier;
 import org.hotutilites.hotInterfaces.IHotSensedActuator;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LEDController implements IHotSensedActuator<RobotState, RobotCommandProvider, Integer >{
     public static CANifier canifier = new CANifier(20);
@@ -22,6 +23,7 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 
 
 	private void setLEDcolor(int color){
+		SmartDashboard.putNumber("MasterIndicator",color);
 		switch(color){
 			case 5: //White
 				canifier.setLEDOutput(1*dimmer, CANifier.LEDChannel.LEDChannelA);  //Green
@@ -68,20 +70,23 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 
 	@Override
 	public void updateState() {
-        if(robotState.isLEDFlash()){
-			if(flashDelayTimer < (flashTime * dutyCycle)){
-				this.setLEDcolor(robotState.getLEDColorState());
+		if(robotState.isRobotEnabled()){
+			if(robotState.isLEDFlash()){
+				if(flashDelayTimer < (flashTime * dutyCycle)){
+					this.setLEDcolor(robotState.getLEDColorState());
+				}else{
+					this.setLEDcolor(-1);
+				}
+				if(flashDelayTimer >= flashTime){
+					flashDelayTimer = 0;
+				}
+				flashDelayTimer++;
 			}else{
-				this.setLEDcolor(-1);
+				this.setLEDcolor(robotState.getLEDColorState());	
 			}
-			if(flashDelayTimer >= flashTime){
-				flashDelayTimer = 0;
-			}
-			flashDelayTimer++;
 		}else{
-			this.setLEDcolor(robotState.getLEDColorState());	
+			this.setLEDcolor(4);
 		}
-
 		if(powerPannel.getVoltage() < 9.5){
 			dimmer = (powerPannel.getVoltage() - 7.3) / 2.2;
 			if(dimmer < 0) dimmer = 0;

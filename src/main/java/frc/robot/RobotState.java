@@ -1,10 +1,7 @@
 package frc.robot;
-
 import org.hotutilites.hotlogger.HotLogger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Arm.ArmStates;
-
 public class RobotState {
     private double theta; // Degrees
     private double driveDistanceLeft; // Meters
@@ -23,147 +20,120 @@ public class RobotState {
     private boolean manual;
     private ArmStates armState;
     private double armDegreesFrom90;
-
+    private double limelightHeight;
     public double getTheta() {
         return theta;
     }
-
     public boolean isManual() {
         return manual;
     }
-
     public void setManual(boolean manual) {
         this.manual = manual;
     }
-
     public double getDistanceFromTarget() {
         return distanceFromTarget;
     }
-
     public void setDistanceFromTarget(double distanceFromTarget) {
         this.distanceFromTarget = distanceFromTarget;
+        SmartDashboard.putNumber("distance from Target", distanceFromTarget);
     }
-
     public double getLimelightYTheta() {
         return limelightYTheta;
     }
-
     public void setLimelightYTheta(double limelightYTheta) {
         this.limelightYTheta = limelightYTheta;
     }
-
     public double getLimelightXTheta() {
         return limelightXTheta;
     }
-
     public void setLimelightXTheta(double limelightXTheta) {
         this.limelightXTheta = limelightXTheta;
     }
-
     public boolean isLEDFlash() {
         return LEDFlash;
     }
-
     public void setLEDFlash(boolean lEDFlash) {
         this.LEDFlash = lEDFlash;
     }
-
     public int getLEDColorState() {
         return LEDColorState;
     }
-
     public void setLEDColorState(int lEDColorState) {
         this.LEDColorState = lEDColorState;
     }
-
     public int getVisionOutputStatus() {
         return VisionOutputStatus;
     }
-
     public void setVisionOutputStatus(int visionOutputStatus) {
         this.VisionOutputStatus = visionOutputStatus;
     }
-
     public boolean isRobotEnabled() {
         return robotEnabled;
     }
-
     public void setRobotEnabled(boolean robotEnabled) {
         this.robotEnabled = robotEnabled;
     }
-
     public int getShooterTargetRPM() {
         return shooterTargetRPM;
     }
-
     public void setShooterTargetRPM(int shooterTargetRPM) {
         this.shooterTargetRPM = shooterTargetRPM;
     }
-
     public boolean isFault() {
         return fault;
     }
-
     public void setFault(boolean fault) {
         this.fault = fault;
     }
-
     public boolean isReadyToShoot() {
         return readyToShoot;
     }
-
     public void setReadyToShoot(boolean readyToShoot) {
         this.readyToShoot = readyToShoot;
     }
-
     public int getInventory() {
         return inventory;
     }
-
     public void setInventory(int inventory) {
         this.inventory = inventory;
     }
-
     public double getDriveDistanceRight() {
         return driveDistanceRight;
     }
-
     public void setDriveDistanceRight(double driveDistanceRight) {
         this.driveDistanceRight = driveDistanceRight;
         HotLogger.Log("Drive_Distance_Right", driveDistanceRight);
       
     }
-
     public double getDriveDistanceLeft() {
         return driveDistanceLeft;
     }
-
     public void setDriveDistanceLeft(double driveDistanceLeft) {
         this.driveDistanceLeft = driveDistanceLeft;
         HotLogger.Log("Drive_Distance_Left", driveDistanceLeft);
      
     }
-
     public void setTheta(double theta) {
         this.theta = theta;
         HotLogger.Log("theta", theta);
         SmartDashboard.putNumber("theta", theta);
     }
-
     public void setArmState(ArmStates armState){
         this.armState = armState;
         SmartDashboard.putString("arm state", armState.toString());
     }
-
-	public void setArmAngleDegreesFrom90(double armDegreesFrom90) {
+    public void setArmAngleDegreesFrom90(double armDegreesFrom90) {
         this.armDegreesFrom90 = armDegreesFrom90;
     }
     
     public double getArmAngleDegreesFrom90() {
+        SmartDashboard.putNumber("armAngle from 90", armDegreesFrom90);
         return armDegreesFrom90;
-	}
-
-	public double getLimelightHeight() {  //trig- opp = tangent*sin(armangle)
-        return Calibrations.ARM.limelightHeightAtArm90 * Math.sin(Math.toRadians(180 - getArmAngleDegreesFrom90()));
+    }
+    public double getLimelightHeight() {  //trig- opp = tangent*sin(armangle)
+        limelightHeight = Calibrations.ARM.limelightHeightAtArm90 + (Calibrations.ARM.lengthOfArmToLimelight* Math.cos(Math.toRadians(90 - getArmAngleDegreesFrom90())));
+        SmartDashboard.putNumber("Limelight height", limelightHeight);
+        return limelightHeight;
+       
     }
 }

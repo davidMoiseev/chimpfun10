@@ -30,23 +30,19 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         shooter.Display();
         conveyor.display();
         if(robotState.isManual()){
-
+            robotState.setLEDColorState(3);
+            robotState.setLEDFlash(true); 
         }else if(robotState.isRobotEnabled() == false){
-            SmartDashboard.putNumber("MasterIndicator",0);
             robotState.setLEDColorState(4);
             robotState.setLEDFlash(false);  
         }else if(shooter.isInFault() || conveyor.inWarning() || conveyor.inCritical() && robotState.getVisionOutputStatus() == 0){
             this.robotState.setFault(true);
-            SmartDashboard.putNumber("MasterIndicator",0);
             robotState.setLEDColorState(0);
         }else if(conveyor.getStatusLightState() == 3 && shooter.isShooterStable() && robotState.getVisionOutputStatus() == 3){
-            SmartDashboard.putNumber("MasterIndicator", 3);
             robotState.setLEDColorState(3);
         }else if(conveyor.getStatusLightState() == 3 && shooter.PIDTarget != 0 && robotState.getVisionOutputStatus() == 2){
-            SmartDashboard.putNumber("MasterIndicator", 2);
             robotState.setLEDColorState(2);
         }else{
-            SmartDashboard.putNumber("MasterIndicator",1);
             robotState.setLEDColorState(1);
         }
         this.robotState.setInventory(conveyor.BallStored());
@@ -101,7 +97,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 if(true){
                     conveyor.setIntakeOn(true);
                     if(conveyor.reverseTime_1 > 0 || conveyor.conveyorBounceBack){
-                        intake.consume(0);
+                        intake.consume(Calibrations.ballSuperviserVals.intakeStandardPower);
                     }else{
                         intake.consume(Calibrations.ballSuperviserVals.intakeStandardPower);
                     }
@@ -134,7 +130,12 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 shooter.indexPower(0);
                 intake.consume(0);
                 conveyor.setIntakeOn(false);
-                shooter.setHood(HoodPosition.trench);
+                if(shooter.isShooterStable()){
+                    robotState.setReadyToShoot(true);
+                }else{
+                    robotState.setReadyToShoot(false);
+                }
+
             break;
             case reject:
                 //this is how we get balls ouv t of the conveyor system
@@ -175,6 +176,9 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 shooter.stopPIDMotor();
                 shooter.indexPower(0);
                 conveyor.setIntakeOn(false);
+                robotState.setLEDFlash(true);
+                robotState.setLEDColorState(0);
+                
             break;
             case confirm:
                 SmartDashboard.putString("BallState", "Confirm");

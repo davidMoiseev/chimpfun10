@@ -47,7 +47,19 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
     @Override
     public void performAction(RobotCommandProvider commander, RobotState robotState) {
-        
+        if(commander.isLowPowerMode()){
+            driveLeftLeader.configPeakOutputForward(0.25);
+            driveRightLeader.configPeakOutputForward(0.25);
+            driveLeftLeader.configPeakOutputReverse(-0.1);
+            driveRightLeader.configPeakOutputReverse(-0.1);
+        }else{
+            driveLeftLeader.configPeakOutputForward(1);
+            driveRightLeader.configPeakOutputForward(1);
+            driveLeftLeader.configPeakOutputReverse(-1);
+            driveRightLeader.configPeakOutputReverse(-1);
+        }
+
+
         if (commander.getAimingEnabled()){
             headingError = robotState.getLimelightXTheta();    
             if (Math.abs(headingError) > Calibrations.Vision.deadband) {
@@ -61,11 +73,11 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
         else if (commander.getRangeEnabled()){
             currentDistanceFromTarget = robotState.getDistanceFromTarget();
-            desiredDistanceFromTarget = 2.2;
+            desiredDistanceFromTarget = 6.6;
             distanceError = desiredDistanceFromTarget - currentDistanceFromTarget;
             distanceAdjust = pidControllerDistance.calculate(distanceError);
-            driveLeftLeader.set(ControlMode.PercentOutput, distanceAdjust);
-            driveRightLeader.set(ControlMode.PercentOutput, distanceAdjust);
+            driveLeftLeader.set(ControlMode.PercentOutput, -distanceAdjust);
+            driveRightLeader.set(ControlMode.PercentOutput, -distanceAdjust);
         }
 
         else{   //changed into else so motors are never commanded more than once -S

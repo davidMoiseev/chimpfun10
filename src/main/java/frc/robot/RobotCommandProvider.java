@@ -41,4 +41,7 @@ public abstract class RobotCommandProvider {
     public abstract double getTurnCommand();
     public abstract void chooseBallCommand();
     public abstract double getArmOutput();
+    public abstract boolean isLowPowerMode();
+    public abstract void setLowPowerMode();
+    public abstract void lockManualMode(boolean mode);
 }

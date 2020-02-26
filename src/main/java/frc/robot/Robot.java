@@ -61,6 +61,7 @@ public class Robot extends TimedRobot {
     ballSupervisor.updateState();
     drivetrain.updateState();
     pigeon.updateState();
+    arm.updateState();
     limelite.updateState();
     lEDController.updateState();
   }
@@ -93,6 +94,7 @@ public class Robot extends TimedRobot {
     ballSupervisor.performAction(commander, robotState);
     arm.performAction(commander, robotState);
     commander.setManualMode();
+    commander.setLowPowerMode();
   }
   @Override
   public void testInit() {
@@ -100,7 +102,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-  
+    commander.lockManualMode(true);
+    commander.chooseBallCommand();
+    ballSupervisor.performAction(commander, robotState);
+    arm.performAction(commander, robotState);
   }
 
 }
