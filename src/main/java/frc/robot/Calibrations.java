@@ -81,7 +81,7 @@ public class Calibrations
         public static final double measuredTicksHorizontal = 82;
         public static final double averageCurrentDraw = 40;  //amps, log motion magic to get value      
         public static final double ticksAt90 = 300; //configure  by measuring ticks when arm is level using level
-        public static final double limelightHeightAtArm90 = 0.426; //configure, from ground
+        public static final double limelightHeightAtArm90 = 0.426; //configure, from ground  //difference on comp bot becausw of hard stop is 1.51 degrees
         public static final double lengthOfArmToLimelight = 0.62;
     }
     // //Pratice bot 
