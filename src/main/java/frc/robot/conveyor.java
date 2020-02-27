@@ -12,8 +12,8 @@ public class conveyor {
     private boolean frontPorchSkip = false;
     private boolean carouselFull = false;
     private boolean shouldStage;
-    private double carouselPower = 0.75;
-    private double conveyorPower = 0.75;
+    private double carouselPower = 0.8;
+    private double conveyorPower = 0.55;
     private double coveyorPowerStandered = 0.7;
     private double carouselOutPut = 0;
     private double conveyorOutPut = 0;
@@ -172,7 +172,7 @@ public class conveyor {
     }
 
     public void carouselStageCheck(){
-        if ((pos4Sensor.get() && (carouselFull == false)) || carouselPos < 0){
+        if ((pos4Sensor.get() && inConveyor > 0 && (carouselFull == false)) || carouselPos < 0){
             shouldStage = true;
         }
         if (shouldStage){
@@ -218,7 +218,8 @@ public class conveyor {
         confirm,
         stop,
         reset,
-        manual
+        manual,
+        test
     }
     public void stage(feedModes mode){
         warning = false;
@@ -257,10 +258,12 @@ public class conveyor {
             break;
             case manual:
             break;
+            case test:
+            break;
         }
         runMotors();
         if (carouselPos < -2) carouselPos = 2;
-        if (carouselPos < 2) carouselPos = -2;
+        //if (carouselPos < 2) carouselPos = -2;
     }
 
     public void reset(){
@@ -290,16 +293,16 @@ public class conveyor {
     }
 
     public void antiJam(){
-        if(powerPannel.getCurrent(7) > 20){
+        if(powerPannel.getCurrent(7) > 25){
             reverseTime_1 = 75;
         }else{
             reverseTime_1--;
         }
-        if(powerPannel.getCurrent(6) > 25 + 1.875){
-            reverseTime_2 = 75;
-        }else{
-            reverseTime_2--;
-        }
+        // if(powerPannel.getCurrent(6) > 30 + 1.875){
+        //     reverseTime_2 = 75;
+        // }else{
+        //     reverseTime_2--;
+        // }
 
         if(reverseTime_1 > 0){
             conveyorOutPut = 0;

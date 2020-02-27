@@ -29,12 +29,18 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         shooter.read();
         shooter.Display();
         conveyor.display();
-        if(robotState.isManual()){
-            robotState.setLEDColorState(3);
+        if(robotState.isLowPower()){
+            robotState.setLEDColorState(0);
+            robotState.setLEDFlash(true);
+        }else if(robotState.isManual()){
+            robotState.setLEDColorState(2);
             robotState.setLEDFlash(true); 
         }else if(robotState.isRobotEnabled() == false){
             robotState.setLEDColorState(4);
-            robotState.setLEDFlash(false);  
+            robotState.setLEDFlash(false);
+        }else if(alreadyShooting){
+            robotState.setLEDFlash(true);
+            robotState.setLEDColorState(3);
         }else if(shooter.isInFault() || conveyor.inWarning() || conveyor.inCritical() && robotState.getVisionOutputStatus() == 0){
             this.robotState.setFault(true);
             robotState.setLEDColorState(0);
@@ -209,6 +215,9 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 conveyor.stage(feedModes.manual);
                 //conveyor.stage(feedModes.stop);
             break;   
+            case test:
+                
+            break;
         }    
         //Don't forget to comment this out cause davids stuff no work 
 		
@@ -248,7 +257,8 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         reject,
         confirm,
         reset,
-        manual
+        manual,
+        test
     }
 
 	public enum intakePosition {

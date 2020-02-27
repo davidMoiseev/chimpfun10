@@ -48,7 +48,7 @@ public class shooter {
         m_motor = new CANSparkMax(Calibrations.CAN_ID.shooter1, MotorType.kBrushless);
         m_mator = new CANSparkMax(Calibrations.CAN_ID.shooter2, MotorType.kBrushless);
         m_feeder = new VictorSPX(Calibrations.CAN_ID.indexer);
-        m_feeder.setInverted(true);
+        m_feeder.setInverted(Calibrations.hardware.indexerInvert);
         m_encoder = m_motor.getEncoder();
         m_encoder2 = m_mator.getEncoder();
         m_pidController = m_motor.getPIDController();
@@ -137,20 +137,20 @@ public class shooter {
     public void setHood(HoodPosition pos){
         switch(pos){
             case goingUnder: //trench
-                hood1.set(false); //short extened
-                hood2.set(true); //long extented
+                hood1.set(Calibrations.hardware.shortPistonExtend); //short extened
+                hood2.set(Calibrations.hardware.longPistonExtend); //long extented
             break;
             case trench:
-                hood1.set(true); //short 
-                hood2.set(false); //long
+                hood1.set(Calibrations.hardware.shortPistonExtend); //short 
+                hood2.set(!Calibrations.hardware.longPistonExtend); //long
             break;
             case wallShot:
-                hood1.set(false); //short 
-                hood2.set(true); //long
+                hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
+                hood2.set(!Calibrations.hardware.longPistonExtend); //long
             break;
             case autoshot:
-                hood1.set(false); //short 
-                hood2.set(false); //long
+                hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
+                hood2.set(Calibrations.hardware.longPistonExtend); //long
             break;
         }
     }

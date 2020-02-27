@@ -1,7 +1,9 @@
 package frc.robot;
+
 import org.hotutilites.hotlogger.HotLogger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Arm.ArmStates;
+
 public class RobotState {
     private double theta; // Degrees
     private double driveDistanceLeft; // Meters
@@ -18,12 +20,23 @@ public class RobotState {
     private double limelightYTheta; // Degrees
     private double distanceFromTarget; // Meters
     private boolean manual;
+    private boolean lowPower;
     private ArmStates armState;
     private double armDegreesFrom90;
     private double limelightHeight;
+
     public double getTheta() {
         return theta;
     }
+
+    public boolean isLowPower() {
+        return lowPower;
+    }
+
+    public void setLowPower(boolean lowPower) {
+        this.lowPower = lowPower;
+    }
+
     public boolean isManual() {
         return manual;
     }

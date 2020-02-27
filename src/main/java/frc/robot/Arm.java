@@ -52,8 +52,8 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         armMotor.config_kI(0, Calibrations.ARM.kI, 30);
         armMotor.config_kD(0, Calibrations.ARM.kD, 30);
         armMotor.config_kF(0, Calibrations.ARM.kF, 30);
-          
-        zeroSensor();
+        armMotor.config_IntegralZone(0, Calibrations.ARM.kFZ);
+        this.zeroSensor();
     }
     public enum ArmPositions{      
         packaged,

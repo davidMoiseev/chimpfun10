@@ -73,6 +73,7 @@ public class Calibrations
         public static final double kI = 0.01  * 2 /3;
         public static final double kD = 0;
         public static final double kF = 0;
+        public static final int kFZ = 480;
         public static final int acc = 1600;
         public static final int vel = 1600;
         public static final double ticksPerDegree = 118;
@@ -83,5 +84,18 @@ public class Calibrations
         public static final double limelightHeightAtArm90 = 0.426; //configure, from ground
         public static final double lengthOfArmToLimelight = 0.62;
     }
+    // //Pratice bot 
+    // public class hardware{
+    //     public static final boolean longPistonExtend = true;
+    //     public static final boolean shortPistonExtend = false;
+    //     public static final boolean indexerInvert = true;
+    // }
+    //CompBot
+    public class hardware{
+        public static final boolean longPistonExtend = false;
+        public static final boolean shortPistonExtend = true;
+        public static final boolean indexerInvert = false;
+    }
+
 
 }
