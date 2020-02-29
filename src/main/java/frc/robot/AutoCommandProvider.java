@@ -133,5 +133,53 @@ public class AutoCommandProvider extends RobotCommandProvider {
           
         }
     }
+
+	@Override
+	public boolean getManualMode() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isLowPowerMode() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isLeftClimberActivate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isRightClimberActivate() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double getLeftClimberDelta() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getRightClimberDelta() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setLowPowerMode() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void lockManualMode(boolean mode) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

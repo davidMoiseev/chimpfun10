@@ -76,6 +76,7 @@ public class TrajectoryFollower {
                 break;
 
             case none:
+                SmartDashboard.putBoolean("no sample", true);
                break;
         }
         
