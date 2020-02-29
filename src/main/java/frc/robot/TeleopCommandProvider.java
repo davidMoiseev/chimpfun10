@@ -122,20 +122,20 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.shoot);
         }else if (operator.getButtonX()){ //config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(3040);
+            robotState.setShooterTargetRPM(3040); //to const
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
             robotState.setTurnOnLimeLiteLight(true);
         }else if(operator.getButtonB()){//config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(5800);
+            robotState.setShooterTargetRPM(5800); //to const
             setHoodPosition(hoodPos.trench);
             setArmPosition(ArmPositions.trenchshot);
             robotState.setTurnOnLimeLiteLight(true);
 
         }else if(operator.getButtonA()){ //Prime for wallshot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(2800);
+            robotState.setShooterTargetRPM(2800); //to const
             setHoodPosition(hoodPos.wallShot);
             setArmPosition(ArmPositions.wallshot);
             robotState.setTurnOnLimeLiteLight(true);

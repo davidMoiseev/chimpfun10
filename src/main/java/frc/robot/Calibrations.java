@@ -103,13 +103,18 @@ public class Calibrations
         public static final double lengthOfArmToLimelight = 0.62;
     }
     // //Pratice bot 
-    //  n
-    //CompBot
     public class hardware{
         public static final boolean longPistonExtend = false;
         public static final boolean shortPistonExtend = true;
         public static final boolean indexerInvert = false;
     }
+
+    //CompBot
+    // public class hardware{
+    //     public static final boolean longPistonExtend = false;
+    //     public static final boolean shortPistonExtend = true;
+    //     public static final boolean indexerInvert = false;
+    // }
 
 
 }

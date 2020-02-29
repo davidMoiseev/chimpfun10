@@ -247,13 +247,13 @@ public class conveyor {
             break;
             case shoot:
                 this.count(true);
-                this.shootPower(-0.45);
+                this.shootPower(-0.45); //to const
                 this.shotFired();
             break;
             case reject:
                 this.antiJam();
                 this.count(false);
-                this.shootPower(0.5);
+                this.shootPower(0.5); //to const
             break;
             case stop:
                 this.count(true);
