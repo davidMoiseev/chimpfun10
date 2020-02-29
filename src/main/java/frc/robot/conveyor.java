@@ -8,13 +8,15 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 
 public class conveyor {
+    private boolean wasStage;
     private boolean frontPorch = false;
     private boolean frontPorchSkip = false;
     private boolean carouselFull = false;
     private boolean shouldStage;
-    private double carouselPower = 0.8;
-    private double conveyorPower = 0.55;
+    private double carouselPower = 0.65;
+    private double conveyorPower = 0.75;
     private double coveyorPowerStandered = 0.7;
+    private double carouselPowerSlow = 0.6;
     private double carouselOutPut = 0;
     private double conveyorOutPut = 0;
     public int reverseTime_1 = 0;
@@ -31,7 +33,8 @@ public class conveyor {
     private boolean Pos4lastState;
     private boolean Pos1lastState;
     private int inConveyor;
-    private int carouselPos = 3;
+    private int inCarousel;
+    private int carouselPos = 2;
     public PowerDistributionPanel powerPannel;
     DigitalInput pos1Sensor;
     DigitalInput pos2Sensor;
@@ -90,7 +93,7 @@ public class conveyor {
             }else{
                 conveyorOutPut = conveyorPower; 
             }
-        }else if(inConveyor > 0 || IntakeOn){
+        }else if(inConveyor > 0 || IntakeOn || shouldStage){
             IntakeCountLockout = false;
             conveyorOutPut = conveyorPower; 
         }else{
@@ -99,7 +102,7 @@ public class conveyor {
         }
     }
     public void carouselState(){
-        if(pos1Sensor.get() && carouselPos < 1){
+        if(((carouselPos <= 0 && pos1Sensor.get()) || (inConveyor >= 3)) && (shouldStage == false)){
             carouselFull = true;
         }else{
             carouselFull = false;
@@ -128,13 +131,13 @@ public class conveyor {
                 }
             break;
             case 0:
-                if(Edgecounter < 2 && (frontPorch == false || frontPorchSkip)){
+                if(Edgecounter < 2 && (!pos1Sensor.get() || frontPorchSkip)){
                     frontPorchSkip = true;
                     if(FallingedgeSensor != pos2Sensor.get()){
                         Edgecounter++;
                     }
                     FallingedgeSensor = pos2Sensor.get();
-                    carouselOutPut = carouselPower;
+                    carouselOutPut = carouselPowerSlow;
                 }else{
                     inConveyor--;
                     staging = false;
@@ -177,12 +180,17 @@ public class conveyor {
         }
         if (shouldStage){
             shouldStage = carouselStage();
+            if(!wasStage){
+                inCarousel++;
+            }
+            wasStage = true;
         }else{
             FallingedgeSensor = pos2Sensor.get();
             carouselOutPut = 0;
             conveyorPower = coveyorPowerStandered;
+            wasStage = false;
         }
-        if (carouselPos > 0) carouselFull = false;
+        
     }
 
     public void shootPower(double pwr){
@@ -202,6 +210,7 @@ public class conveyor {
         if(pos1Sensor.get() != Pos1lastState){
             if(pos1Sensor.get() != true){
                 ballStored--;
+                inCarousel--;
             }
         }
         if(ballStored <= 0){
@@ -274,6 +283,7 @@ public class conveyor {
         shouldStage = false;
         IntakeCountLockout = false;
         conveyorBounceBack = false;
+        inCarousel = 0;
     }
 
     public boolean inWarning(){
@@ -282,6 +292,10 @@ public class conveyor {
 
     public boolean inCritical(){
         return critical;
+    }
+
+    public void testState(){
+    
     }
     
     public int getStatusLightState(){
@@ -298,11 +312,11 @@ public class conveyor {
         }else{
             reverseTime_1--;
         }
-        // if(powerPannel.getCurrent(6) > 30 + 1.875){
-        //     reverseTime_2 = 75;
-        // }else{
-        //     reverseTime_2--;
-        // }
+        if(powerPannel.getCurrent(6) > 30 + 1.875){
+            reverseTime_2 = 75;
+        }else{
+            reverseTime_2--;
+        }
 
         if(reverseTime_1 > 0){
             conveyorOutPut = 0;
@@ -365,8 +379,10 @@ public class conveyor {
         SmartDashboard.putBoolean("Staging", shouldStage);
         SmartDashboard.putNumber("Inventory Total",ballStored);
         SmartDashboard.putNumber("Conveyor Total",inConveyor);
+        SmartDashboard.putNumber("Carousel Total",inCarousel);
         SmartDashboard.putBoolean("Carousel Full", carouselFull);
         SmartDashboard.putNumber("Carousel Pos",carouselPos);
+        SmartDashboard.putNumber("Conveyor OutPut", conveyorOutPut);
         SmartDashboard.putNumber("Bype Carousel Possible",bCarPos);
         
         SmartDashboard.putNumber("Carousel Output", carouselMotor.getMotorOutputPercent());
@@ -388,10 +404,6 @@ public class conveyor {
         // if(pos1Sensor.get() == false) bCarPos = bCarPos + 1;
         if(pos2Sensor.get() == false) bCarPos = bCarPos + 3;
         if(pos3Sensor.get()) bCarPos = bCarPos + 5;
-
-        
-
-
     }
 
 }        

@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     arm.zeroSensor();
-    ballSupervisor.zeroSensor();
+    //ballSupervisor.zeroSensor();
     robotState.setRobotEnabled(true);
   }
 

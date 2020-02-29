@@ -29,8 +29,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
         driveRightLeader.setInverted(true);
         driveRightFollower.setInverted(TalonFXInvertType.FollowMaster);
 
-        driveLeftFollower.follow(driveLeftLeader);
-        driveRightFollower.follow(driveRightLeader);
+        //driveLeftFollower.follow(driveLeftLeader);
+        //driveRightFollower.follow(driveRightLeader);
 
         this.robotState = robotState;
 

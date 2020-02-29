@@ -31,13 +31,13 @@ public class Limelight implements IHotSensor<RobotState, Double> {
         robotState.setLimelightXTheta(xTheta);
         robotState.setLimelightYTheta(yTheta);
         robotState.setDistanceFromTarget(getDistanceFromTarget());
-        
+        SmartDashboard.putNumber("target", canSeeTarget);
         if (robotState.isRobotEnabled()){
             ledMode.setNumber(3);
         } else {
             ledMode.setNumber(1);
         }
-        if(latency > 1000){
+        if(true){
             SmartDashboard.putNumber("VisionOutputStatus", 0);
             robotState.setVisionOutputStatus(0);
         }else if(Math.abs(xTheta) < Calibrations.Vision.deadband + 1 && canSeeTarget >= 1){
