@@ -186,6 +186,10 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
     public void updateState() {
         leftClimber.periodic();
         rightClimber.periodic();
+
+        SmartDashboard.putNumber("LeftClimberStatus", leftClimber.statusColor);
+        SmartDashboard.putNumber("RightClimberStatus", rightClimber.statusColor);
+
         if(leftClimber.getCurrentHeight() > rightClimber.getCurrentHeight()){
             robotState.setHighestClimberPos(leftClimber.getCurrentHeight());
         }else{
