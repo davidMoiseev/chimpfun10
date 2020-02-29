@@ -21,6 +21,23 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         this.robotState = robotState;
     }
 
+
+    public boolean isLeftClimberActivate() {
+        return (operator.getLeftTrigger() > 0.5 && operator.getRightTrigger() > 0.5 && !manaulMode) || (operator.getButtonLeftStick() && manaulMode) ;
+    }
+
+    public boolean isRightClimberActivate() {
+        return  this.isLeftClimberActivate();
+    }
+
+    public double getLeftClimberDelta(){
+        return operator.getStickLY() * Calibrations.climberCals.maxDelta;
+    }
+
+    public double getRightClimberDelta(){
+        return operator.getStickRY() * Calibrations.climberCals.maxDelta;
+    }
+
     public boolean isLowPowerMode() {
         return lowPowerMode;
     }
@@ -53,7 +70,11 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         }
     }
     public double getArmOutput(){    //for testing, normally disable
-        return -operator.getStickLY();
+        if(this.isLeftClimberActivate()){
+            return 0;
+        }else{
+            return -operator.getStickLY();
+        }
     }
     public boolean getAimingEnabled(){
         return driver.getButtonA();
@@ -94,6 +115,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setArmPosition(ArmPositions.manual);
         }else if(this.isLowPowerMode()){
             setBallSupervisorState(BallSupervisorState.stop);
+            setArmPosition(ArmPositions.off);
         }else if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
             setBallSupervisorState(BallSupervisorState.shootNsuck);
         }else if(driver.getRightTrigger() > 0.5){

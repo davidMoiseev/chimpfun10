@@ -18,6 +18,9 @@ public class Calibrations
         public final static int intakeLifter = 14;
         public final static int pcm = 0;
         public final static int CANifier = 20;
+        public final static int leftClimber = 7;
+        public final static int rightClimber = 8;
+
      }
     public class shooter_PID{
         public final static double kP = 1.1e-3; 
@@ -61,6 +64,21 @@ public class Calibrations
         public static final double kHeight = (2.7114 - .17); // Height of Target - Height of Camera
         public static final double kMountedAngle = 41.1;
     }
+    public class climberCals{
+        public static final int rachetID = 4;
+        public static final double kP = 0.05;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kF = 0;
+        public static final int kIZ = 0;
+        public static final int acc = 1600/2;
+        public static final int vel = 1600/2;
+        public static final double ticksPerInch = 118;
+        public static final double upperLimit = 70; //Upper Hight Limit    
+        public static final double maxDelta = 12; //Max Target Change
+        
+    }
+
     public class ArmPositions{
         public static final double packagedAngle = 90;  
         public static final double trenchShotAngle = 70;
@@ -73,7 +91,7 @@ public class Calibrations
         public static final double kI = 0.01  * 2 /3;
         public static final double kD = 0;
         public static final double kF = 0;
-        public static final int kFZ = 480;
+        public static final int kIZ = 480;
         public static final int acc = 1600;
         public static final int vel = 1600;
         public static final double ticksPerDegree = 118;

@@ -52,7 +52,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         armMotor.config_kI(0, Calibrations.ARM.kI, 30);
         armMotor.config_kD(0, Calibrations.ARM.kD, 30);
         armMotor.config_kF(0, Calibrations.ARM.kF, 30);
-        armMotor.config_IntegralZone(0, Calibrations.ARM.kFZ);
+        armMotor.config_IntegralZone(0, Calibrations.ARM.kIZ);
         this.zeroSensor();
     }
     public enum ArmPositions{      
@@ -62,6 +62,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         trenchshot,
         ground,
         manual,
+        off,
         reset
     }
     public enum ArmStates{            
@@ -104,6 +105,9 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             break;
             case manual:
                 armMotor.set(ControlMode.PercentOutput, commander.getArmOutput());
+            break;
+            case off:
+                armMotor.set(ControlMode.PercentOutput, 0);
             break;
             case reset:
                 armMotor.set(ControlMode.PercentOutput, 0.00);  

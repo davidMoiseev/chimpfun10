@@ -24,9 +24,18 @@ public class RobotState {
     private ArmStates armState;
     private double armDegreesFrom90;
     private double limelightHeight;
+    private double highestClimberPos;
 
     public double getTheta() {
         return theta;
+    }
+
+    public double getHighestClimberPos() {
+        return highestClimberPos;
+    }
+
+    public void setHighestClimberPos(double highestClimberPos) {
+        this.highestClimberPos = highestClimberPos;
     }
 
     public boolean isLowPower() {

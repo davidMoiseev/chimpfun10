@@ -11,6 +11,8 @@ public class Limelight implements IHotSensor<RobotState, Double> {
     private RobotState robotState;
     private double xTheta, yTheta;
     private double latency;
+    private int timeoutCnt;
+    private double lastTimeoutVal;
     private double distanceFromTarget, sensorAngle;
     private double cameraAngle;
     public Limelight(RobotState robotState){
@@ -37,7 +39,15 @@ public class Limelight implements IHotSensor<RobotState, Double> {
         } else {
             ledMode.setNumber(1);
         }
-        if(true){
+
+        if(latency == lastTimeoutVal){
+            timeoutCnt++;
+        }else{
+            timeoutCnt = 0;
+        }
+        lastTimeoutVal = latency;
+
+        if(timeoutCnt > 50){
             SmartDashboard.putNumber("VisionOutputStatus", 0);
             robotState.setVisionOutputStatus(0);
         }else if(Math.abs(xTheta) < Calibrations.Vision.deadband + 1 && canSeeTarget >= 1){
