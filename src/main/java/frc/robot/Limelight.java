@@ -16,6 +16,7 @@ public class Limelight implements IHotSensor<RobotState, Double> {
     private double xTheta, yTheta;
     private double latency;
     private double distanceFromTarget, sensorAngle;
+    private double cameraAngle;
 
     public Limelight(RobotState robotState){
         limelight = NetworkTableInstance.getDefault().getTable("limelight");
@@ -36,7 +37,7 @@ public class Limelight implements IHotSensor<RobotState, Double> {
         robotState.setLimelightXTheta(xTheta);
         robotState.setLimelightYTheta(yTheta);
         robotState.setDistanceFromTarget(getDistanceFromTarget());
-  
+        
         if (robotState.isRobotEnabled()){
             ledMode.setNumber(3);
         } else {
@@ -80,8 +81,10 @@ public class Limelight implements IHotSensor<RobotState, Double> {
 
     public double getDistanceFromTarget(){
         sensorAngle = yTheta;
-        distanceFromTarget = (Calibrations.Vision.kHeight / (Math.tan(Math.toRadians(sensorAngle + Calibrations.Vision.kMountedAngle)))) - Calibrations.Vision.kLimelightDistanceFromFront;
-        distanceFromTarget = (robotState.getLimelightHeight() / (Math.tan(Math.toRadians(sensorAngle + (180- robotState.getArmAngleDegreesFrom90())))) - Calibrations.Vision.kLimelightDistanceFromFront);
+        //distanceFromTarget = (Calibrations.Vision.kHeight / (Math.tan(Math.toRadians(sensorAngle + Calibrations.Vision.kMountedAngle)))) - Calibrations.Vision.kLimelightDistanceFromFront;
+        cameraAngle = 90 - (180 - 90 - (90 - robotState.getArmAngleDegreesFrom90())); 
+        SmartDashboard.putNumber("camera angle",  cameraAngle);
+        distanceFromTarget = ((2.7114 - robotState.getLimelightHeight()) / (Math.tan(Math.toRadians(sensorAngle + cameraAngle)))) - Calibrations.Vision.kLimelightDistanceFromFront;
         return distanceFromTarget;
     }
 

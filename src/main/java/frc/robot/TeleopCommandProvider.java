@@ -4,6 +4,7 @@ import org.hotutilites.hotcontroller.HotController;
 
 import frc.robot.BallSupervisor.BallSupervisorState;
 import frc.robot.BallSupervisor.hoodPos;
+import frc.robot.TrajectoryFollower.PathNames;
 import frc.robot.Arm.ArmPositions;
 
 public class TeleopCommandProvider extends RobotCommandProvider {
@@ -14,7 +15,8 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     private boolean setModeEdge;
     private boolean manaulMode;
     private double turn;
-    public TeleopCommandProvider(HotController driver, HotController operator,RobotState robotState) {
+
+    public TeleopCommandProvider(HotController driver, HotController operator, RobotState robotState) {
         this.setDriver(driver);
         this.setOperator(operator);
         this.robotState = robotState;
@@ -34,31 +36,31 @@ public class TeleopCommandProvider extends RobotCommandProvider {
 
     public double getTurnCommand() {
         turn = driver.getStickRX();
-        if(turn < 0){
+        if (turn < 0) {
             return -Math.pow(Math.abs(turn), 2);
-        }
-        else{
+        } else {
             return Math.pow(turn, 2);
         }
     }
 
-    public double getArmOutput(){    //for testing, normally disable
+    public double getArmOutput() { // for testing, normally disable
         return -operator.getStickLY();
     }
 
-    public boolean getAimingEnabled(){
+    public boolean getAimingEnabled() {
         return driver.getButtonA();
     }
-    public boolean getRangeEnabled(){
+
+    public boolean getRangeEnabled() {
         return driver.getButtonX();
     }
 
-    public boolean getManualMode(){
+    public boolean getManualMode() {
         return manaulMode;
     }
 
-    public void rezeroArm(){
-        if(operator.getButtonBack()){
+    public void rezeroArm() {
+        if (operator.getButtonBack()) {
             setArmPosition(ArmPositions.reset);
         }
     }
@@ -67,9 +69,9 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         this.driver = driver;
     }
 
-    public void setManualMode(){
-        if(operator.getButtonLeftStick() != setModeEdge){
-            if(operator.getButtonLeftStick()){
+    public void setManualMode() {
+        if (operator.getButtonLeftStick() != setModeEdge) {
+            if (operator.getButtonLeftStick()) {
                 manaulMode = !manaulMode;
             }
         }
@@ -78,45 +80,56 @@ public class TeleopCommandProvider extends RobotCommandProvider {
 
     @Override
     public void chooseBallCommand() {
-        if(this.getManualMode()){
+        if (this.getManualMode()) {
             setBallSupervisorState(BallSupervisorState.manual);
             setArmPosition(ArmPositions.manual);
-        }else if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
+        } else if (driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()) {
             setBallSupervisorState(BallSupervisorState.shootNsuck);
-        }else if(driver.getRightTrigger() > 0.5){
+        } else if (driver.getRightTrigger() > 0.5) {
             setBallSupervisorState(BallSupervisorState.shoot);
-        }else if (operator.getButtonX()){ //config for autoshot
+        } else if (operator.getButtonX()) { // config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(3800);
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
-        }else if(operator.getButtonB()){//config for trench shot
+        } else if (operator.getButtonB()) {// config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(5200);
+            robotState.setShooterTargetRPM(5300);
             setHoodPosition(hoodPos.trench);
             setArmPosition(ArmPositions.trenchshot);
-        }else if(operator.getButtonA()){ //Prime for wallshot
+        } else if (operator.getButtonA()) { // Prime for wallshot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(2800);
+            robotState.setShooterTargetRPM(2400);
             setHoodPosition(hoodPos.wallShot);
             setArmPosition(ArmPositions.wallshot);
-        }else if(operator.getButtonY()){
+        } else if (operator.getButtonY()) {
             setBallSupervisorState(BallSupervisorState.reject);
-        }else if(operator.getButtonLeftBumper()){
-            setBallSupervisorState(BallSupervisorState.intakeIn); 
+        } else if (operator.getButtonLeftBumper()) {
+            setBallSupervisorState(BallSupervisorState.intakeIn);
             setArmPosition(ArmPositions.ground);
-        }else if(operator.getButtonRightBumper()){
-            setBallSupervisorState(BallSupervisorState.intakeOut); 
-        }else if(operator.getButtonRightStick()){
+        } else if (operator.getButtonRightBumper()) {
+            setBallSupervisorState(BallSupervisorState.intakeOut);
+        } else if (operator.getButtonRightStick()) {
             setBallSupervisorState(BallSupervisorState.reset);
-        }else if(operator.getButtonStart()){
+        } else if (operator.getButtonStart()) {
             setBallSupervisorState(BallSupervisorState.confirm);
-        }else{
-            setBallSupervisorState(BallSupervisorState.intakeStop); 
+        } else {
+            setBallSupervisorState(BallSupervisorState.intakeStop);
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);
             setArmPosition(ArmPositions.ground);
         }
+    }
+
+    @Override
+    public PathNames getPathName() {
+        
+        return null;
+    }
+
+    @Override
+    public boolean getPathFollowingCommand() {
+        return false;
     }
 
         

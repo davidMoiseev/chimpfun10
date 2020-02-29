@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
    private Pigeon pigeon;
    private HotController driver;
    private RobotCommandProvider commander;
+   private AutoCommandProvider autoCommander;
    private BallSupervisor ballSupervisor;
    private HotController operator;
    private LEDController lEDController;
@@ -39,7 +40,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    HotLogger.Setup("theta","Drive_Distance_Right","Drive_Distance_Left");
+    HotLogger.Setup("theta","Drive_Distance_Right","Drive_Distance_Left", "drive_auto_step", "ball_auto_step");
     driver = new HotController(0, false);
     operator = new HotController(1, false);
     robotState = new RobotState();
@@ -63,6 +64,7 @@ public class Robot extends TimedRobot {
     pigeon.updateState();
     limelite.updateState();
     lEDController.updateState();
+    arm.updateState();
   }
 
   @Override
@@ -72,11 +74,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    arm.autoInitArmAngle();
+    robotState.resetRobotState();
+    autoCommander = new AutoCommandProvider(robotState);
+    drivetrain.zeroPath();
+    drivetrain.zeroActuators();
+    drivetrain.zeroSensor();
     robotState.setRobotEnabled(true);
+    autoCommander.setConveyerAutoInit();
   }
 
   @Override
   public void autonomousPeriodic() {
+    autoCommander.updateAutoRoutine();
+    autoCommander.chooseBallCommand();
+    drivetrain.performAction(autoCommander, robotState);
+    ballSupervisor.performAction(autoCommander, robotState);
+    arm.performAction(autoCommander, robotState);
   }
 
   @Override

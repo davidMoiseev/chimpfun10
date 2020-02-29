@@ -265,7 +265,9 @@ public class conveyor {
                 this.shootPower(0);
             break;
             case confirm:
-                this.confirmInventory();
+                carouselPos = 0;
+                ballStored = 3;
+                inConveyor = 0;
             break;
             case reset:
                 ballStored = 0;

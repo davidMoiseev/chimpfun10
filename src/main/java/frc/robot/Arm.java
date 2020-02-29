@@ -91,8 +91,8 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         freefall                        //nothing commanded, gravity controlled. (should be default so robot doesn't drop when disabled, safety risk, position button held at all time?)
     }
     public void performAction(RobotCommandProvider commander, RobotState state){  
-        SmartDashboard.putNumber("arm current Velocity", armMotor.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("arm ticks ", armMotor.getSelectedSensorPosition());
+      
+       
         //SmartDashboard.putString("commanded pos ", commander.getArmPosition().toString());
         SmartDashboard.putNumber("arm commanded output", armMotor.getMotorOutputPercent());
         SmartDashboard.putNumber("arm motion magc error", armMotor.getClosedLoopError(0));
@@ -111,7 +111,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             case autoshot:
                 armMotor.set(ControlMode.MotionMagic,  Calibrations.ArmPositions.autoShotAngle*Calibrations.ARM.ticksPerDegree);
             
-              // armMotor.set(ControlMode.MotionMagic, Calibrations.ARM.visionAngleSetPoint*Calibrations.ARM.ticksPerDegree, DemandType.ArbitraryFeedForward, calcArbFF()); 
+              // armMotor.set(ControlMode.MotionMagic, Calibrations.ARM.visionAngleSetP1    oint*Calibrations.ARM.ticksPerDegree, DemandType.ArbitraryFeedForward, calcArbFF()); 
             break;
             case trenchshot:
                 armMotor.set(ControlMode.MotionMagic,  Calibrations.ArmPositions.trenchShotAngle*Calibrations.ARM.ticksPerDegree);
@@ -180,6 +180,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
 
     @Override
     public void updateState() {
+        SmartDashboard.putNumber("arm ticks ", armMotor.getSelectedSensorPosition());
         if(resetting = true){
             state.setArmState(ArmStates.resetting);
         }
@@ -190,7 +191,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             state.setArmState(ArmStates.changingPosition);
         }
 
-        state.setArmAngleDegreesFrom90((armMotor.getSelectedSensorPosition() - Calibrations.ARM.ticksAt90) * Calibrations.ARM.ticksPerDegree);
+        state.setArmAngleDegreesFrom90((armMotor.getSelectedSensorPosition() - Calibrations.ARM.ticksAt90) / Calibrations.ARM.ticksPerDegree);
 
     }
 
@@ -198,6 +199,11 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
     public void zeroSensor() {
         armMotor.set(ControlMode.PercentOutput, 0.00);  
         armMotor.setSelectedSensorPosition(0, 0, 0);
+    }
+
+    public void autoInitArmAngle(){
+        armMotor.set(ControlMode.PercentOutput, 0.00);  
+        armMotor.setSelectedSensorPosition(93, 0, 0);
     }
 
     @Override

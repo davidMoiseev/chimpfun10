@@ -2,6 +2,8 @@ package frc.robot;
 
 import org.hotutilites.hotcontroller.HotController;
 
+import frc.robot.TrajectoryFollower.PathNames;
+
 public abstract class RobotCommandProvider {
     private BallSupervisor.BallSupervisorState ballSupervisorState;
     private BallSupervisor.hoodPos hoodPosition;
@@ -40,5 +42,7 @@ public abstract class RobotCommandProvider {
     public abstract HotController getOperator();
     public abstract double getTurnCommand();
     public abstract void chooseBallCommand();
+    public abstract PathNames getPathName();
     public abstract double getArmOutput();
+    public abstract boolean getPathFollowingCommand();
 }
