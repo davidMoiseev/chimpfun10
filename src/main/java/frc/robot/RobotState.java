@@ -25,7 +25,19 @@ public class RobotState {
     private ArmStates armState;
     private double armDegreesFrom90;
     private double limelightHeight;
-    private double highestClimberPos;
+	private double highestClimberPos;
+    private double driveVelocityLeft; //meters per second
+    private double driveVelocityRight; //meters per second
+    private boolean trajectoryComplete = false;
+
+    public void resetRobotState(){
+        theta = 0; // Degrees
+        driveDistanceLeft = 0; // Meters
+        driveDistanceRight = 0; // Meters
+        driveVelocityLeft = 0; //meters per second
+        driveVelocityRight = 0; //meters per second
+        trajectoryComplete = false;
+    }
 
     public double getTheta() {
         return theta;
@@ -92,7 +104,8 @@ public class RobotState {
     public void setLEDColorState(int lEDColorState) {
         this.LEDColorState = lEDColorState;
     }
-    public int getVisionOutputStatus() {
+
+    public int getVisionOutputStatus() {   // 3 = aimed
         return VisionOutputStatus;
     }
     public void setVisionOutputStatus(int visionOutputStatus) {
@@ -166,5 +179,30 @@ public class RobotState {
         SmartDashboard.putNumber("Limelight height", limelightHeight);
         return limelightHeight;
        
+    }
+
+    public void setTrajectoryComplete(boolean trajectoryComplete) {
+        this.trajectoryComplete = trajectoryComplete;
+        SmartDashboard.putBoolean("trajComplete", trajectoryComplete);
+    }
+    
+    public boolean getTrajectoryComplete() {
+        return trajectoryComplete;
+    }
+
+    public void setDriveVelocityLeft(double driveVelocityLeft){ //m/s
+        this.driveDistanceLeft = driveVelocityRight;
+    }
+
+    public void setDriveVelocityRight(double driveVelocityRight){  //m/s
+        this.driveVelocityRight = driveVelocityRight;
+    }
+
+    public double getDriveVelocityLeft(){
+        return driveVelocityLeft;
+    }
+
+    public double getDriveVelocityRight(){
+        return driveVelocityRight;
     }
 }

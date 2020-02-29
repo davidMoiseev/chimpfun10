@@ -3,6 +3,7 @@ package frc.robot;
 import org.hotutilites.hotcontroller.HotController;
 import frc.robot.BallSupervisor.BallSupervisorState;
 import frc.robot.BallSupervisor.hoodPos;
+import frc.robot.TrajectoryFollower.PathNames;
 import frc.robot.Arm.ArmPositions;
 
 public class TeleopCommandProvider extends RobotCommandProvider {
@@ -62,10 +63,9 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     }
     public double getTurnCommand() {
         turn = driver.getStickRX();
-        if(turn < 0){
+        if (turn < 0) {
             return -Math.pow(Math.abs(turn), 2);
-        }
-        else{
+        } else {
             return Math.pow(turn, 2);
         }
     }
@@ -79,10 +79,11 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     public boolean getAimingEnabled(){
         return driver.getButtonA();
     }
-    public boolean getRangeEnabled(){
+
+    public boolean getRangeEnabled() {
         return driver.getButtonX();
     }
-    public boolean getManualMode(){
+    public boolean getManualMode() {
         return manaulMode;
     }
    
@@ -110,7 +111,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
 
     @Override
     public void chooseBallCommand() {
-        if(this.getManualMode()){
+        if (this.getManualMode()) {
             setBallSupervisorState(BallSupervisorState.manual);
             setArmPosition(ArmPositions.manual);
         }else if(this.isLowPowerMode()){
@@ -122,13 +123,13 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.shoot);
         }else if (operator.getButtonX()){ //config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(3040); //to const
+            robotState.setShooterTargetRPM(3040); //to const  //3800
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
             robotState.setTurnOnLimeLiteLight(true);
         }else if(operator.getButtonB()){//config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(5800); //to const
+            robotState.setShooterTargetRPM(5800); //to const //5300
             setHoodPosition(hoodPos.trench);
             setArmPosition(ArmPositions.trenchshot);
             robotState.setTurnOnLimeLiteLight(true);
@@ -160,5 +161,19 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             robotState.setTurnOnLimeLiteLight(false);
         }
     }
+
+    @Override
+    public PathNames getPathName() {
+        
+        return null;
+    }
+
+    @Override
+    public boolean getPathFollowingCommand() {
+        return false;
+    }
+
         
 }
+
+

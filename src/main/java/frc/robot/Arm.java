@@ -72,7 +72,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         freefall                        //nothing commanded, gravity controlled. (should be default so robot doesn't drop when disabled, safety risk, position button held at all time?)
     }
     public void performAction(RobotCommandProvider commander, RobotState state){  
-        SmartDashboard.putNumber("arm current Velocity", armMotor.getSelectedSensorVelocity());
+      
        
         //SmartDashboard.putString("commanded pos ", commander.getArmPosition().toString());
         SmartDashboard.putNumber("arm commanded output", armMotor.getMotorOutputPercent());
@@ -92,7 +92,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             case autoshot:
                 armMotor.set(ControlMode.MotionMagic,  Calibrations.ArmPositions.autoShotAngle*Calibrations.ARM.ticksPerDegree);
             
-              // armMotor.set(ControlMode.MotionMagic, Calibrations.ARM.visionAngleSetPoint*Calibrations.ARM.ticksPerDegree, DemandType.ArbitraryFeedForward, calcArbFF()); 
+              // armMotor.set(ControlMode.MotionMagic, Calibrations.ARM.visionAngleSetP1    oint*Calibrations.ARM.ticksPerDegree, DemandType.ArbitraryFeedForward, calcArbFF()); 
             break;
             case trenchshot:
                 armMotor.set(ControlMode.MotionMagic,  Calibrations.ArmPositions.trenchShotAngle*Calibrations.ARM.ticksPerDegree);
@@ -171,6 +171,12 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         armMotor.set(ControlMode.PercentOutput, 0.00);  
         armMotor.setSelectedSensorPosition(0, 0, 0);
     }
+
+    public void autoInitArmAngle(){
+        armMotor.set(ControlMode.PercentOutput, 0.00);  
+        armMotor.setSelectedSensorPosition(93, 0, 0);
+    }
+
     @Override
     public void setSensorValue(Integer value) {
         // TODO Auto-generated method stub
