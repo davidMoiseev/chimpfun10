@@ -194,7 +194,7 @@ public class conveyor {
     }
 
     public void shootPower(double pwr){
-        conveyorOutPut = -pwr;   
+        conveyorOutPut = -(pwr - 0.2);   
         carouselOutPut = -pwr;
         if(pos4Sensor.get() != Pos4lastState){
             if(pos4Sensor.get() != Pos4lastState){
@@ -202,7 +202,6 @@ public class conveyor {
             }else{
                 Pos4lastState = pos4Sensor.get();
             }
-           
         }
     }
 
@@ -228,7 +227,8 @@ public class conveyor {
         stop,
         reset,
         manual,
-        test
+        test,
+        manualChangeReset
     }
     public void stage(feedModes mode){
         warning = false;
@@ -247,7 +247,7 @@ public class conveyor {
             break;
             case shoot:
                 this.count(true);
-                this.shootPower(-0.55);
+                this.shootPower(-0.45);
                 this.shotFired();
             break;
             case reject:
@@ -268,6 +268,13 @@ public class conveyor {
             case manual:
             break;
             case test:
+            break;
+            case manualChangeReset:
+                conveyorOutPut = 0;
+                carouselOutPut = 0;
+                shouldStage = false;
+                IntakeCountLockout = false;
+                conveyorBounceBack = false;
             break;
         }
         runMotors();
@@ -307,12 +314,12 @@ public class conveyor {
     }
 
     public void antiJam(){
-        if(powerPannel.getCurrent(7) > 25){
+        if(powerPannel.getCurrent(7) > 20 ){
             reverseTime_1 = 75;
         }else{
             reverseTime_1--;
         }
-        if(powerPannel.getCurrent(6) > 30 + 1.875){
+        if(powerPannel.getCurrent(6) > 30){
             reverseTime_2 = 75;
         }else{
             reverseTime_2--;

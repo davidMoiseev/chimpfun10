@@ -75,7 +75,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         shooter.updateStatus();
         operator = commander.getOperator();
         if(commander.getBallSupervisorState() != BallSupervisorState.manual && wasInManual){
-            commander.setBallSupervisorState(BallSupervisorState.reset);
+            //commander.setBallSupervisorState(BallSupervisorState.reset);
             wasInManual = false;
         }
 

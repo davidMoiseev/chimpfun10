@@ -48,7 +48,7 @@ public class Calibrations
         public final static int shooterCurrentLimit = 40;
         public final static int intakeArmCurrentLimit = 30;
         public final static double intakeStandardPower = 0.75;
-        public final static double indexerPower = 1;
+        public final static double indexerPower = 0.9;
         public final static double ledCycleTime = 15;
         public final static double ledDutyCycle = 0.5;
     }

@@ -21,6 +21,7 @@ public class RobotState {
     private double distanceFromTarget; // Meters
     private boolean manual;
     private boolean lowPower;
+    private boolean turnOnLimeLiteLight;
     private ArmStates armState;
     private double armDegreesFrom90;
     private double limelightHeight;
@@ -28,6 +29,14 @@ public class RobotState {
 
     public double getTheta() {
         return theta;
+    }
+
+    public boolean isTurnOnLimeLiteLight() {
+        return turnOnLimeLiteLight;
+    }
+
+    public void setTurnOnLimeLiteLight(boolean turnOnLimeLiteLight) {
+        this.turnOnLimeLiteLight = turnOnLimeLiteLight;
     }
 
     public double getHighestClimberPos() {

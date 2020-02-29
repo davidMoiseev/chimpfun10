@@ -34,7 +34,7 @@ public class Limelight implements IHotSensor<RobotState, Double> {
         robotState.setLimelightYTheta(yTheta);
         robotState.setDistanceFromTarget(getDistanceFromTarget());
         SmartDashboard.putNumber("target", canSeeTarget);
-        if (robotState.isRobotEnabled()){
+        if (robotState.isTurnOnLimeLiteLight() && robotState.isRobotEnabled()){
             ledMode.setNumber(3);
         } else {
             ledMode.setNumber(1);

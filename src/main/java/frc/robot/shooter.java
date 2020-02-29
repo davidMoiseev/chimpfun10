@@ -36,6 +36,7 @@ public class shooter {
         compressor = new Compressor(Calibrations.CAN_ID.pcm);
         compressor.setClosedLoopControl(true);
         hood1 = new Solenoid(6);
+        
         hood2 = new Solenoid(7);
         powerPannel = new PowerDistributionPanel();
         kP = Calibrations.shooter_PID.kP;
@@ -141,12 +142,12 @@ public class shooter {
                 hood2.set(Calibrations.hardware.longPistonExtend); //long extented
             break;
             case trench:
-                hood1.set(Calibrations.hardware.shortPistonExtend); //short 
+                hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(!Calibrations.hardware.longPistonExtend); //long
             break;
             case wallShot:
-                hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
-                hood2.set(!Calibrations.hardware.longPistonExtend); //long
+                hood1.set(Calibrations.hardware.shortPistonExtend); //short 
+                hood2.set(Calibrations.hardware.longPistonExtend); //long
             break;
             case autoshot:
                 hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
