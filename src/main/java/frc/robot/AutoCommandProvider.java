@@ -15,6 +15,7 @@ import org.hotutilites.hotcontroller.HotController;
 import frc.robot.BallSupervisor.BallSupervisorState;
 import frc.robot.BallSupervisor.hoodPos;
 import frc.robot.Arm.ArmPositions;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutoRoutineRunner;
 
 public class AutoCommandProvider extends RobotCommandProvider {
@@ -61,8 +62,7 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     @Override
     public boolean getAimingEnabled() {
-        // TODO Auto-generated method stub
-        return false;
+        return autoRunner.primeAutoShot;
     }
 
     @Override
@@ -90,11 +90,11 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     @Override
     public void chooseBallCommand() {
+        SmartDashboard.putBoolean("actually choosing ball command", autoRunner.primeAutoShot);
         
-        
-
         if (autoRunner.shooting) {
             setBallSupervisorState(BallSupervisorState.shoot);
+            
         } 
 
         else if (autoRunner.primeAutoShot) { // config for autoshot
@@ -102,7 +102,9 @@ public class AutoCommandProvider extends RobotCommandProvider {
             robotState.setShooterTargetRPM(3800);
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
+            SmartDashboard.putBoolean("actually trying to prime", true);
         } 
+
         else if (autoRunner.primeTrenchShot) {// config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(5300);
@@ -126,10 +128,10 @@ public class AutoCommandProvider extends RobotCommandProvider {
         } 
         
         else {
-            // setBallSupervisorState(BallSupervisorState.intakeStop);
-            // setHoodPosition(hoodPos.goingUnder);
-            // robotState.setShooterTargetRPM(0);
-            // setArmPosition(ArmPositions.ground);
+            setBallSupervisorState(BallSupervisorState.intakeStop);
+            setHoodPosition(hoodPos.goingUnder);
+            robotState.setShooterTargetRPM(0);
+            setArmPosition(ArmPositions.ground);
           
         }
     }

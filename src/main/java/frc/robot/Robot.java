@@ -83,6 +83,7 @@ public class Robot extends TimedRobot {
     drivetrain.zeroSensor();
     robotState.setRobotEnabled(true);
     autoCommander.setConveyerAutoInit();
+    robotState.setTurnOnLimeLiteLight(true);
   }
 
   @Override

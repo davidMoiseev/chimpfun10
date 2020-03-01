@@ -174,7 +174,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
 
     public void autoInitArmAngle(){
         armMotor.set(ControlMode.PercentOutput, 0.00);  
-        armMotor.setSelectedSensorPosition(93, 0, 0);
+        armMotor.setSelectedSensorPosition((int) (93*Calibrations.ARM.ticksPerDegree), 0, 0);
     }
 
     @Override

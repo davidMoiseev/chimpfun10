@@ -150,8 +150,13 @@ public class shooter {
                 hood2.set(Calibrations.hardware.longPistonExtend); //long
             break;
             case autoshot:
+            if (Calibrations.isCompBot) {
                 hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(Calibrations.hardware.longPistonExtend); //long
+            } else  {
+                hood1.set(Calibrations.hardware.shortPistonExtend); //short 
+                hood2.set(!Calibrations.hardware.longPistonExtend); //long
+            }
             break;
         }
     }

@@ -2,6 +2,8 @@ package frc.robot;
 
 public class Calibrations
 {
+    public final static boolean isCompBot=false;
+
     public class CAN_ID {
         public final static int pigeon = 30;
         public final static int driveLeft1 = 3;
@@ -119,19 +121,10 @@ public class Calibrations
         public static final double limelightHeightAtArm90 = 0.426; //configure, from ground  //difference on comp bot becausw of hard stop is 1.51 degrees
         public static final double lengthOfArmToLimelight = 0.62;
     }
-    // //Pratice bot 
+
     public class hardware{
-        public static final boolean longPistonExtend = false;
-        public static final boolean shortPistonExtend = true;
-        public static final boolean indexerInvert = false;
+        public static final boolean longPistonExtend = isCompBot?false:true;
+        public static final boolean shortPistonExtend = isCompBot;
+        public static final boolean indexerInvert = isCompBot?false:true;;
     }
-
-    //CompBot
-    // public class hardware{
-    //     public static final boolean longPistonExtend = false;
-    //     public static final boolean shortPistonExtend = true;
-    //     public static final boolean indexerInvert = false;
-    // }
-
-
 }
