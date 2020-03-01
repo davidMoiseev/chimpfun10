@@ -32,11 +32,11 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     }
 
     public double getLeftClimberDelta(){
-        return operator.getStickLY() * Calibrations.climberCals.maxDelta;
+        return operator.getStickLY() - operator.getStickLX();
     }
 
     public double getRightClimberDelta(){
-        return operator.getStickRY() * Calibrations.climberCals.maxDelta;
+        return operator.getStickLY() + operator.getStickLX();
     }
 
     public boolean isLowPowerMode() {

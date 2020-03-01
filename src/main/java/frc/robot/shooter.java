@@ -37,7 +37,7 @@ public class shooter {
         compressor.setClosedLoopControl(true);
         hood1 = new Solenoid(6);
         
-        hood2 = new Solenoid(7);
+        hood2 = new Solenoid(5);
         powerPannel = new PowerDistributionPanel();
         kP = Calibrations.shooter_PID.kP;
         kI = Calibrations.shooter_PID.kI;

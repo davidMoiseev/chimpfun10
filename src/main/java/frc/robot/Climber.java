@@ -4,6 +4,7 @@ import javax.swing.text.Position;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -35,27 +36,28 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
 
         public climberController(int canID) {
             motor = new TalonFX(canID);
-            motor.configFactoryDefault();
+            //motor.configFactoryDefault();
             motor.selectProfileSlot(0, 0);
             motor.configNominalOutputForward(0);
             motor.configNominalOutputReverse(0);
             motor.configPeakOutputForward(1);
             motor.configPeakOutputReverse(-1);
-            motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, canID);
-            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10);
-            motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10);
-            motor.configMotionAcceleration(Calibrations.climberCals.acc);
-            motor.configMotionCruiseVelocity(Calibrations.climberCals.vel);
-            motor.config_kP(0, Calibrations.climberCals.kP);
-            motor.config_kI(0, Calibrations.climberCals.kI);
-            motor.config_kD(0, Calibrations.climberCals.kD);
-            motor.config_kF(0, Calibrations.climberCals.kF);
-            motor.config_IntegralZone(0, Calibrations.climberCals.kIZ);
-            motor.configForwardSoftLimitEnable(true);
-            motor.configReverseSoftLimitEnable(true);
-            motor.configForwardSoftLimitThreshold(
-                    (int) (Calibrations.climberCals.upperLimit * Calibrations.climberCals.ticksPerInch));
-            motor.configReverseSoftLimitThreshold(0);
+            motor.setNeutralMode(NeutralMode.Brake);
+            // motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, canID);
+            // motor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10);
+            // motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10);
+            // motor.configMotionAcceleration(Calibrations.climberCals.acc);
+            // motor.configMotionCruiseVelocity(Calibrations.climberCals.vel);
+            // motor.config_kP(0, Calibrations.climberCals.kP);
+            // motor.config_kI(0, Calibrations.climberCals.kI);
+            // motor.config_kD(0, Calibrations.climberCals.kD);
+            // motor.config_kF(0, Calibrations.climberCals.kF);
+            // motor.config_IntegralZone(0, Calibrations.climberCals.kIZ);
+            // motor.configForwardSoftLimitEnable(true);
+            // motor.configReverseSoftLimitEnable(true);
+            // motor.configForwardSoftLimitThreshold(
+            //         (int) (Calibrations.climberCals.upperLimit * Calibrations.climberCals.ticksPerInch));
+            // motor.configReverseSoftLimitThreshold(0);
         }
 
         public int getStatusColor() {
@@ -164,13 +166,12 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
     
 
     public void performAction(RobotCommandProvider commander, RobotState state){  
-        leftClimber.setOverride(commander.getManualMode());
-        rightClimber.setOverride(commander.getManualMode());
-        leftClimber.setPower(commander.getLeftClimberDelta() / Calibrations.climberCals.maxDelta);
-        rightClimber.setPower(commander.getRightClimberDelta() / Calibrations.climberCals.maxDelta);
+        leftClimber.setOverride(true);
+        rightClimber.setOverride(true);
+        leftClimber.setPower(commander.getLeftClimberDelta());
+        rightClimber.setPower(commander.getRightClimberDelta());
 
-
-        leftClimber.setEnabled(commander.isLeftClimberActivate());
+        leftClimber.setEnabled(true);
         leftClimber.setDelta(commander.getLeftClimberDelta());
         rightClimber.setEnabled(commander.isRightClimberActivate());
         rightClimber.setDelta(commander.getRightClimberDelta());

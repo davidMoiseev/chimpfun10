@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
    private DriveTrain drivetrain;
    private Pigeon pigeon;
    private HotController driver;
+   private Climber climber;
    private RobotCommandProvider commander;
    private AutoCommandProvider autoCommander;
    private BallSupervisor ballSupervisor;
@@ -44,6 +45,7 @@ public class Robot extends TimedRobot {
     driver = new HotController(0, false);
     operator = new HotController(1, false);
     robotState = new RobotState();
+    climber = new Climber(robotState);
     limelite = new Limelight(robotState);    
     drivetrain = new DriveTrain(robotState);
     commander = new TeleopCommandProvider(driver,operator,robotState);
@@ -52,6 +54,7 @@ public class Robot extends TimedRobot {
     lEDController = new LEDController(robotState);
     arm = new Arm(robotState);
     drivetrain.zeroSensor();
+    climber.zeroSensor();
     pigeon.zeroSensor();
     ballSupervisor.zeroSensor();
   }
@@ -105,6 +108,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drivetrain.performAction(commander, robotState);
     commander.chooseBallCommand();
+    climber.performAction(commander, robotState);
     ballSupervisor.performAction(commander, robotState);
     arm.performAction(commander, robotState);
     commander.setManualMode();

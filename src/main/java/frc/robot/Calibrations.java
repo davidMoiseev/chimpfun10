@@ -2,12 +2,12 @@ package frc.robot;
 
 public class Calibrations
 {
-    public final static boolean isCompBot=false;
+    public final static boolean isCompBot=true;
 
     public class CAN_ID {
         public final static int pigeon = 30;
-        public final static int driveLeft1 = 3;
-        public final static int driveLeft2 = 4;
+        public final static int driveLeft1 = 7;
+        public final static int driveLeft2 = 8;
         public final static int driveRight1 = 1;
         public final static int driveRight2 = 2;
         public final static int shooter1 = 5;
@@ -83,9 +83,9 @@ public class Calibrations
 
     public class ArmPositions{
         public static final double packagedAngle = 90;  
-        public static final double trenchShotAngle = 70;
-        public static final double autoShotAngle = 62;
-        public static final double wallShotAngle = 10;
+        public static final double trenchShotAngle = 0;
+        public static final double autoShotAngle = 0;
+        public static final double wallShotAngle = 0;
         public static final double groundPickupAngle = 0.1;
     }
 
@@ -125,6 +125,6 @@ public class Calibrations
     public class hardware{
         public static final boolean longPistonExtend = isCompBot?false:true;
         public static final boolean shortPistonExtend = isCompBot;
-        public static final boolean indexerInvert = isCompBot?false:true;;
+        public static final boolean indexerInvert = isCompBot?false:true;
     }
 }
