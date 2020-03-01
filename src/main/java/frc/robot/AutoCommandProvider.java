@@ -23,6 +23,7 @@ public class AutoCommandProvider extends RobotCommandProvider {
     private AutoRoutineRunner autoRunner;
     private RobotState robotState;
 
+
     public AutoCommandProvider(RobotState robotState) {
         this.robotState = robotState;
 
@@ -83,10 +84,6 @@ public class AutoCommandProvider extends RobotCommandProvider {
         return null;
     }
 
-    public void setConveyerAutoInit(){
-        setBallSupervisorState(BallSupervisorState.confirm);
-    }
-
 
     @Override
     public void chooseBallCommand() {
@@ -94,7 +91,6 @@ public class AutoCommandProvider extends RobotCommandProvider {
         
         if (autoRunner.shooting) {
             setBallSupervisorState(BallSupervisorState.shoot);
-            
         }else if (autoRunner.primeAutoShot) { // config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(3800);
@@ -116,7 +112,12 @@ public class AutoCommandProvider extends RobotCommandProvider {
             setArmPosition(ArmPositions.ground);
         }else if (autoRunner.ballReset) {
             setBallSupervisorState(BallSupervisorState.reset);
-        }else{
+        }else if (autoRunner.initConveyer){
+            setBallSupervisorState(BallSupervisorState.confirm);
+            setHoodPosition(hoodPos.goingUnder);
+            setArmPosition(ArmPositions.autoshot);
+        }
+        else{
             setBallSupervisorState(BallSupervisorState.intakeStop);
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);

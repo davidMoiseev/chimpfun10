@@ -59,13 +59,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    ballSupervisor.updateState();
     drivetrain.updateState();
     pigeon.updateState();
     arm.updateState();
     limelite.updateState();
     lEDController.updateState();
     arm.updateState();
+    ballSupervisor.updateState();
   }
 
   @Override
@@ -82,7 +82,6 @@ public class Robot extends TimedRobot {
     drivetrain.zeroActuators();
     drivetrain.zeroSensor();
     robotState.setRobotEnabled(true);
-    autoCommander.setConveyerAutoInit();
     robotState.setTurnOnLimeLiteLight(true);
   }
 

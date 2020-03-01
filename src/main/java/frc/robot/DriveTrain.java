@@ -3,8 +3,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.SpeedController;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.music.Orchestra;
+
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +30,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
     public double driveVelocityLeft;
     public double driveVelocityRight;
+
+    public Orchestra musicPlayer;
 
     private boolean followingPath = false;
     private boolean previouslyFollowingPath = false;
@@ -95,7 +100,6 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
         trajFollower = new TrajectoryFollower(0);
         followingPath = false;
-        
 
         this.robotState = robotState;
     }
@@ -127,6 +131,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
             driveRightLeader.configPeakOutputReverse(-1);
         }
 
+    
+
         previouslyFollowingPath = followingPath;
         followingPath = commander.getPathFollowingCommand();
 
@@ -148,17 +154,13 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
             distanceAdjust = pidControllerDistance.calculate(distanceError);
             driveLeftLeader.set(ControlMode.PercentOutput, -distanceAdjust);
             driveRightLeader.set(ControlMode.PercentOutput, -distanceAdjust);
-        }
-
-        else if (followingPath && !previouslyFollowingPath) {
+        }else if (followingPath && !previouslyFollowingPath) {
             zeroActuators();
             zeroSensor();
             trajFollower.startTrajectory(commander.getPathName(), robotState.getTheta());
             SmartDashboard.putNumber("started path", startedPathCount);
             startedPathCount++;
-        }
-
-        else if (followingPath){
+        }else if (followingPath){
         
 
             trajFollower.update(robotState.getTheta(), robotState.getDriveDistanceLeft(), robotState.getDriveDistanceRight());

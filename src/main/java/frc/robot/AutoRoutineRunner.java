@@ -41,13 +41,14 @@ public class AutoRoutineRunner {
 	public boolean intake = false;
     public boolean ballReset = false;
     public boolean autoAiming = false;
+	public boolean initConveyer = false;
 
  
 
     public AutoRoutineRunner(RobotState robotState){ 
 
         this.robotState = robotState;
-        driveStep = 0;
+        driveStep = -1;
         // ballStep = 1;
 
         // isDriveStepFinished = false;
@@ -258,28 +259,27 @@ public class AutoRoutineRunner {
         SmartDashboard.putNumber("11 vision ready", robotState.getVisionOutputStatus());
 
         switch(driveStep){
+            case -1:
+                initConveyer = true;
+                driveStep++; //so init code can run
+                break;
             case 0:
-
-            primeAutoShot = true;
-            autoAiming = true;
-
-            if(robotState.isReadyToShoot() && (robotState.getVisionOutputStatus() == 3)){
-               
-               
+                initConveyer = false;
+                primeAutoShot = true;
+                 autoAiming = true;
+            if(robotState.isReadyToShoot()){
                 driveStep++;
             }
             break;
 
             case 1:
-            shooting = true;
-            autoAiming = false;
-            primeAutoShot = false;
+                shooting = true;
+                autoAiming = false;
+                primeAutoShot = false;
 
-            if(robotState.getInventory() == 2){ 
+            if(robotState.getInventory() == 0){ 
                 inventoryEmptyFor++;  
-            }
-            
-            else if(inventoryEmptyFor >= 5){
+            }else if(inventoryEmptyFor >= 5){
                 ballReset = true;
                 driveStep++;
             }
@@ -287,16 +287,13 @@ public class AutoRoutineRunner {
 
             case 2:
             shooting = false;
-           
-
-            if(robotState.getTrajectoryComplete()){
+            intake = true;
+            
+            if(robotState.getInventory() == 3){
                 driveStep++;
             }
-            break;
+            break;  
         }
-
-
-
 
     }
 }

@@ -41,15 +41,19 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         }else if(alreadyShooting){
             robotState.setLEDFlash(true);
             robotState.setLEDColorState(3);
-        }else if(shooter.isInFault() || conveyor.inWarning() || conveyor.inCritical() && robotState.getVisionOutputStatus() == 0){
+            robotState.setReadyToShoot(true);
+        }else if(shooter.isInFault() || conveyor.inWarning() || conveyor.inCritical()){
             this.robotState.setFault(true);
             robotState.setLEDColorState(0);
-        }else if(conveyor.getStatusLightState() == 3 && shooter.isShooterStable() && robotState.getVisionOutputStatus() == 3){
+        }else if(conveyor.getStatusLightState() == 3 && shooter.isShooterStable()){ //robotState.getVisionOutputStatus() == 3
             robotState.setLEDColorState(3);
-        }else if(conveyor.getStatusLightState() == 3 && shooter.PIDTarget != 0 && robotState.getVisionOutputStatus() == 2){
+            robotState.setReadyToShoot(true);
+        }else if(conveyor.getStatusLightState() == 3 && shooter.PIDTarget != 0){
             robotState.setLEDColorState(2);
+            robotState.setReadyToShoot(false);
         }else{
             robotState.setLEDColorState(1);
+            robotState.setReadyToShoot(false);
         }
         this.robotState.setInventory(conveyor.BallStored());
         SmartDashboard.putNumber("BallInventory", conveyor.BallStored());
