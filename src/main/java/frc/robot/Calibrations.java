@@ -2,9 +2,11 @@ package frc.robot;
 
 public class Calibrations
 {
+    public final static boolean isCompBot=false;
+
     public class CAN_ID {
         public final static int pigeon = 30;
-        public final static int driveLeft1 = 3;//3
+        public final static int driveLeft1 = 3;
         public final static int driveLeft2 = 4;
         public final static int driveRight1 = 1;
         public final static int driveRight2 = 2;
@@ -86,6 +88,23 @@ public class Calibrations
         public static final double wallShotAngle = 10;
         public static final double groundPickupAngle = 0.1;
     }
+
+    public class DRIVE_CONSTANTS {  //6.5 gear ratio
+        public static final double ticksPerMeter = 38800; //38449.2;
+        public static final double trackWidth = 0.5925;   //meters
+    }
+    public class AUTO_CONTROLLERS {
+        public static final double velocityPIDkp = 0.000447; 
+        public static final double velocityPIDki = 0.0;
+        public static final double velocityPIDkd = 0.0;
+        public static final double velocityPIDkf = 0.0;
+        public static final double ramseteB = 6;
+        public static final double ramseteTheta = 0.7;
+        public static final double ffkS = 0.577;
+        public static final double ffkV = 2.36;
+        public static final double ffkA = 0.196;
+	
+}
     public class ARM{
         public static final double kP = 1.5;
         public static final double kI = 0.01  * 2 /3;
@@ -102,19 +121,10 @@ public class Calibrations
         public static final double limelightHeightAtArm90 = 0.426; //configure, from ground  //difference on comp bot becausw of hard stop is 1.51 degrees
         public static final double lengthOfArmToLimelight = 0.62;
     }
-    // //Pratice bot 
+
     public class hardware{
-        public static final boolean longPistonExtend = false;
-        public static final boolean shortPistonExtend = true;
-        public static final boolean indexerInvert = false;
+        public static final boolean longPistonExtend = isCompBot?false:true;
+        public static final boolean shortPistonExtend = isCompBot;
+        public static final boolean indexerInvert = isCompBot?false:true;;
     }
-
-    //CompBot
-    // public class hardware{
-    //     public static final boolean longPistonExtend = false;
-    //     public static final boolean shortPistonExtend = true;
-    //     public static final boolean indexerInvert = false;
-    // }
-
-
 }

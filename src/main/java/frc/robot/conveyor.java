@@ -131,7 +131,7 @@ public class conveyor {
                 }
             break;
             case 0:
-                if(Edgecounter < 2 && (!pos1Sensor.get() || frontPorchSkip)){
+                if(Edgecounter < 2){
                     frontPorchSkip = true;
                     if(FallingedgeSensor != pos2Sensor.get()){
                         Edgecounter++;
@@ -260,7 +260,9 @@ public class conveyor {
                 this.shootPower(0);
             break;
             case confirm:
-                this.confirmInventory();
+                carouselPos = 0;
+                ballStored = 3;
+                inConveyor = 0;
             break;
             case reset:
                 this.reset();
