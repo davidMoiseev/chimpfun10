@@ -45,7 +45,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         }else if(shooter.isInFault() || conveyor.inWarning() || conveyor.inCritical()){
             this.robotState.setFault(true);
             robotState.setLEDColorState(0);
-        }else if(conveyor.getStatusLightState() == 3 && shooter.isShooterStable()){ //robotState.getVisionOutputStatus() == 3
+        }else if(conveyor.getStatusLightState() == 3 && shooter.isShooterStable() && (robotState.getVisionOutputStatus() == 3)){ //
             robotState.setLEDColorState(3);
             robotState.setReadyToShoot(true);
         }else if(conveyor.getStatusLightState() == 3 && shooter.PIDTarget != 0){

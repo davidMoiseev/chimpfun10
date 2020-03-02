@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    HotLogger.Setup("theta","Drive_Distance_Right","Drive_Distance_Left", "drive_auto_step", "ball_auto_step");
+    
     driver = new HotController(0, false);
     operator = new HotController(1, false);
     robotState = new RobotState();
@@ -74,7 +74,14 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void disabledInit() {
+    drivetrain.setBrake(false);
+  }
+
+  @Override
   public void autonomousInit() {
+    drivetrain.setBrake(true);
+    pigeon.zeroSensor();
     arm.autoInitArmAngle();
     robotState.resetRobotState();
     autoCommander = new AutoCommandProvider(robotState);
@@ -83,6 +90,8 @@ public class Robot extends TimedRobot {
     drivetrain.zeroSensor();
     robotState.setRobotEnabled(true);
     robotState.setTurnOnLimeLiteLight(true);
+    HotLogger.Setup("theta", "auto_step_drive", "path feedback output left", "path feedback output right", "path feedforward output left",  
+    "path feedforward output right", "path velocity left", "path velocity right", "path complete", "pid target vel", "motor act vel");
   }
 
   @Override

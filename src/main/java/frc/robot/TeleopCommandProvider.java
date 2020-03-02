@@ -173,6 +173,12 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         return false;
     }
 
+    @Override
+    public boolean getEncodersReset() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
         
 }
 

@@ -31,6 +31,10 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     }
 
+    public boolean getEncodersReset(){
+        return autoRunner.resetEncoders;
+    }
+
     public void updateAutoRoutine() {
         autoRunner.update();
     }
@@ -110,11 +114,13 @@ public class AutoCommandProvider extends RobotCommandProvider {
         }else if (autoRunner.intake) {
             setBallSupervisorState(BallSupervisorState.intakeIn);
             setArmPosition(ArmPositions.ground);
+            setHoodPosition(hoodPos.goingUnder);
         }else if (autoRunner.ballReset) {
             setBallSupervisorState(BallSupervisorState.reset);
         }else if (autoRunner.initConveyer){
             setBallSupervisorState(BallSupervisorState.confirm);
             setHoodPosition(hoodPos.goingUnder);
+            // setArmPosition(ArmPositions.ground);//
             setArmPosition(ArmPositions.autoshot);
         }
         else{

@@ -90,19 +90,22 @@ public class Calibrations
     }
 
     public class DRIVE_CONSTANTS {  //6.5 gear ratio
-        public static final double ticksPerMeter = 38800; //38449.2;
+        public static final double ticksPerMeter = 38825; //38449.2;
         public static final double trackWidth = 0.5925;   //meters
     }
     public class AUTO_CONTROLLERS {
-        public static final double velocityPIDkp = 0.000447; 
+        public static final double velocityPIDkp = 0.000447 ; 
         public static final double velocityPIDki = 0.0;
         public static final double velocityPIDkd = 0.0;
-        public static final double velocityPIDkf = 0.0;
+        public static final double velocityPIDkf = 0.0603;
         public static final double ramseteB = 6;
         public static final double ramseteTheta = 0.7;
         public static final double ffkS = 0.577;
-        public static final double ffkV = 2.36;
+        public static final double ffkV = 2.36;        //2.36 * 10 *1023 * 0.0635 *2 *pi /6.5 / 12 /4096
         public static final double ffkA = 0.196;
+		public static final double voltagekP = 14.3;
+		public static final double voltagekI = 0;
+		public static final double voltagekD = 0;
 	
 }
     public class ARM{

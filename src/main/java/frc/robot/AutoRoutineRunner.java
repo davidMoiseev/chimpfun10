@@ -9,6 +9,7 @@ package frc.robot;
 
 import org.hotutilites.hotlogger.HotLogger;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Autos.AutoRoutineBase;
 import frc.robot.Autos.SimpleRoutine;
@@ -41,7 +42,13 @@ public class AutoRoutineRunner {
 	public boolean intake = false;
     public boolean ballReset = false;
     public boolean autoAiming = false;
-	public boolean initConveyer = false;
+    public boolean initConveyer = false;
+    public boolean resetEncoders = false;
+    
+    double distance1 = 2.4; //2.4;
+    double distance2 = 3.15;
+    private double shotAngle = 0;
+    private Timer timer;
 
  
 
@@ -57,7 +64,7 @@ public class AutoRoutineRunner {
     }
 
     public enum autoModes{
-        followingSamplePath,
+        followingShootingStartPosToWofFront,
         followingSamplePath2,
         shooting, 
         turningToFront,
@@ -257,21 +264,42 @@ public class AutoRoutineRunner {
         SmartDashboard.putNumber("11drive step", driveStep);
         SmartDashboard.putBoolean("11 ready to shoot", robotState.isReadyToShoot());
         SmartDashboard.putNumber("11 vision ready", robotState.getVisionOutputStatus());
+        SmartDashboard.putNumber("11 inventory empty for", inventoryEmptyFor);
+        HotLogger.Log("auto_step_drive", driveStep);
+
+        // switch(driveStep){
+        //     case -1:
+        //         isPathFollowing = true;
+        //         pathName = PathNames.shootingStartPosToWofFront;
+
+        //         if (robotState.getTrajectoryComplete()){
+        //             driveStep++;
+        //         }
+
+        //         break;
+
+        //     case 0:
+        //         isPathFollowing = false;
+        //         break;
+                
+
+        // }
 
         switch(driveStep){
             case -1:
                 initConveyer = true;
                 driveStep++; //so init code can run
+                timer = new Timer();
                 break;
             case 0:
                 initConveyer = false;
                 primeAutoShot = true;
                  autoAiming = true;
-            if(robotState.isReadyToShoot()){
+            if(robotState.isReadyToShoot() && (robotState.getVisionOutputStatus() == 3)){
+                
                 driveStep++;
             }
             break;
-
             case 1:
                 shooting = true;
                 autoAiming = false;
@@ -279,21 +307,105 @@ public class AutoRoutineRunner {
 
             if(robotState.getInventory() == 0){ 
                 inventoryEmptyFor++;  
-            }else if(inventoryEmptyFor >= 5){
+            }
+            if(inventoryEmptyFor >= 10){
+                shotAngle = robotState.getTheta();
                 ballReset = true;
+                resetEncoders = true;
                 driveStep++;
             }
             break;
 
             case 2:
-            shooting = false;
-            intake = true;
-            
-            if(robotState.getInventory() == 3){
+                shooting = false;
+                 resetEncoders = false;
+                driveOutput = 0.2;
+                intake = true;
+                SmartDashboard.putNumber("1111 inthingu drivedistance left", robotState.getDriveDistanceLeft());
+                SmartDashboard.putNumber("1111 inthingy drive distance right", robotState.getDriveDistanceRight());
+
+            if ((robotState.getDriveDistanceLeft() >= distance1) || (robotState.getDriveDistanceRight() >= distance1)){
+                intake = true;
                 driveStep++;
-            }
+                }
             break;  
+
+            case 3:
+                intake = true;
+                driveOutput = 0;
+                turnOutput = 0.08;
+                if(robotState.getTheta() > 0){
+                intake = true;
+                resetEncoders = true;
+                driveStep++;
+                timer.start();
+                }
+                break;
+
+            case 4: 
+                resetEncoders = false;
+                turnOutput = 0;
+                driveOutput = 0.2;
+                intake = true;
+
+                if ((robotState.getDriveDistanceLeft() >= distance2) || (robotState.getDriveDistanceRight() >= distance2) || (timer.get() > 4.5)){
+                    driveStep++;
+                    resetEncoders = true;
+                    intake = true;
+                    }
+                break;
+
+            case 5:
+                resetEncoders = false;
+                driveOutput = -0.2;
+                intake = true;
+                if ((robotState.getDriveDistanceLeft() <= -distance2) || (robotState.getDriveDistanceRight() <= -distance2)){
+                    driveStep++;
+                    }
+                break;
+            case 6:
+                driveOutput = 0;
+                turnOutput = -0.08;
+                if(robotState.getTheta() < shotAngle){
+                resetEncoders = true;
+                driveStep++;
+                }
+                break;
+            case 7:
+                resetEncoders = false;
+                turnOutput = 0;
+                driveOutput = -0.2;
+        
+                if ((robotState.getDriveDistanceLeft() <= -distance1) || (robotState.getDriveDistanceRight() <= -distance1)){
+                    driveStep++;
+                    }
+                    break;  
+            case 8:
+                    driveOutput = 0;
+                    primeAutoShot = true;
+                    autoAiming = true;
+                if(robotState.isReadyToShoot() && (robotState.getVisionOutputStatus() == 3)){
+                    driveStep++;
+                }
+                break;
+            case 9:
+                    shooting = true;
+                    autoAiming = false;
+                    primeAutoShot = false;
+
+                if(robotState.getInventory() == 0){ 
+                    inventoryEmptyFor++;  
+                }
+                if(inventoryEmptyFor >= 5){
+                    ballReset = true;
+                }
+                break;
+                
+                
         }
 
+
+            
     }
 }
+
