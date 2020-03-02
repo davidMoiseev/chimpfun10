@@ -66,6 +66,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
 
         public void setPower(double power) {
             this.overridePower = power;
+            motor.set(ControlMode.PercentOutput, power);
         }
 
         public void setEnabled(boolean enabled) {
@@ -157,7 +158,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
     }
     
     public Climber(RobotState state){
-        this.robotState = robotState;
+        this.robotState = state;
         leftClimber = new climberController(Calibrations.CAN_ID.leftClimber);
         rightClimber = new climberController(Calibrations.CAN_ID.rightClimber);
         rachet = new Solenoid(Calibrations.climberCals.rachetID);
@@ -166,19 +167,19 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
     
 
     public void performAction(RobotCommandProvider commander, RobotState state){  
-        leftClimber.setOverride(true);
-        rightClimber.setOverride(true);
+        // leftClimber.setOverride(true);
+        // rightClimber.setOverride(true);
         leftClimber.setPower(commander.getLeftClimberDelta());
         rightClimber.setPower(commander.getRightClimberDelta());
 
-        leftClimber.setEnabled(true);
-        leftClimber.setDelta(commander.getLeftClimberDelta());
-        rightClimber.setEnabled(commander.isRightClimberActivate());
-        rightClimber.setDelta(commander.getRightClimberDelta());
+        // leftClimber.setEnabled(true);
+        // leftClimber.setDelta(commander.getLeftClimberDelta());
+        // rightClimber.setEnabled(commander.isRightClimberActivate());
+        // rightClimber.setDelta(commander.getRightClimberDelta());
         if(commander.isLeftClimberActivate() || commander.isRightClimberActivate()){
-            rachet.set(false);
-        }else{
             rachet.set(true);
+        }else{
+            rachet.set(false);
         }
 
     }

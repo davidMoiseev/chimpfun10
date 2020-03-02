@@ -13,6 +13,10 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
     public double flashTime = Calibrations.ballSuperviserVals.ledCycleTime;
     public double dutyCycle = Calibrations.ballSuperviserVals.ledDutyCycle;
 	public double dimmer = 1;
+	public int StartState = 0;
+	public int POSTTimer = 50;
+	public int POSTTime = 50;
+	public boolean POSTFinished = false;
 	private RobotState robotState;
 	private PowerDistributionPanel powerPannel;
 
@@ -20,6 +24,40 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 		this.robotState = robotState;
 		powerPannel = new PowerDistributionPanel();
     } 
+
+	private void POSTRoutine(){
+		switch(StartState){
+			case 0:
+				setLEDcolor(5);
+				POSTTime = 50;
+			break;
+			case 1:
+				setLEDcolor(3);
+				POSTTime = 25;
+			break;
+			case 2:
+				setLEDcolor(2);
+				POSTTime = 25;
+			break;
+			case 3:
+				setLEDcolor(0);
+				POSTTime = 25;
+			break;
+			case 4:
+				setLEDcolor(-1);
+				POSTTime = 25;
+			break;
+			case 5:
+				POSTFinished = true;
+			break;
+		}
+		if(POSTTimer >= POSTTime){
+			POSTTimer = 0;
+			StartState++;
+		}else{
+			POSTTimer++;
+		}
+	}
 
 
 	private void setLEDcolor(int color){
@@ -70,26 +108,30 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 
 	@Override
 	public void updateState() {
-		if(robotState.isRobotEnabled()){
-			if(robotState.isLEDFlash()){
-				if(flashDelayTimer < (flashTime * dutyCycle)){
-					this.setLEDcolor(robotState.getLEDColorState());
+		if(POSTFinished){
+			if(robotState.isRobotEnabled()){
+				if(robotState.isLEDFlash()){
+					if(flashDelayTimer < (flashTime * dutyCycle)){
+						this.setLEDcolor(robotState.getLEDColorState());
+					}else{
+						this.setLEDcolor(-1);
+					}
+					if(flashDelayTimer >= flashTime){
+						flashDelayTimer = 0;
+					}
+					flashDelayTimer++;
 				}else{
-					this.setLEDcolor(-1);
+					this.setLEDcolor(robotState.getLEDColorState());	
 				}
-				if(flashDelayTimer >= flashTime){
-					flashDelayTimer = 0;
-				}
-				flashDelayTimer++;
 			}else{
-				this.setLEDcolor(robotState.getLEDColorState());	
+				this.setLEDcolor(4);
+			}
+			if(powerPannel.getVoltage() < 9.5){
+				dimmer = (powerPannel.getVoltage() - 7.3) / 2.2;
+				if(dimmer < 0) dimmer = 0;
 			}
 		}else{
-			this.setLEDcolor(4);
-		}
-		if(powerPannel.getVoltage() < 9.5){
-			dimmer = (powerPannel.getVoltage() - 7.3) / 2.2;
-			if(dimmer < 0) dimmer = 0;
+			POSTRoutine();
 		}
 
 	}
@@ -97,7 +139,9 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 	@Override
 	public void zeroSensor() {
 		// TODO Auto-generated method stub
-		
+		POSTFinished = false;
+		StartState = 0;
+		POSTTimer = 0;
 	}
 
 	@Override

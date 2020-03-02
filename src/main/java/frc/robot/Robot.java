@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
     drivetrain.zeroSensor();
     climber.zeroSensor();
     pigeon.zeroSensor();
+    lEDController.zeroSensor();
     ballSupervisor.zeroSensor();
   }
 

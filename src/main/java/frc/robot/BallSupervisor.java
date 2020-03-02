@@ -103,6 +103,8 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 SmartDashboard.putString("BallState", "Intake in");
                 conveyor.stage(feedModes.autoFill);
                 shooter.stopPIDMotor();
+                robotState.setTurnOnLimeLiteLight(false);
+                alreadyShooting = false;
                 shooter.indexPower(0);
                 if(true){
                     conveyor.setIntakeOn(true);
@@ -116,12 +118,15 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             case intakeOut:// when commanded to have intake reverse we command a negative power on the intake
                 SmartDashboard.putString("BallState", "Intake out");
                 conveyor.stage(feedModes.autoFill);
+                alreadyShooting = false;
+                robotState.setTurnOnLimeLiteLight(false);
                 shooter.stopPIDMotor();
                 shooter.indexPower(0);
                 intake.consume(-Calibrations.ballSuperviserVals.intakeStandardPower);
                 conveyor.setIntakeOn(true);
             break;
             case intakeStop: //Set to stop the intake
+                robotState.setTurnOnLimeLiteLight(false);
                 robotState.setManual(false);
                 alreadyShooting = false;
                 SmartDashboard.putString("BallState", "Intake stop");
@@ -129,7 +134,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 shooter.stopPIDMotor();
                 shooter.indexPower(0);
                 intake.consume(0);
-                 robotState.setLEDFlash(false);
+                robotState.setLEDFlash(false);
                 conveyor.setIntakeOn(false);
             break;
             case prime: //when we need to prime the robot for shooting we start spooling up the shooter to the requested
@@ -140,6 +145,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 shooter.indexPower(0);
                 intake.consume(0);
                 conveyor.setIntakeOn(false);
+                robotState.setTurnOnLimeLiteLight(true);
                 if(shooter.isShooterStable()){
                     robotState.setReadyToShoot(true);
                 }else{
@@ -160,6 +166,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 SmartDashboard.putString("BallState", "shoot");
                 robotState.setLEDColorState(3);
                 robotState.setLEDFlash(true);
+                robotState.setTurnOnLimeLiteLight(true);
                 if (shooter.isShooterStable() == true || alreadyShooting) {
                     conveyor.stage(feedModes.shoot);
                     shooter.indexPower(Calibrations.ballSuperviserVals.indexerPower);

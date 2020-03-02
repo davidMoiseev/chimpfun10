@@ -33,6 +33,8 @@ public class shooter {
     public double lowVoltageLockout;
 
     public shooter() {
+
+        
         compressor = new Compressor(Calibrations.CAN_ID.pcm);
         compressor.setClosedLoopControl(true);
         hood1 = new Solenoid(6);
