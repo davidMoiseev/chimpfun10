@@ -9,6 +9,8 @@ public abstract class RobotCommandProvider {
     private BallSupervisor.hoodPos hoodPosition;
     private Arm.ArmPositions ArmPosition;
 
+    public abstract boolean getEncodersReset();
+
     public abstract double getDriveCommand();
 
     public Arm.ArmPositions getArmPosition() {

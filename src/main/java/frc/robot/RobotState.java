@@ -146,7 +146,7 @@ public class RobotState {
     }
     public void setDriveDistanceRight(double driveDistanceRight) {
         this.driveDistanceRight = driveDistanceRight;
-        HotLogger.Log("Drive_Distance_Right", driveDistanceRight);
+      
       
     }
     public double getDriveDistanceLeft() {
@@ -154,7 +154,7 @@ public class RobotState {
     }
     public void setDriveDistanceLeft(double driveDistanceLeft) {
         this.driveDistanceLeft = driveDistanceLeft;
-        HotLogger.Log("Drive_Distance_Left", driveDistanceLeft);
+      
      
     }
     public void setTheta(double theta) {
@@ -184,6 +184,7 @@ public class RobotState {
     public void setTrajectoryComplete(boolean trajectoryComplete) {
         this.trajectoryComplete = trajectoryComplete;
         SmartDashboard.putBoolean("trajComplete", trajectoryComplete);
+        HotLogger.Log("path complete", trajectoryComplete);
     }
     
     public boolean getTrajectoryComplete() {

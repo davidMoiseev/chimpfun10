@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.controller.RamseteController;
+
+import org.hotutilites.hotlogger.HotLogger;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -27,8 +30,8 @@ public class TrajectoryFollower {
     private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Calibrations.DRIVE_CONSTANTS.trackWidth);
     private DifferentialDriveOdometry odometry;
 
-    TrajectoryMaker sample;
-    TrajectoryMaker sample2;
+    TrajectoryMaker shootingStartPosToWofFront;
+  
 
     Trajectory currentTraj;
     State currentStateGoal;
@@ -53,27 +56,23 @@ public class TrajectoryFollower {
     }
 
     public enum PathNames{
-        sample,
+        shootingStartPosToWofFront,
         sample2, 
         none
     }
     public void generateTrajectories(){  //structured so all auton trajs can be generated when robot inits to save time
-         sample = new TrajectoryMaker(2.0, 2, 0, 0, 0, 0, 1.5, -0.5);
-         sample2 = new TrajectoryMaker(2.0, 2, 0, 0, 0, 0, 1, 0.5);
+         shootingStartPosToWofFront = new TrajectoryMaker(2.0, 2, 0, 0, 0, 0, 3, 0);    // 4.13, 0.7 //(2.0, 2, 0, 0, 0, 0, 4, 0.5)
+       
     }
 
     public void startTrajectory(PathNames trajName, double yaw){    //structured so startTrajectory(name) can be called for any for auton and such (precalculated trajs)
     
         switch (trajName){
-            case sample:
-                currentTraj = sample.getTrajectory();
+            case shootingStartPosToWofFront:
+                currentTraj = shootingStartPosToWofFront.getTrajectory();
                 SmartDashboard.putBoolean("correct sample", true);
                 break;
 
-            case sample2:
-                currentTraj = sample2.getTrajectory();
-                SmartDashboard.putBoolean("other sample", true);
-                break;
 
             case none:
                 SmartDashboard.putBoolean("no sample", true);
@@ -96,7 +95,7 @@ public class TrajectoryFollower {
     }
 
     public boolean isTrajFinished(){
-        if ((Math.abs(leftOutput) < 0.01) && (Math.abs(rightOutput) < 0.01) && (trajTimer.get() > trajDuration) && !previouslyReportedFinished){
+        if ((Math.abs(leftOutput) < 0.001) && (Math.abs(rightOutput) < 0.001) && (trajTimer.get() > trajDuration) && !previouslyReportedFinished){
             previouslyReportedFinished = true;
             return true;
         }
@@ -132,6 +131,8 @@ public class TrajectoryFollower {
      
         SmartDashboard.putNumber("path Output left", leftOutput);
         SmartDashboard.putNumber("path Output right", rightOutput);
+        HotLogger.Log("path velocity left", leftOutput);
+        HotLogger.Log("path velocity right", rightOutput);
         SmartDashboard.putNumber("current path time", trajTimer.get());
       
     }
