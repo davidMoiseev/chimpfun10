@@ -19,6 +19,7 @@ public void updateState() {
         double[] ypr_deg = {0,0,0};
         pigeonIMU.getYawPitchRoll(ypr_deg);
         robotState.setTheta(ypr_deg[0]);
+        robotState.setRoll(ypr_deg[3]);
 }
 
 public void setSensorValue(double value) {

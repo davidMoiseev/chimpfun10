@@ -29,23 +29,23 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 		switch(StartState){
 			case 0:
 				setLEDcolor(5);
-				POSTTime = 50;
+				POSTTime = 85;
 			break;
 			case 1:
 				setLEDcolor(3);
-				POSTTime = 25;
+				POSTTime = 40;
 			break;
 			case 2:
 				setLEDcolor(2);
-				POSTTime = 25;
+				POSTTime = 40;
 			break;
 			case 3:
 				setLEDcolor(0);
-				POSTTime = 25;
+				POSTTime = 40;
 			break;
 			case 4:
 				setLEDcolor(-1);
-				POSTTime = 25;
+				POSTTime = 50;
 			break;
 			case 5:
 				POSTFinished = true;
@@ -130,6 +130,7 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 				dimmer = (powerPannel.getVoltage() - 7.3) / 2.2;
 				if(dimmer < 0) dimmer = 0;
 			}
+			if(dimmer > 0.40) dimmer = 0.40;
 		}else{
 			POSTRoutine();
 		}

@@ -142,7 +142,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 SmartDashboard.putString("BallState", "prime");
                 conveyor.stage(feedModes.prime);
                 shooter.PIDmotor(robotState.getShooterTargetRPM());
-                shooter.indexPower(0);
+                shooter.indexPower(-0.2);
                 intake.consume(0);
                 conveyor.setIntakeOn(false);
                 robotState.setTurnOnLimeLiteLight(true);
@@ -193,8 +193,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 shooter.stopPIDMotor();
                 shooter.indexPower(0);
                 conveyor.setIntakeOn(false);
-                robotState.setLEDFlash(true);
-                robotState.setLEDColorState(0);
                 
             break;
             case confirm:

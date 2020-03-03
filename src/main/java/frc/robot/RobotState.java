@@ -21,22 +21,31 @@ public class RobotState {
     private double distanceFromTarget; // Meters
     private boolean manual;
     private boolean lowPower;
+    private double roll;
     private boolean turnOnLimeLiteLight;
     private ArmStates armState;
     private double armDegreesFrom90;
     private double limelightHeight;
-	private double highestClimberPos;
-    private double driveVelocityLeft; //meters per second
-    private double driveVelocityRight; //meters per second
+    private double highestClimberPos;
+    private double driveVelocityLeft; // meters per second
+    private double driveVelocityRight; // meters per second
     private boolean trajectoryComplete = false;
 
-    public void resetRobotState(){
+    public void resetRobotState() {
         theta = 0; // Degrees
         driveDistanceLeft = 0; // Meters
         driveDistanceRight = 0; // Meters
-        driveVelocityLeft = 0; //meters per second
-        driveVelocityRight = 0; //meters per second
+        driveVelocityLeft = 0; // meters per second
+        driveVelocityRight = 0; // meters per second
         trajectoryComplete = false;
+    }
+
+    public double getRoll() {
+        return roll;
+    }
+
+    public void setRoll(double roll) {
+        this.roll = roll;
     }
 
     public double getTheta() {

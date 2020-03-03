@@ -6,8 +6,8 @@ public class Calibrations
 
     public class CAN_ID {
         public final static int pigeon = 30;
-        public final static int driveLeft1 = 7;
-        public final static int driveLeft2 = 8;
+        public final static int driveLeft1 = 3;
+        public final static int driveLeft2 = 4;
         public final static int driveRight1 = 1;
         public final static int driveRight2 = 2;
         public final static int shooter1 = 5;
@@ -50,7 +50,7 @@ public class Calibrations
         public final static int shooterCurrentLimit = 40;
         public final static int intakeArmCurrentLimit = 30;
         public final static double intakeStandardPower = 0.75;
-        public final static double indexerPower = 0.9;
+        public final static double indexerPower = 1;
         public final static double ledCycleTime = 15;
         public final static double ledDutyCycle = 0.5;
     }

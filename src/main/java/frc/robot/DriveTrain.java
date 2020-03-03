@@ -151,10 +151,10 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
         }
 
         if(commander.isLowPowerMode()){
-            driveLeftLeader.configPeakOutputForward(0.25);
-            driveRightLeader.configPeakOutputForward(0.25);
-            driveLeftLeader.configPeakOutputReverse(-0.1);
-            driveRightLeader.configPeakOutputReverse(-0.1);
+            driveLeftLeader.configPeakOutputForward(0.05);
+            driveRightLeader.configPeakOutputForward(0.05);
+            driveLeftLeader.configPeakOutputReverse(-0.25);
+            driveRightLeader.configPeakOutputReverse(-0.25);
         }else{
             driveLeftLeader.configPeakOutputForward(1);
             driveRightLeader.configPeakOutputForward(1);
@@ -234,8 +234,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
         }
 
         else{
-            driveRightLeader.set(ControlMode.PercentOutput, commander.getDriveCommand() + commander.getTurnCommand());
-            driveLeftLeader.set(ControlMode.PercentOutput, commander.getDriveCommand() - commander.getTurnCommand());
+            driveRightLeader.set(ControlMode.PercentOutput, -commander.getDriveCommand() + commander.getTurnCommand());
+            driveLeftLeader.set(ControlMode.PercentOutput, -commander.getDriveCommand() - commander.getTurnCommand());
         }
         
         robotState.setTrajectoryComplete(trajFollower.isTrajFinished());

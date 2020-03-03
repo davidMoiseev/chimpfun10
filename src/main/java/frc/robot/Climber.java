@@ -36,28 +36,13 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
 
         public climberController(int canID) {
             motor = new TalonFX(canID);
-            //motor.configFactoryDefault();
+            motor.configFactoryDefault();
             motor.selectProfileSlot(0, 0);
             motor.configNominalOutputForward(0);
             motor.configNominalOutputReverse(0);
             motor.configPeakOutputForward(1);
             motor.configPeakOutputReverse(-1);
             motor.setNeutralMode(NeutralMode.Brake);
-            // motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, canID);
-            // motor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10);
-            // motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10);
-            // motor.configMotionAcceleration(Calibrations.climberCals.acc);
-            // motor.configMotionCruiseVelocity(Calibrations.climberCals.vel);
-            // motor.config_kP(0, Calibrations.climberCals.kP);
-            // motor.config_kI(0, Calibrations.climberCals.kI);
-            // motor.config_kD(0, Calibrations.climberCals.kD);
-            // motor.config_kF(0, Calibrations.climberCals.kF);
-            // motor.config_IntegralZone(0, Calibrations.climberCals.kIZ);
-            // motor.configForwardSoftLimitEnable(true);
-            // motor.configReverseSoftLimitEnable(true);
-            // motor.configForwardSoftLimitThreshold(
-            //         (int) (Calibrations.climberCals.upperLimit * Calibrations.climberCals.ticksPerInch));
-            // motor.configReverseSoftLimitThreshold(0);
         }
 
         public int getStatusColor() {
@@ -89,68 +74,6 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
             enabled = false;
         }
 
-        public void setOverride(boolean mode){
-            override = mode;
-        }
-
-        public void setTarget(double targetInch){
-            autoTarget = (Calibrations.climberCals.ticksPerInch * targetInch);
-        }
-
-        public void setDelta(double deltaInch){
-            delta = (Calibrations.climberCals.ticksPerInch * deltaInch);
-        }
-
-        private void release(){
-            target = position + 4;
-            if(position > SnapShot - 0.25 || position < 0.25){
-                released = true;
-            }else{
-                released = false;
-            }
-        }
-
-        public void periodic(){
-            position = motor.getSelectedSensorPosition() / Calibrations.climberCals.ticksPerInch;
-            if(override){
-                if(!enabled){
-                    motor.set(ControlMode.PercentOutput, 0);
-                }else{
-                    motor.set(ControlMode.PercentOutput, overridePower);
-                }
-            }else{
-                if(!enabled){
-                    motor.set(ControlMode.PercentOutput, 0);
-                    released = false;
-                    statusColor = 1;
-                }else if(enabled && !released){
-                    this.release();
-                }else{
-                    if(inAuto){
-                        target = autoTarget;
-                    }else{
-                        if(Math.abs(delta) < 0.25 && !tookSnapShot){
-                            SnapShot = position;
-                            target = SnapShot;
-                            tookSnapShot = true;
-                        }else if(Math.abs(delta) < 0.25 && tookSnapShot){
-                            target = SnapShot;
-                        }else{
-                            target = position + delta;
-                            tookSnapShot = false;
-                        }
-                        if(Math.abs(target - position) < 1){
-                            statusColor = 3;
-                        }else{
-                            statusColor = 2;
-                        }
-                    }
-
-                }
-                if(target >= Calibrations.climberCals.upperLimit) target = Calibrations.climberCals.upperLimit; 
-                motor.set(ControlMode.MotionMagic, (int)(target * Calibrations.climberCals.ticksPerInch));
-            }
-        }
 
         public double getCurrentHeight(){
             return position;
@@ -167,15 +90,9 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
     
 
     public void performAction(RobotCommandProvider commander, RobotState state){  
-        // leftClimber.setOverride(true);
-        // rightClimber.setOverride(true);
-        leftClimber.setPower(commander.getLeftClimberDelta());
-        rightClimber.setPower(commander.getRightClimberDelta());
-
-        // leftClimber.setEnabled(true);
-        // leftClimber.setDelta(commander.getLeftClimberDelta());
-        // rightClimber.setEnabled(commander.isRightClimberActivate());
-        // rightClimber.setDelta(commander.getRightClimberDelta());
+        
+        leftClimber.setPower(-commander.getLeftClimberDelta());
+        //rightClimber.setPower(commander.getRightClimberDelta());
         if(commander.isLeftClimberActivate() || commander.isRightClimberActivate()){
             rachet.set(true);
         }else{
@@ -186,9 +103,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
 
     @Override
     public void updateState() {
-        leftClimber.periodic();
-        rightClimber.periodic();
-
+        SmartDashboard.putNumber("ClimberRoll", robotState.getRoll());
         SmartDashboard.putNumber("LeftClimberStatus", leftClimber.statusColor);
         SmartDashboard.putNumber("RightClimberStatus", rightClimber.statusColor);
 

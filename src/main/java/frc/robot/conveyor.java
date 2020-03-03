@@ -248,7 +248,7 @@ public class conveyor {
                 this.zeroMotors();
                 this.shotFired();
                 this.count(true);
-                this.shootPower(0.45); //to const
+                this.shootPower(0.30); //to const
             break;
             case reject:
                 this.zeroMotors();
@@ -259,7 +259,6 @@ public class conveyor {
             case stop:
                 this.zeroMotors();
                 this.count(true);
-                this.shootPower(0);
             break;
             case confirm:
                 this.confirmInventory();
