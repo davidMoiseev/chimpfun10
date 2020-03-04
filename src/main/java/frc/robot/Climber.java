@@ -91,7 +91,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
 
     public void performAction(RobotCommandProvider commander, RobotState state){  
         
-        leftClimber.setPower(-commander.getLeftClimberDelta());
+        //leftClimber.setPower(-commander.getLeftClimberDelta());
         //rightClimber.setPower(commander.getRightClimberDelta());
         if(commander.isLeftClimberActivate() || commander.isRightClimberActivate()){
             rachet.set(true);

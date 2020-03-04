@@ -67,6 +67,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
         driveRightLeader.configFactoryDefault();
         driveLeftLeader.configFactoryDefault();
+        driveRightFollower.configFactoryDefault();
+        driveLeftFollower.configFactoryDefault();
 
         driveRightLeader.setNeutralMode(NeutralMode.Brake);
         driveRightFollower.setNeutralMode(NeutralMode.Brake);
