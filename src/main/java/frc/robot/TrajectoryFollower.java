@@ -61,7 +61,7 @@ public class TrajectoryFollower {
         none
     }
     public void generateTrajectories(){  //structured so all auton trajs can be generated when robot inits to save time
-         shootingStartPosToWofFront = new TrajectoryMaker(2.0, 2, 0, 0, 0, 0, 3, 0);    // 4.13, 0.7 //(2.0, 2, 0, 0, 0, 0, 4, 0.5)
+         shootingStartPosToWofFront = new TrajectoryMaker(1.8, 1.8, 0, 0, 0, 0, 3.5, 0);    // 4.13, 0.7 //(2.0, 2, 0, 0, 0, 0, 4, 0.5)
        
     }
 
@@ -71,7 +71,7 @@ public class TrajectoryFollower {
             case shootingStartPosToWofFront:
                 currentTraj = shootingStartPosToWofFront.getTrajectory();
                 SmartDashboard.putBoolean("correct sample", true);
-                break;
+               
 
 
             case none:

@@ -1,6 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -56,6 +58,11 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
     private double rightFF;
     private double driveDistanceRight = 0;
     private double driveDistanceLeft = 0;
+    private double autoDriveStraightRight = 0;
+    private double autoDriveStraightLeft = 0;
+    private double distanceDifference = 0;;
+
+
 
     public DriveTrain(RobotState robotState) {
 
@@ -86,6 +93,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
         driveRightLeader.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0 , 30);
         driveLeftLeader.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0 , 30);
+        driveRightFollower.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0 , 30);
+        driveLeftFollower.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0 , 30);
 
         driveRightLeader.configNominalOutputForward(0,30);
 		driveRightLeader.configNominalOutputReverse(0, 30);
@@ -202,24 +211,20 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
             
             leftOutput = (1 * Calibrations.DRIVE_CONSTANTS.ticksPerMeter) * 10 ;
             rightOutput = (1 * Calibrations.DRIVE_CONSTANTS.ticksPerMeter) * 10;
-            // leftFF = (leftffController.calculate(trajFollower.leftOutput));
-            // rightFF = (rightffController.calculate(trajFollower.rightOutput));
-            driveLeftLeader.set((ControlMode.Velocity), leftOutput);
-            driveRightLeader.set((ControlMode.Velocity), rightOutput);
+
+            leftOutput = lDrivePID.calculate(driveDistanceLeft, trajFollower.leftOutput);
+            rightOutput = rDrivePID.calculate(driveDistanceRight, trajFollower.rightOutput);
+            leftFF = (leftffController.calculate(trajFollower.leftOutput));
+            rightFF = (rightffController.calculate(trajFollower.rightOutput));
+
+            driveLeftLeader.set((ControlMode.PercentOutput), (leftOutput + leftFF) / 12);
+            driveRightLeader.set((ControlMode.PercentOutput), (rightOutput + rightFF)/ 12);
 
             SmartDashboard.putNumber("111 pid target vel", driveLeftLeader.getActiveTrajectoryVelocity());
             SmartDashboard.putNumber("111 motor act vel", driveLeftLeader.getSelectedSensorVelocity() *10 / Calibrations.DRIVE_CONSTANTS.ticksPerMeter);
             HotLogger.Log("pid target vel", driveLeftLeader.getActiveTrajectoryVelocity());
             HotLogger.Log("motor act vel", driveLeftLeader.getSelectedSensorVelocity() *10 / Calibrations.DRIVE_CONSTANTS.ticksPerMeter);
-            // leftOutput = lDrivePID.calculate(robotState.getDriveVelocityLeft(), trajFollower.leftOutput);
-            // rightOutput = rDrivePID.calculate(robotState.getDriveVelocityRight(), trajFollower.rightOutput);
-
-            // leftFF = leftffController.calculate(trajFollower.leftOutput);
-            // rightFF = rightffController.calculate(trajFollower.rightOutput);
-
-            // driveLeftLeader.set(ControlMode.PercentOutput, (leftOutput + leftFF) /12);
-            // driveRightLeader.set(ControlMode.PercentOutput, (rightOutput + rightFF) /12);
-            
+         
 
 
             SmartDashboard.putNumber("following path", followingPathCount);
@@ -228,18 +233,38 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
             SmartDashboard.putNumber("left Output", leftOutput);
             SmartDashboard.putNumber("right Output", rightOutput);
 
-            HotLogger.Log("path feedback output left", leftOutput);
-            HotLogger.Log("path feedback output right", rightOutput);
-            HotLogger.Log("path feedforward output left", leftFF);
-            HotLogger.Log("path feedforward output right", rightFF);
+            
             followingPathCount++;
         }
-
+    
         else{
-            driveRightLeader.set(ControlMode.PercentOutput, -commander.getDriveCommand() + commander.getTurnCommand());
-            driveLeftLeader.set(ControlMode.PercentOutput, -commander.getDriveCommand() - commander.getTurnCommand());
-        }
+            double correction = 0;
+
+            if (commander.getDriveYawCorrectionEnabled()) {
+               double error = commander.getDriveYawCorrection() - robotState.getTheta();
+               correction = error * Calibrations.DRIVE_CONSTANTS.YawCorrection_kP;
+            } else  {
+            correction = 0;
+            }
+
+            // if (commander.getDriveCommand() < 0) {
+            //     correction = -correction;
+            // }
         
+            driveRightLeader.set(ControlMode.PercentOutput, commander.getDriveCommand() + commander.getTurnCommand() + correction);
+            driveLeftLeader.set(ControlMode.PercentOutput, commander.getDriveCommand() - commander.getTurnCommand() - correction);
+
+        }
+
+        HotLogger.Log("left motor output", driveLeftLeader.getMotorOutputPercent());
+        HotLogger.Log("right motor output", driveRightLeader.getMotorOutputPercent());
+        HotLogger.Log("path feedback output left", leftOutput);
+        HotLogger.Log("path feedback output right", rightOutput);
+        HotLogger.Log("path feedforward output left", leftFF);
+        HotLogger.Log("path feedforward output right", rightFF);
+        HotLogger.Log("drive ticks left", driveLeftLeader.getSelectedSensorPosition());
+         HotLogger.Log("drive ticks right", driveRightLeader.getSelectedSensorPosition());
+            
         robotState.setTrajectoryComplete(trajFollower.isTrajFinished());
     }
   
@@ -253,10 +278,14 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
     @Override
     public void zeroSensor() {
-        driveRightLeader.setSelectedSensorPosition(0);
-        driveRightFollower.setSelectedSensorPosition(0);
-        driveLeftLeader.setSelectedSensorPosition(0);
-        driveLeftFollower.setSelectedSensorPosition(0);
+        driveRightLeader.setSelectedSensorPosition(0,0,30);
+        driveRightFollower.setSelectedSensorPosition(0,0,30);
+        driveLeftLeader.setSelectedSensorPosition(0,0,30);
+        driveLeftFollower.setSelectedSensorPosition(0,0,30);
+        driveRightLeader.setSelectedSensorPosition(0,1,30);
+        driveRightFollower.setSelectedSensorPosition(0,1,30);
+        driveLeftLeader.setSelectedSensorPosition(0,1,30);
+        driveLeftFollower.setSelectedSensorPosition(0,1,30);
         
     }
 

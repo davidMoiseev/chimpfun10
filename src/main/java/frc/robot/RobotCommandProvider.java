@@ -8,14 +8,18 @@ public abstract class RobotCommandProvider {
     private BallSupervisor.BallSupervisorState ballSupervisorState;
     private BallSupervisor.hoodPos hoodPosition;
     private Arm.ArmPositions ArmPosition;
+    private boolean autoProvider;
 
     public abstract boolean getEncodersReset();
 
     public abstract double getDriveCommand();
+    public abstract boolean getDriveYawCorrectionEnabled();
 
     public Arm.ArmPositions getArmPosition() {
         return ArmPosition;
     }
+
+    public abstract double getDriveYawCorrection();
 
     public void setArmPosition(Arm.ArmPositions armPosition) {
         this.ArmPosition = armPosition;

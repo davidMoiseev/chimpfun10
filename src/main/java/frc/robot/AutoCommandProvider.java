@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-
-
 import frc.robot.TrajectoryFollower.PathNames;
 
 import org.hotutilites.hotcontroller.HotController;
@@ -22,7 +20,8 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     private AutoRoutineRunner autoRunner;
     private RobotState robotState;
-
+    private boolean driveYawCorrectionEnabled;
+    private double driveYawCorrection;
 
     public AutoCommandProvider(RobotState robotState) {
         this.robotState = robotState;
@@ -31,7 +30,11 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     }
 
-    public boolean getEncodersReset(){
+    public double getDriveYawCorrection() {
+        return autoRunner.driveYawCorrection;
+    }
+
+    public boolean getEncodersReset() {
         return autoRunner.resetEncoders;
     }
 
@@ -67,7 +70,7 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     @Override
     public boolean getAimingEnabled() {
-        return autoRunner.primeAutoShot;
+        return autoRunner.autoAiming;
     }
 
     @Override
@@ -91,13 +94,13 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     @Override
     public void chooseBallCommand() {
-        SmartDashboard.putBoolean("actually choosing ball command", autoRunner.primeAutoShot);
+
         
         if (autoRunner.shooting) {
             setBallSupervisorState(BallSupervisorState.shoot);
         }else if (autoRunner.primeAutoShot) { // config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(3800);
+            robotState.setShooterTargetRPM(3040);
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
             SmartDashboard.putBoolean("actually trying to prime", true);
@@ -179,5 +182,10 @@ public class AutoCommandProvider extends RobotCommandProvider {
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public boolean getDriveYawCorrectionEnabled() {
+        return autoRunner.driveYawCorrectionEnabled;
+    }
     
 }

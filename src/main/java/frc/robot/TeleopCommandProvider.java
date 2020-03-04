@@ -68,7 +68,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         this.operator = operator;
     }
     public double getDriveCommand() {
-        return driver.getStickLY();
+        return -driver.getStickLY();
     }
     public double getTurnCommand() {
         turn = driver.getStickRX();
@@ -163,7 +163,8 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.intakeStop); 
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);
-            setArmPosition(ArmPositions.off);   
+            setArmPosition(ArmPositions.off);
+            robotState.setTurnOnLimeLiteLight(false);
         }
     }
 
@@ -184,7 +185,18 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         return false;
     }
 
-        
+    @Override
+    public boolean getDriveYawCorrectionEnabled() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public double getDriveYawCorrection() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }
 
 

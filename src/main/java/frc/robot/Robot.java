@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
    private LEDController lEDController;
    private Arm arm;
    private Limelight limelite;
+  private int disabledCounter = 0;
 
   @Override
   public void robotInit() {
@@ -74,12 +75,18 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    disabledCounter++;
+    if( disabledCounter > 300){
+      drivetrain.setBrake(false);
+    }
     robotState.setRobotEnabled(false);
   }
 
   @Override
   public void disabledInit() {
-    drivetrain.setBrake(false);
+        HotLogger.Setup("theta", "auto_step_drive", "rightDistance", "leftDistance","autoTime","path feedback output left", "path feedback output right", "path feedforward output left",  
+    "path feedforward output right", "path velocity left", "path velocity right", "path complete", "pid target vel", "motor act vel", "left motor output", "right motor output",
+    "drive ticks left", "drive ticks right");
   }
 
   @Override
@@ -94,8 +101,7 @@ public class Robot extends TimedRobot {
     drivetrain.zeroSensor();
     robotState.setRobotEnabled(true);
     robotState.setTurnOnLimeLiteLight(true);
-    HotLogger.Setup("theta", "auto_step_drive", "path feedback output left", "path feedback output right", "path feedforward output left",  
-    "path feedforward output right", "path velocity left", "path velocity right", "path complete", "pid target vel", "motor act vel");
+
   }
 
   @Override
@@ -109,6 +115,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    drivetrain.setBrake(true);
     arm.zeroSensor();
     //ballSupervisor.zeroSensor();
     robotState.setRobotEnabled(true);

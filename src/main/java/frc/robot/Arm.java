@@ -62,6 +62,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         trenchshot,
         ground,
         manual,
+        wheelOfFortune,
         off,
         reset
     }
@@ -75,10 +76,15 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
       
        
         //SmartDashboard.putString("commanded pos ", commander.getArmPosition().toString());
-        SmartDashboard.putNumber("arm commanded output", armMotor.getMotorOutputPercent());
+  
         SmartDashboard.putNumber("arm motion magc error", armMotor.getClosedLoopError(0));
         resetting = false; //set here so will default to set to false unless runs case that is resetting
         //if (!commander.getArmReset() && hasReset) {
+
+        if(armMotor.getSelectedSensorPosition() > Calibrations.ArmPositions.maxTicks){
+            armMotor.set(ControlMode.PercentOutput, 0);
+        }
+        else{
         switch(commander.getArmPosition()){
             case packaged:
                 armMotor.set(ControlMode.MotionMagic, Calibrations.ArmPositions.packagedAngle*Calibrations.ARM.ticksPerDegree);
@@ -106,6 +112,9 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             case manual:
                 armMotor.set(ControlMode.PercentOutput, commander.getArmOutput());
             break;
+            case wheelOfFortune:
+                armMotor.set(ControlMode.MotionMagic, Calibrations.ArmPositions.wofAngle*Calibrations.ARM.ticksPerDegree);
+            break;
             case off:
                 armMotor.set(ControlMode.PercentOutput, 0);
             break;
@@ -113,9 +122,10 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
                 armMotor.set(ControlMode.PercentOutput, 0.00);  
                 armMotor.setSelectedSensorPosition(0, 0, 0);
                 resetting = true;
+          
             break;
             }
-            
+        }   
         }
         
         // if(commander.getArmReset()) {
@@ -174,7 +184,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
 
     public void autoInitArmAngle(){
         armMotor.set(ControlMode.PercentOutput, 0.00);  
-        armMotor.setSelectedSensorPosition((int) (93*Calibrations.ARM.ticksPerDegree), 0, 0);
+        armMotor.setSelectedSensorPosition(0, 0, 0); // Set back to 7700
     }
 
     @Override

@@ -39,7 +39,12 @@ public class shooter {
         compressor.setClosedLoopControl(true);
         hood1 = new Solenoid(6);
         
-        hood2 = new Solenoid(5);
+        if(Calibrations.isCompBot) {
+			 hood2 = new Solenoid(5);
+			 }
+        else {
+			 hood2 = new Solenoid(7);
+			 }
         powerPannel = new PowerDistributionPanel();
         kP = Calibrations.shooter_PID.kP;
         kI = Calibrations.shooter_PID.kI;
