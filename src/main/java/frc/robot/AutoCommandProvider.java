@@ -103,7 +103,6 @@ public class AutoCommandProvider extends RobotCommandProvider {
             robotState.setShooterTargetRPM(3040);
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
-            SmartDashboard.putBoolean("actually trying to prime", true);
         }else if (autoRunner.primeTrenchShot) {// config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(5300);

@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-
 public class conveyor {
     private boolean wasStage;
     private boolean frontPorch = false;
     private boolean frontPorchSkip = false;
     private boolean carouselFull = false;
     private boolean shouldStage;
+    private boolean full;
     private double carouselPower = 0.65;
     private double conveyorPower = 0.75;
     private double carouselOutPut = 0;
@@ -57,6 +57,17 @@ public class conveyor {
         powerPannel = new PowerDistributionPanel();
         carouselMotor.setNeutralMode(NeutralMode.Brake);
         conveyorMotor.setNeutralMode(NeutralMode.Coast);
+    }
+
+    public boolean isFull() {
+        if(carouselFull && inConveyor >= 2){
+            full = true;
+            return true;
+        }else{
+            full = false;
+            return false;
+        }
+        
     }
 
     public void setIntakeOn(boolean intakeOn) {
@@ -191,8 +202,8 @@ public class conveyor {
     }
 
     public void shootPower(double pwr){
-        conveyorOutPut = conveyorPower;   
-        carouselOutPut = carouselPower;
+        conveyorOutPut = conveyorPower*pwr;   
+        carouselOutPut = carouselPower*pwr;
         if(pos4Sensor.get() != Pos4lastState){
             if(pos4Sensor.get() != Pos4lastState){
                 inConveyor--;
@@ -248,13 +259,13 @@ public class conveyor {
                 this.zeroMotors();
                 this.shotFired();
                 this.count(true);
-                this.shootPower(0.30); //to const
+                this.shootPower(0.85); //to const
             break;
             case reject:
                 this.zeroMotors();
                 this.antiJam();
                 this.count(false);
-                this.shootPower(-0.5); //to const
+                this.shootPower(-1); //to const
             break;
             case stop:
                 this.zeroMotors();

@@ -38,12 +38,11 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             return operator.getStickLY() + operator.getStickLX();
         }
     }
-
     public double getRightClimberDelta(){
         if(manaulMode){
             return operator.getStickRY();
         }else{
-            return operator.getStickLY() + operator.getStickLX();
+            return operator.getStickLY() - operator.getStickLX();
         }
         
     }
@@ -123,7 +122,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         if (this.getManualMode()) {
             setBallSupervisorState(BallSupervisorState.manual);
             setArmPosition(ArmPositions.manual);
-        }else if(this.isLowPowerMode()){
+        }else if(false){
             setBallSupervisorState(BallSupervisorState.stop);
             setArmPosition(ArmPositions.off);
         }else if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
@@ -138,7 +137,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             
         }else if(operator.getButtonB()){//config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(5800); //to const //5300
+            robotState.setShooterTargetRPM(5400); //to const //5300
             setHoodPosition(hoodPos.trench);
             setArmPosition(ArmPositions.trenchshot);     
 

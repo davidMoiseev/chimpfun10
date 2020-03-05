@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.SensorTerm;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import org.hotutilites.hotInterfaces.IHotSensedActuator;
+import org.hotutilites.hotlogger.HotLogger;
 public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider, Integer > {
     RobotState state;
     private TalonSRX armMotor;
@@ -20,6 +21,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
     private int counter = 0;
     private double output;
     private boolean resetting;
+    private boolean armReset = false;;
     public Arm(RobotState state){
         this.state = state;
         armMotor = new TalonSRX(Calibrations.CAN_ID.intakeLifter);
@@ -33,7 +35,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         armMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 40);
     
      
-        armMotor.configPeakCurrentLimit(55, 20); //Limit of 45 amps
+        armMotor.configPeakCurrentLimit(45, 20); //Limit of 45 amps
         armMotor.configPeakCurrentDuration(750, 20); //For 500ms
         armMotor.configContinuousCurrentLimit(30, 20); //Limit of 30 amps cont
         armMotor.configNominalOutputForward(0, 0);
@@ -74,12 +76,10 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
     }
     public void performAction(RobotCommandProvider commander, RobotState state){  
       
-       
-        //SmartDashboard.putString("commanded pos ", commander.getArmPosition().toString());
   
         SmartDashboard.putNumber("arm motion magc error", armMotor.getClosedLoopError(0));
         resetting = false; //set here so will default to set to false unless runs case that is resetting
-        //if (!commander.getArmReset() && hasReset) {
+
 
         if(armMotor.getSelectedSensorPosition() > Calibrations.ArmPositions.maxTicks){
             armMotor.set(ControlMode.PercentOutput, 0);
@@ -103,12 +103,22 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             case trenchshot:
                 armMotor.set(ControlMode.MotionMagic,  Calibrations.ArmPositions.trenchShotAngle*Calibrations.ARM.ticksPerDegree);
             
-              // armMotor.set(ControlMode.MotionMagic, Calibrations.ARM.visionAngleSetPoint*Calibrations.ARM.ticksPerDegree, DemandType.ArbitraryFeedForward, calcArbFF()); 
             break;
             case ground:
+                if(!armReset){
+                    if(hardResetComplete()){
+                        resetting = false;
+                        armReset = true;
+                    }
+                    else{
+                        resetting = false;
+                    }
+                }
+                else{
                   armMotor.set(ControlMode.MotionMagic, Calibrations.ArmPositions.groundPickupAngle*Calibrations.ARM.ticksPerDegree);
-               // armMotor.set(ControlMode.MotionMagic, Calibrations.ARM.groundAngleSetPoint*Calibrations.ARM.ticksPerDegree, DemandType.ArbitraryFeedForward, calcArbFF()); 
-            break;
+               
+                }
+               break;
             case manual:
                 armMotor.set(ControlMode.PercentOutput, commander.getArmOutput());
             break;
@@ -127,22 +137,10 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             }
         }   
         }
-        
-        // if(commander.getArmReset()) {
-        //     if (!hardResetComplete()){              //runs hard reset
-        //         state.setArmState(ArmStates.resetting);
-        //     }
-        //     else{
-        //         state.setArmState(ArmStates.freefall);        //can log
-        //         hasReset = true;
-        //     }
-        // }
-    // }
+     
     public boolean hardResetComplete(){
-      
-        currentCurrent = Math.abs(armMotor.getStatorCurrent());
-        SmartDashboard.putNumber("current current", currentCurrent);
-        if  (currentCurrent > Calibrations.ARM.averageCurrentDraw + 5){    
+    
+        if  (currentCurrent > Calibrations.ARM.resetCurrentDraw){    
             armMotor.set(ControlMode.PercentOutput, 0.00);  
             armMotor.setSelectedSensorPosition(0);
             counter = 0;
@@ -164,7 +162,9 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
     
     @Override
     public void updateState() {
-        SmartDashboard.putNumber("arm ticks ", armMotor.getSelectedSensorPosition());
+        currentCurrent = Math.abs(armMotor.getStatorCurrent());
+        SmartDashboard.putNumber("current current", currentCurrent);
+        HotLogger.Log("arm current draw", armMotor.getStatorCurrent());
         if(resetting = true){
             state.setArmState(ArmStates.resetting);
         }
@@ -178,13 +178,14 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
     }
     @Override
     public void zeroSensor() {
+        hasReset = false;
         armMotor.set(ControlMode.PercentOutput, 0.00);  
         armMotor.setSelectedSensorPosition(0, 0, 0);
     }
 
     public void autoInitArmAngle(){
         armMotor.set(ControlMode.PercentOutput, 0.00);  
-        armMotor.setSelectedSensorPosition(0, 0, 0); // Set back to 7700
+        armMotor.setSelectedSensorPosition(7700, 0, 0); // Set back to 7700
     }
 
     @Override

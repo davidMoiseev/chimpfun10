@@ -116,9 +116,9 @@ public class TrajectoryFollower {
         wheelSpeeds = kinematics.toWheelSpeeds(adjustedSpeeds);
  
    
-        SmartDashboard.putString("path position now", currentStateGoal.poseMeters.toString());
-        SmartDashboard.putNumber ("state goal velocity now", currentStateGoal.velocityMetersPerSecond);
-        SmartDashboard.putString("current position", currentPos.toString());
+        // SmartDashboard.putString("path position now", currentStateGoal.poseMeters.toString());
+        // SmartDashboard.putNumber ("state goal velocity now", currentStateGoal.velocityMetersPerSecond);
+        // SmartDashboard.putString("current position", currentPos.toString());
         
         }
 
@@ -129,11 +129,10 @@ public class TrajectoryFollower {
         rightOutput = wheelSpeeds.rightMetersPerSecond;
 
      
-        SmartDashboard.putNumber("path Output left", leftOutput);
-        SmartDashboard.putNumber("path Output right", rightOutput);
-        HotLogger.Log("path velocity left", leftOutput);
-        HotLogger.Log("path velocity right", rightOutput);
-        SmartDashboard.putNumber("current path time", trajTimer.get());
+        // SmartDashboard.putNumber("path Output left", leftOutput);
+        // SmartDashboard.putNumber("path Output right", rightOutput);
+// ;
+//         SmartDashboard.putNumber("current path time", trajTimer.get());
       
     }
 

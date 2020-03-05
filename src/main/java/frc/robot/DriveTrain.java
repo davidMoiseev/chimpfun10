@@ -258,10 +258,10 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
         HotLogger.Log("left motor output", driveLeftLeader.getMotorOutputPercent());
         HotLogger.Log("right motor output", driveRightLeader.getMotorOutputPercent());
-        HotLogger.Log("path feedback output left", leftOutput);
-        HotLogger.Log("path feedback output right", rightOutput);
-        HotLogger.Log("path feedforward output left", leftFF);
-        HotLogger.Log("path feedforward output right", rightFF);
+        // HotLogger.Log("path feedback output left", leftOutput);
+        // HotLogger.Log("path feedback output right", rightOutput);
+        // HotLogger.Log("path feedforward output left", leftFF);
+        // HotLogger.Log("path feedforward output right", rightFF);
         HotLogger.Log("drive ticks left", driveLeftLeader.getSelectedSensorPosition());
          HotLogger.Log("drive ticks right", driveRightLeader.getSelectedSensorPosition());
             
