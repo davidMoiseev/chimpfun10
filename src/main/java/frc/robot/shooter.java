@@ -85,10 +85,19 @@ public class shooter {
         }
     }
 
+    public void setCompressor(boolean enabled){
+        if(enabled){
+            compressor.setClosedLoopControl(true);
+        }else{
+            compressor.setClosedLoopControl(false);
+        }
+    }
+
     public void stopPIDMotor() {
         m_pidController.setReference(0, ControlType.kDutyCycle);
         PIDTarget = 0;
         m_pidController.setOutputRange(0, kMaxOutput);
+        setCompressor(true);
     }
     
     public void PIDmotor(double rpm){ 
@@ -96,6 +105,7 @@ public class shooter {
         m_pidController.setOutputRange(kMinOutput, lowVoltage);
         PIDTarget = rpm;
         m_pidController.setReference(rpm, ControlType.kVelocity,0);
+        setCompressor(false);
     }
 
     public void PowerCheck(){
