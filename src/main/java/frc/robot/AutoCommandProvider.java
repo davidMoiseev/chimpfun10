@@ -16,6 +16,8 @@ import frc.robot.Arm.ArmPositions;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutoRoutineRunner;
 
+
+
 public class AutoCommandProvider extends RobotCommandProvider {
 
     private AutoRoutineRunner autoRunner;
@@ -25,7 +27,7 @@ public class AutoCommandProvider extends RobotCommandProvider {
 
     public AutoCommandProvider(RobotState robotState) {
         this.robotState = robotState;
-
+        
         autoRunner = new AutoRoutineRunner(robotState);
 
     }
@@ -130,7 +132,7 @@ public class AutoCommandProvider extends RobotCommandProvider {
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);
             setArmPosition(ArmPositions.ground);
-          
+            
         }
     }
 

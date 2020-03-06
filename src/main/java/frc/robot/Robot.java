@@ -104,8 +104,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    autoCommander.updateAutoRoutine();
-    autoCommander.chooseBallCommand();
+    //autoCommander.updateAutoRoutine();
+    //autoCommander.chooseBallCommand();
     drivetrain.performAction(autoCommander, robotState);
     ballSupervisor.performAction(autoCommander, robotState);
     arm.performAction(autoCommander, robotState);
@@ -116,7 +116,6 @@ public class Robot extends TimedRobot {
     HotLogger.Setup("theta", "auto_step_drive", "rightDistance", "leftDistance","autoTime", "left motor output", "right motor output",
     "drive ticks left", "drive ticks right", "ball inventory", "BallState", "carousel output", "conveyor output", "MasterIndicator State" );
     drivetrain.setBrake(true);
-    arm.zeroSensor();
     //ballSupervisor.zeroSensor();
     robotState.setRobotEnabled(true);
   }

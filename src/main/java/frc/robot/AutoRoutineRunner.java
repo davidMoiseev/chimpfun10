@@ -55,6 +55,8 @@ public class AutoRoutineRunner {
 	public double driveYawCorrection = 0;
 	public boolean driveYawCorrectionEnabled = false;
     private boolean timedOutCase1 = false;
+    private boolean trench;
+    private double distanceJustShoot = 0.5;
 
 
         //1.7 m = wof
@@ -62,6 +64,7 @@ public class AutoRoutineRunner {
 
     public AutoRoutineRunner(RobotState robotState){ 
 
+        trench = Calibrations.auton.trench;
         this.robotState = robotState;
         driveStep = -1;
         driveYawCorrection = 0;
@@ -279,6 +282,8 @@ public class AutoRoutineRunner {
         HotLogger.Log("leftDistance", robotState.getDriveDistanceLeft());
         HotLogger.Log("autoTime", autoTimer.get()); 
 
+
+        if(trench){
         switch(driveStep){
             case -1:
                 autoTimer.start();
@@ -470,8 +475,65 @@ public class AutoRoutineRunner {
                 }
                 break;
         }
+        }
 
-
+        else{
+            switch(driveStep){
+                case -1:
+                    autoTimer.start();
+                    initConveyer = true;
+                    timer = new Timer();
+                    timer.start();
+                    driveStep++; //so init code can run
+                    break;
+                case 0:
+                    initConveyer = false;
+                    primeAutoShot = true;
+                     autoAiming = true;
+                if(robotState.isReadyToShoot() && ((robotState.getVisionOutputStatus() == 3) || timer.get() > 3) ){
+                    driveStep++;
+                }
+                break;
+                case 1:
+                    shooting = true;
+                    autoAiming = false;
+                    primeAutoShot = false;
+                    if((timer.get() > 7)){
+                        timedOutCase1 = true;}
+    
+                if(robotState.getInventory() == 0 || timedOutCase1){ 
+                    inventoryEmptyFor++;  
+                }
+                if(inventoryEmptyFor >= 10){
+                    shotAngle = robotState.getTheta();
+                    if(timedOutCase1)
+                    {ballReset = true;}
+                    resetEncoders = true;
+                    autoAiming = false;
+                    driveStep++;
+                }
+                break;
+    
+                case 2:
+                    autoAiming = false;
+                    shooting = false;
+                    resetEncoders = false;
+                    driveOutput = -0.15;
+                    intake = false;
+                    driveYawCorrection = shotAngle;
+                    driveYawCorrectionEnabled = true;
+    
+                if (robotState.getDriveDistanceRight() <= -distanceJustShoot){
+                    intake = false;
+                    driveStep++;
+                    }
+                break;  
+                
+                case 3:
+                    driveOutput = 0;
+                    break;
+        }
+    }
             
     }
 }

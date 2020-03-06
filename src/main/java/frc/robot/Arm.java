@@ -121,6 +121,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
                break;
             case manual:
                 armMotor.set(ControlMode.PercentOutput, commander.getArmOutput());
+                armReset = false;
             break;
             case wheelOfFortune:
                 armMotor.set(ControlMode.MotionMagic, Calibrations.ArmPositions.wofAngle*Calibrations.ARM.ticksPerDegree);

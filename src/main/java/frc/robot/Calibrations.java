@@ -4,6 +4,10 @@ public class Calibrations
 {
     public final static boolean isCompBot=true;
 
+    public class auton{
+        public static final boolean trench = false;
+    }
+
     public class CAN_ID {
         public final static int pigeon = 30;
         public final static int driveLeft1 = 4;
@@ -134,4 +138,6 @@ public class Calibrations
         public static final boolean shortPistonExtend = isCompBot;
         public static final boolean indexerInvert = isCompBot?false:true;
     }
+
+
 }
