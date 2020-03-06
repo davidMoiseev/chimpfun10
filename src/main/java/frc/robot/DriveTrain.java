@@ -146,8 +146,8 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
         robotState.setDriveDistanceRight(driveDistanceRight);
         robotState.setDriveDistanceLeft(driveDistanceLeft);
-        SmartDashboard.putNumber("1111 drivedistance left", driveDistanceLeft);
-        SmartDashboard.putNumber("1111 drive distance right", driveDistanceRight);
+        SmartDashboard.putNumber("drive distance left", driveDistanceLeft);
+        SmartDashboard.putNumber("drive distance right", driveDistanceRight);
       
 
         robotState.setDriveVelocityLeft((driveLeftLeader.getSelectedSensorVelocity() *10 / Calibrations.DRIVE_CONSTANTS.ticksPerMeter));  //unit conversions- ticks/ms to m/s
@@ -222,8 +222,7 @@ public class DriveTrain implements IHotSensedActuator<RobotState, RobotCommandPr
 
             SmartDashboard.putNumber("111 pid target vel", driveLeftLeader.getActiveTrajectoryVelocity());
             SmartDashboard.putNumber("111 motor act vel", driveLeftLeader.getSelectedSensorVelocity() *10 / Calibrations.DRIVE_CONSTANTS.ticksPerMeter);
-            HotLogger.Log("pid target vel", driveLeftLeader.getActiveTrajectoryVelocity());
-            HotLogger.Log("motor act vel", driveLeftLeader.getSelectedSensorVelocity() *10 / Calibrations.DRIVE_CONSTANTS.ticksPerMeter);
+       
          
 
 

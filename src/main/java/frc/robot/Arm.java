@@ -164,7 +164,6 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
     public void updateState() {
         currentCurrent = Math.abs(armMotor.getStatorCurrent());
         SmartDashboard.putNumber("current current", currentCurrent);
-        HotLogger.Log("arm current draw", armMotor.getStatorCurrent());
         if(resetting = true){
             state.setArmState(ArmStates.resetting);
         }

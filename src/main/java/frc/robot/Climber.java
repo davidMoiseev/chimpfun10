@@ -12,7 +12,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
     RobotState robotState;
     climberController leftClimber;
     climberController rightClimber;
-    Solenoid rachet;
+
     private class climberController {
         private TalonFX motor;
         private int statusColor;
@@ -62,11 +62,11 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
         }
     }
     
+
     public Climber(RobotState state){
         this.robotState = state;
         leftClimber = new climberController(Calibrations.CAN_ID.leftClimber);
         rightClimber = new climberController(Calibrations.CAN_ID.rightClimber);
-        rachet = new Solenoid(Calibrations.climberCals.rachetID);
     }
     
     
@@ -74,18 +74,18 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
         
         
         if(commander.isLeftClimberActivate() || commander.isRightClimberActivate()){
-            rachet.set(true);
+       
             leftClimber.setPower(-commander.getLeftClimberDelta());
             rightClimber.setPower(-commander.getRightClimberDelta());
         }else{
-            rachet.set(false);
+           
             leftClimber.setPower(0);
             rightClimber.setPower(0);
         }
     }
     @Override
     public void updateState() {
-        SmartDashboard.putNumber("RobotRoll", robotState.getRoll());
+        SmartDashboard.putNumber("RobotRoll", (int)robotState.getRoll());
         SmartDashboard.putNumber("LeftClimberStatus", leftClimber.statusColor);
         SmartDashboard.putNumber("RightClimberStatus", rightClimber.statusColor);
         if(leftClimber.getCurrentHeight() > rightClimber.getCurrentHeight()){

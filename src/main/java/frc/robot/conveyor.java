@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import org.hotutilites.hotlogger.HotLogger;
+
 public class conveyor {
     private boolean wasStage;
     private boolean frontPorch = false;
@@ -13,8 +15,8 @@ public class conveyor {
     private boolean carouselFull = false;
     private boolean shouldStage;
     private boolean full;
-    private double carouselPower = 0.65;
-    private double conveyorPower = 0.75;
+    private double carouselPower = 0.8;
+    private double conveyorPower = 0.75;  //previously 0.6
     private double carouselOutPut = 0;
     private double conveyorOutPut = 0;
     public int reverseTime_1 = 0;
@@ -402,9 +404,10 @@ public class conveyor {
         SmartDashboard.putBoolean("Carousel Full", carouselFull);
         SmartDashboard.putNumber("Carousel Pos",carouselPos);
         SmartDashboard.putNumber("Conveyor OutPut", conveyorOutPut);
-        SmartDashboard.putNumber("Bype Carousel Possible",bCarPos);
-        
-        SmartDashboard.putNumber("Carousel Output", carouselMotor.getMotorOutputPercent());
+        SmartDashboard.putNumber("Carousel Output", carouselOutPut);
+
+        HotLogger.Log("conveyor output", conveyorOutPut);
+        HotLogger.Log("carousel output", carouselOutPut);
     }
 
     public void updateStatusLight(){

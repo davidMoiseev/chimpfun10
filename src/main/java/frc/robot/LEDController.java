@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.CANifier;
 
 import org.hotutilites.hotInterfaces.IHotSensedActuator;
+import org.hotutilites.hotlogger.HotLogger;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,6 +63,7 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 
 	private void setLEDcolor(int color){
 		SmartDashboard.putNumber("MasterIndicator",color);
+		HotLogger.Log("MasterIndicator State", color);
 		switch(color){
 			case 5: //White
 				canifier.setLEDOutput(1*dimmer, CANifier.LEDChannel.LEDChannelA);  //Green
