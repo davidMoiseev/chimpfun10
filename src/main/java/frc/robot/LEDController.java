@@ -132,7 +132,7 @@ public class LEDController implements IHotSensedActuator<RobotState, RobotComman
 				dimmer = (powerPannel.getVoltage() - 7.3) / 2.2;
 				if(dimmer < 0) dimmer = 0;
 			}
-			if(dimmer > 0.40) dimmer = 0.40;
+			//if(dimmer > 0.40) dimmer = 0.40;
 		}else{
 			POSTRoutine();
 		}

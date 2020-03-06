@@ -156,8 +156,13 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.intakeOut); 
         }else if(operator.getButtonRightStick()){
             setBallSupervisorState(BallSupervisorState.reset);
+        }else if(operator.getButtonLeftStick()){
+            setArmPosition(ArmPositions.wheelOfFortune);
+            setBallSupervisorState(BallSupervisorState.intakeStop);
         }else if(operator.getButtonStart()){
-            setBallSupervisorState(BallSupervisorState.confirm);
+            setBallSupervisorState(BallSupervisorState.prime);
+            robotState.setShooterTargetRPM(1500); //to const //5300
+            setHoodPosition(hoodPos.wallShot); 
         }else{
             setBallSupervisorState(BallSupervisorState.intakeStop); 
             setHoodPosition(hoodPos.goingUnder);

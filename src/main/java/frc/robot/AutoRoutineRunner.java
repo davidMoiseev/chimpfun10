@@ -47,7 +47,7 @@ public class AutoRoutineRunner {
     public boolean initConveyer = false;
     public boolean resetEncoders = false;
     
-    double distance1 = 2;// 2.47; //2.4;
+    double distance1 = 2.1;// 2.47; //2.4;
     double distance2 = 3;//3.15 //4.75
     double distance2Overshoot = 0.2;
     private double shotAngle = 0;
