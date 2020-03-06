@@ -104,8 +104,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    //autoCommander.updateAutoRoutine();
-    //autoCommander.chooseBallCommand();
+    autoCommander.updateAutoRoutine();
+    autoCommander.chooseBallCommand();
     drivetrain.performAction(autoCommander, robotState);
     ballSupervisor.performAction(autoCommander, robotState);
     arm.performAction(autoCommander, robotState);

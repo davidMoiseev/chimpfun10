@@ -10,6 +10,7 @@ package frc.robot;
 import org.hotutilites.hotlogger.HotLogger;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Autos.AutoRoutineBase;
 import frc.robot.Autos.SimpleRoutine;
@@ -33,8 +34,8 @@ public class AutoRoutineRunner {
     private int inventoryEmptyFor = 0;
   
     
-
-
+    //private SendableChooser autoChooser;
+   
     RobotState robotState;
 	public boolean shooting = false;
 	public boolean primeAutoShot = false;
@@ -64,6 +65,7 @@ public class AutoRoutineRunner {
 
     public AutoRoutineRunner(RobotState robotState){ 
 
+        //autoChooser = new SendableChooser();
         trench = Calibrations.auton.trench;
         this.robotState = robotState;
         driveStep = -1;
@@ -277,6 +279,7 @@ public class AutoRoutineRunner {
     //     }
     //  }
         SmartDashboard.putNumber("11drive step", driveStep);
+        SmartDashboard.putBoolean("111 timed out case 1", timedOutCase1);
         HotLogger.Log("auto_step_drive", driveStep);
         HotLogger.Log("rightDistance", robotState.getDriveDistanceRight());
         HotLogger.Log("leftDistance", robotState.getDriveDistanceLeft());
@@ -490,7 +493,7 @@ public class AutoRoutineRunner {
                     initConveyer = false;
                     primeAutoShot = true;
                      autoAiming = true;
-                if(robotState.isReadyToShoot() && ((robotState.getVisionOutputStatus() == 3) || timer.get() > 3) ){
+                if(robotState.isReadyToShoot() && (robotState.getVisionOutputStatus() == 3) || (timer.get() > 3)){
                     driveStep++;
                 }
                 break;
@@ -501,10 +504,10 @@ public class AutoRoutineRunner {
                     if((timer.get() > 7)){
                         timedOutCase1 = true;}
     
-                if(robotState.getInventory() == 0 || timedOutCase1){ 
+                if(robotState.getInventory() == 0 ){ 
                     inventoryEmptyFor++;  
                 }
-                if(inventoryEmptyFor >= 10){
+                if(inventoryEmptyFor >= 10 || timedOutCase1){
                     shotAngle = robotState.getTheta();
                     if(timedOutCase1)
                     {ballReset = true;}

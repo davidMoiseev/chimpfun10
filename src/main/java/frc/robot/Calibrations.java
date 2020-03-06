@@ -5,7 +5,7 @@ public class Calibrations
     public final static boolean isCompBot=true;
 
     public class auton{
-        public static final boolean trench = false;
+        public static final boolean trench = true;
     }
 
     public class CAN_ID {
