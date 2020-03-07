@@ -52,16 +52,12 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         }else if(conveyor.getStatusLightState() == 3 && shooter.PIDTarget != 0){
             robotState.setLEDColorState(2);
             robotState.setReadyToShoot(false);
-        }else if(conveyor.isFull()){
-            robotState.setLEDColorState(1);
-            robotState.setReadyToShoot(true);
         }else{
             robotState.setLEDColorState(1);
             robotState.setReadyToShoot(false);
         }
         this.robotState.setInventory(conveyor.BallStored());
         SmartDashboard.putNumber("BallInventory", conveyor.BallStored());
-        HotLogger.Log("ball inventory", conveyor.BallStored());
     }
 
     @Override
@@ -106,11 +102,10 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             break;
             case intakeIn: //Once we are commanded by teleopcommander to run the intake we execute this case which powers the intake
                 SmartDashboard.putString("BallState", "Intake in");
-                HotLogger.Log("BallState", "intake in");
                 conveyor.stage(feedModes.autoFill);
                 shooter.stopPIDMotor();
                 robotState.setTurnOnLimeLiteLight(false);
-                alreadyShooting = false;
+                alreadyShooting = false; 
                 shooter.indexPower(0);
                 if(true){
                     conveyor.setIntakeOn(true);
@@ -132,6 +127,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 conveyor.setIntakeOn(true);
             break;
             case intakeStop: //Set to stop the intake
+                HotLogger.Log("BallState", "Intake Stop");
                 robotState.setTurnOnLimeLiteLight(false);
                 robotState.setManual(false);
                 alreadyShooting = false;
@@ -146,7 +142,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             case prime: //when we need to prime the robot for shooting we start spooling up the shooter to the requested
                 //Rpm and we also begin to pusu balls forward so we have a ball instantly ready
                 SmartDashboard.putString("BallState", "prime");
-                HotLogger.Log("BallState", "prime");
                 conveyor.stage(feedModes.prime);
                 shooter.PIDmotor(robotState.getShooterTargetRPM());
                 shooter.indexPower(-0.2);
@@ -163,7 +158,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             case reject:
                 //this is how we get balls ouv t of the conveyor system
                 SmartDashboard.putString("BallState", "reject");
-                HotLogger.Log("BallState", "reject");
                 conveyor.stage(feedModes.reject);
                 shooter.stopPIDMotor();
                 shooter.indexPower(-Calibrations.ballSuperviserVals.indexerPower);
@@ -172,7 +166,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             break;
             case shoot: //here we start feeding balls forward into the shooter
                 SmartDashboard.putString("BallState", "shoot");
-                HotLogger.Log("BallState", "shoot");
                 robotState.setLEDColorState(3);
                 robotState.setLEDFlash(true);
                 robotState.setTurnOnLimeLiteLight(true);
@@ -191,7 +184,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             case sort:
                 //normal idle state of the shooter
                 SmartDashboard.putString("BallState", "sort");
-                HotLogger.Log("BallState", "sort");
                 conveyor.stage(feedModes.autoFill);
                 shooter.stopPIDMotor();
                 shooter.indexPower(0);
@@ -199,7 +191,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             break;
             case stop:
                 SmartDashboard.putString("BallState", "stop");
-                HotLogger.Log("BallState", "stop");
                 conveyor.stage(feedModes.stop);
                 shooter.stopPIDMotor();
                 shooter.indexPower(0);
@@ -208,7 +199,6 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             break;
             case confirm:
                 SmartDashboard.putString("BallState", "Confirm");
-                HotLogger.Log("BallState", "confirm");
                 conveyor.stage(feedModes.confirm);
                 shooter.stopPIDMotor();
                 shooter.indexPower(0);
@@ -252,6 +242,9 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             case wallShot:
                 shooter.setHood(HoodPosition.wallShot);
             break;
+            case oneBotBack:
+                shooter.setHood(HoodPosition.oneBotBack);
+            break;
             case goingUnder:
                 shooter.setHood(HoodPosition.goingUnder);
             break;
@@ -263,6 +256,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         goingUnder,
         trench,
         wallShot,
+        oneBotBack,
         autoshot
     }
 
@@ -282,12 +276,4 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         test
     }
 
-	public enum intakePosition {
-        packaged,
-        ground,
-        limelite,
-        middle
-	}
-
-    
 }

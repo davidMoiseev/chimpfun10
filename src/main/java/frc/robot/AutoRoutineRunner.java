@@ -320,6 +320,7 @@ public class AutoRoutineRunner {
                 resetEncoders = true;
                 autoAiming = false;
                 driveStep++;
+                intake = true;
             }
             break;
 

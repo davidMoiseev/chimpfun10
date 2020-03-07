@@ -29,6 +29,7 @@ public class conveyor {
     private boolean FallingedgeSensor;
     private int Edgecounter = 0;
     public boolean conveyorBounceBack;
+    private int conveyorBounceBackTimeOut = 0;
     private boolean IntakeCountLockout;
     private boolean Pos4lastState;
     private boolean Pos1lastState;
@@ -88,14 +89,17 @@ public class conveyor {
                 conveyorOutPut = 0;
                 conveyorBounceBack = false;
                 IntakeCountLockout = false;
+                conveyorBounceBackTimeOut = 0;
             }else{
-                if(pos4Sensor.get() || conveyorBounceBack){
+                if((pos4Sensor.get() || conveyorBounceBack) && conveyorBounceBackTimeOut <= 75){
                     conveyorOutPut = -conveyorPower;
                     IntakeCountLockout = true;
                     conveyorBounceBack = true;
+                    conveyorBounceBackTimeOut++;
                 }else{
                     IntakeCountLockout = false;
-                    conveyorOutPut = conveyorPower; 
+                    conveyorOutPut = conveyorPower;
+                    conveyorBounceBackTimeOut = 0; 
                 }
             }
         }else if(inConveyor >= 2 && carouselFull){

@@ -139,7 +139,13 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(5400); //to const //5300
             setHoodPosition(hoodPos.trench);
-            setArmPosition(ArmPositions.trenchshot);     
+            setArmPosition(ArmPositions.trenchshot);   
+
+        }else if(operator.getButtonY()){
+            setBallSupervisorState(BallSupervisorState.prime);
+            robotState.setShooterTargetRPM(2800); //to const
+            setHoodPosition(hoodPos.oneBotBack);
+            setArmPosition(ArmPositions.wallshot);
 
         }else if(operator.getButtonA()){ //Prime for wallshot
             setBallSupervisorState(BallSupervisorState.prime);
@@ -147,7 +153,12 @@ public class TeleopCommandProvider extends RobotCommandProvider {
             setHoodPosition(hoodPos.wallShot);
             setArmPosition(ArmPositions.wallshot);
 
-        }else if(operator.getButtonY()){
+        }else if(operator.getDpad() == 180){
+            setBallSupervisorState(BallSupervisorState.prime);
+            robotState.setShooterTargetRPM(1500); //to const //5300
+            setHoodPosition(hoodPos.wallShot); 
+
+        }else if(operator.getButtonStart()){
             setBallSupervisorState(BallSupervisorState.reject);
         }else if(operator.getButtonLeftBumper()){
             setBallSupervisorState(BallSupervisorState.intakeIn); 
@@ -159,10 +170,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         }else if(operator.getButtonLeftStick()){
             setArmPosition(ArmPositions.wheelOfFortune);
             setBallSupervisorState(BallSupervisorState.intakeStop);
-        }else if(operator.getButtonStart()){
-            setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(1500); //to const //5300
-            setHoodPosition(hoodPos.wallShot); 
+        
         }else{
             setBallSupervisorState(BallSupervisorState.intakeStop); 
             setHoodPosition(hoodPos.goingUnder);

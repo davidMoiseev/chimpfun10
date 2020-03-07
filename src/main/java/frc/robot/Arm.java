@@ -139,8 +139,15 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         }   
         }
      
+    public void setArmReset(boolean reset){
+        if(reset){
+            armReset = false;
+        }else{
+            armReset = true;
+        }
+    }
+
     public boolean hardResetComplete(){
-    
         if  (currentCurrent > Calibrations.ARM.resetCurrentDraw){    
             armMotor.set(ControlMode.PercentOutput, 0.00);  
             armMotor.setSelectedSensorPosition(0);
@@ -164,6 +171,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
     @Override
     public void updateState() {
         currentCurrent = Math.abs(armMotor.getStatorCurrent());
+        HotLogger.Log("has arm reset", armReset );
         SmartDashboard.putNumber("current current", currentCurrent);
         if(resetting = true){
             state.setArmState(ArmStates.resetting);
@@ -185,7 +193,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
 
     public void autoInitArmAngle(){
         armMotor.set(ControlMode.PercentOutput, 0.00);  
-        armMotor.setSelectedSensorPosition(7700, 0, 0); // Set back to 7700
+        armMotor.setSelectedSensorPosition(7700, 0, 0); 
     }
 
     @Override

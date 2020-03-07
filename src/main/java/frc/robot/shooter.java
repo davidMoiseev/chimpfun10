@@ -4,6 +4,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import org.hotutilites.hotlogger.HotLogger;
+
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
@@ -150,6 +153,7 @@ public class shooter {
         goingUnder,
         trench,
         wallShot,
+        oneBotBack,
         autoshot
     }
     public void setHood(HoodPosition pos){
@@ -166,11 +170,15 @@ public class shooter {
                 hood1.set(Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(Calibrations.hardware.longPistonExtend); //long
             break;
+            case oneBotBack:
+                hood1.set(Calibrations.hardware.shortPistonExtend); //short 
+                hood2.set(!Calibrations.hardware.longPistonExtend); //long
+            break;
             case autoshot:
             if (Calibrations.isCompBot) {
                 hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(Calibrations.hardware.longPistonExtend); //long
-            } else  {
+            }else{
                 hood1.set(Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(!Calibrations.hardware.longPistonExtend); //long
             }
@@ -179,6 +187,11 @@ public class shooter {
     }
 
     public void updateStatus(){
+        HotLogger.Log("Target Speed", PIDTarget);
+        HotLogger.Log("Shooter PowerOutput",m_motor.getAppliedOutput());
+        HotLogger.Log("shooter speed", rpm);
+        HotLogger.Log("Battery Voltage",powerPannel.getVoltage());
+        HotLogger.Log("Current Current Draw", powerPannel.getTotalCurrent());
         int status = 0;
         if(lowVoltage < 0.9){
             status = 0;

@@ -84,13 +84,15 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    arm.setArmReset(true);
         
   }
 
   @Override
   public void autonomousInit() {
     HotLogger.Setup("theta", "auto_step_drive", "rightDistance", "leftDistance","autoTime", "left motor output", "right motor output",
-    "drive ticks left", "drive ticks right", "ball inventory", "BallState", "carousel output", "conveyor output", "MasterIndicator State" );
+    "drive ticks left", "drive ticks right", "ball inventory", "BallState", "carousel output", "conveyor output", "MasterIndicator State", "shooter speed",
+    "Battery Voltage", "Current Current Draw", "has arm reset","Target Speed","Shooter PowerOutput");
     drivetrain.setBrake(true);
     pigeon.zeroSensor();
     arm.autoInitArmAngle();
@@ -114,7 +116,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     HotLogger.Setup("theta", "auto_step_drive", "rightDistance", "leftDistance","autoTime", "left motor output", "right motor output",
-    "drive ticks left", "drive ticks right", "ball inventory", "BallState", "carousel output", "conveyor output", "MasterIndicator State" );
+    "drive ticks left", "drive ticks right", "ball inventory", "BallState", "carousel output", "conveyor output", "MasterIndicator State", "shooter speed",
+    "Battery Voltage", "Current Current Draw", "has arm reset","Target Speed","Shooter PowerOutput");
     drivetrain.setBrake(true);
     //ballSupervisor.zeroSensor();
     robotState.setRobotEnabled(true);
