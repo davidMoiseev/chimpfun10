@@ -69,7 +69,6 @@ public class Robot extends TimedRobot {
     arm.updateState();
     limelite.updateState();
     lEDController.updateState();
-    arm.updateState();
     ballSupervisor.updateState();
     climber.updateState();
   }

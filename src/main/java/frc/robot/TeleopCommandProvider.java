@@ -15,6 +15,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
     private boolean manaulMode;
     private boolean lowPowerMode;
     private double turn;
+    private double operatorLX = 0;
 
     public TeleopCommandProvider(HotController driver, HotController operator, RobotState robotState) {
         this.setDriver(driver);
@@ -35,14 +36,22 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         if(manaulMode){
             return operator.getStickLY();
         }else{
-            return operator.getStickLY() + operator.getStickLX();
+            if(Math.abs(operator.getStickLX()) < 0.02 ){
+                operatorLX = 0;
+            }else{
+                operatorLX = ((1.02 * operator.getStickLX()) - 0.02);
+            }return operator.getStickLY() + operatorLX;
         }
     }
     public double getRightClimberDelta(){
         if(manaulMode){
             return operator.getStickRY();
         }else{
-            return operator.getStickLY() - operator.getStickLX();
+            if(Math.abs(operator.getStickLX()) < 0.02 ){
+                operatorLX = 0;
+            }else{
+                operatorLX = ((1.02 * operator.getStickLX()) - 0.02);
+            }return operator.getStickLY() - operatorLX;
         }
         
     }
@@ -140,7 +149,7 @@ public class TeleopCommandProvider extends RobotCommandProvider {
 
         }else if(operator.getButtonY()){
             setBallSupervisorState(BallSupervisorState.prime);
-            robotState.setShooterTargetRPM(2800); //to const
+            robotState.setShooterTargetRPM(2500); //to const
             setHoodPosition(hoodPos.oneBotBack);
             setArmPosition(ArmPositions.wallshot);
 

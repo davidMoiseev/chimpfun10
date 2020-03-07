@@ -81,10 +81,11 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         resetting = false; //set here so will default to set to false unless runs case that is resetting
 
 
-        if(armMotor.getSelectedSensorPosition() > Calibrations.ArmPositions.maxTicks){
-            armMotor.set(ControlMode.PercentOutput, 0);
-        }
-        else{
+        if((armMotor.getSelectedSensorPosition() > Calibrations.ArmPositions.maxTicks)){
+            armMotor.configNominalOutputReverse(0);}
+            else{
+                armMotor.configNominalOutputReverse(1);
+            }
         switch(commander.getArmPosition()){
             case packaged:
                 armMotor.set(ControlMode.MotionMagic, Calibrations.ArmPositions.packagedAngle*Calibrations.ARM.ticksPerDegree);
@@ -137,7 +138,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
             break;
             }
         }   
-        }
+        
      
     public void setArmReset(boolean reset){
         if(reset){
@@ -173,6 +174,7 @@ public class Arm implements IHotSensedActuator<RobotState, RobotCommandProvider,
         currentCurrent = Math.abs(armMotor.getStatorCurrent());
         HotLogger.Log("has arm reset", armReset );
         HotLogger.Log("arm commanded", armMotor.getMotorOutputPercent());
+        SmartDashboard.putNumber("111 arm percent output", armMotor.getMotorOutputPercent());
         HotLogger.Log("arm current", armMotor.getStatorCurrent());
         SmartDashboard.putNumber("current current", currentCurrent);
         if(resetting = true){

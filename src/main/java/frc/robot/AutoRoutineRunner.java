@@ -299,7 +299,7 @@ public class AutoRoutineRunner {
                 initConveyer = false;
                 primeAutoShot = true;
                  autoAiming = true;
-            if(robotState.isReadyToShoot() && ((robotState.getVisionOutputStatus() == 3) || timer.get() > 2.8) ){
+            if((robotState.isReadyToShoot() && (robotState.getVisionOutputStatus() == 3)) || timer.get() > 2.8){
                 driveStep++;
             }
             break;

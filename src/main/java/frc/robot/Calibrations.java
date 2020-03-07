@@ -92,7 +92,7 @@ public class Calibrations
         public static final double wallShotAngle = 25;
         public static final double groundPickupAngle = 0.1;
         public static final double wofAngle = 59.45; //7015 tiks
-        public static final double maxTicks = 7450; //7700 is max
+        public static final double maxTicks = 7600; //7700 is max
     }
 
     public class DRIVE_CONSTANTS {  //6.5 gear ratio

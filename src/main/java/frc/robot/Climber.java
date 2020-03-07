@@ -104,8 +104,6 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
 
     @Override
     public void updateState() {
-        SmartDashboard.putNumber("1111 commanded output left", leftClimber.getCommandedOutput());
-        SmartDashboard.putNumber("1111 commanded output right", rightClimber.getCommandedOutput());
         SmartDashboard.putNumber("RobotRoll", (int)robotState.getRoll());
         SmartDashboard.putNumber("LeftClimberStatus", leftClimber.statusColor);
         SmartDashboard.putNumber("RightClimberStatus", rightClimber.statusColor);
