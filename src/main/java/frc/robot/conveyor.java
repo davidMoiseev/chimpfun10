@@ -99,7 +99,7 @@ public class conveyor {
                 }else{
                     IntakeCountLockout = false;
                     conveyorOutPut = conveyorPower;
-                    conveyorBounceBackTimeOut = 0; 
+                    // conveyorBounceBackTimeOut = 0; 
                 }
             }
         }else if(inConveyor >= 2 && carouselFull){
@@ -262,6 +262,7 @@ public class conveyor {
                 this.carouselPrime();
             break;
             case shoot:
+                this.antiJam();
                 this.zeroMotors();
                 this.shotFired();
                 this.count(true);
@@ -309,6 +310,7 @@ public class conveyor {
         IntakeCountLockout = false;
         conveyorBounceBack = false;
         inCarousel = 0;
+        conveyorBounceBackTimeOut = 0;
     }
 
     public boolean inWarning(){

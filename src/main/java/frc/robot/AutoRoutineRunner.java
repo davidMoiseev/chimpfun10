@@ -415,7 +415,7 @@ public class AutoRoutineRunner {
                     }
                 break;
         case 8:
-                intake = false;
+                intake = true;
                 driveOutput = 0;
                 turnOutput = -0.18;
                 driveYawCorrectionEnabled = false;

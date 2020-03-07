@@ -122,11 +122,8 @@ public class TeleopCommandProvider extends RobotCommandProvider {
         if (this.getManualMode()) {
             setBallSupervisorState(BallSupervisorState.manual);
             setArmPosition(ArmPositions.manual);
-        }else if(false){
-            setBallSupervisorState(BallSupervisorState.stop);
-            setArmPosition(ArmPositions.off);
-        }else if(driver.getRightTrigger() > 0.5 && operator.getButtonLeftBumper()){
-            setBallSupervisorState(BallSupervisorState.shootNsuck);
+        }else if(driver.getRightTrigger() > 0.5 && operator.getButtonStart()){
+            setBallSupervisorState(BallSupervisorState.shootNstuck);
         }else if(driver.getRightTrigger() > 0.5){
             setBallSupervisorState(BallSupervisorState.shoot);
         }else if (operator.getButtonX()){ //config for autoshot
