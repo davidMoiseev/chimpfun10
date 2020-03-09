@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class shooter {
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+    public double lP, lI, lD, lIz, lFF, lMaxOutput, lMinOutput, lmaxRPM;
     private boolean inFault = false;
     public Compressor compressor;
     public Solenoid hood1;
@@ -56,6 +57,13 @@ public class shooter {
         kFF = Calibrations.shooter_PID.kFF;
         kMaxOutput = Calibrations.shooter_PID.kMaxOutput;
         kMinOutput = Calibrations.shooter_PID.kMinOutput;
+
+        lP = Calibrations.shooter2_PID.kP;
+        lI = Calibrations.shooter2_PID.kI;
+        lD = Calibrations.shooter2_PID.kD;
+        lIz = Calibrations.shooter2_PID.kIz;
+        lFF = Calibrations.shooter2_PID.kFF;
+
         m_motor = new CANSparkMax(Calibrations.CAN_ID.shooter1, MotorType.kBrushless);
         m_mator = new CANSparkMax(Calibrations.CAN_ID.shooter2, MotorType.kBrushless);
         m_feeder = new VictorSPX(Calibrations.CAN_ID.indexer);
@@ -64,11 +72,17 @@ public class shooter {
         m_encoder2 = m_mator.getEncoder();
         m_pidController = m_motor.getPIDController();
         m_pidController.setFeedbackDevice(m_encoder);
-        m_pidController.setP(kP);
-        m_pidController.setI(kI);
-        m_pidController.setD(kD);
-        m_pidController.setIZone(kIz);
-        m_pidController.setFF(kFF);
+        m_pidController.setP(kP,0);
+        m_pidController.setI(kI,0);
+        m_pidController.setD(kD,0);
+        m_pidController.setIZone(kIz,0);
+        m_pidController.setFF(kFF,0);
+
+        m_pidController.setP(lP,1);
+        m_pidController.setI(lI,1);
+        m_pidController.setD(lD,1);
+        m_pidController.setIZone(lIz,1);
+        m_pidController.setFF(lFF,1);
         m_pidController.setOutputRange(kMinOutput, kMaxOutput);
         m_motor.setInverted(false);
         m_mator.follow(m_motor, true);
@@ -104,11 +118,19 @@ public class shooter {
     }
     
     public void PIDmotor(double rpm){ 
-        rpm = rpm * 24.0/36.0;
-        m_pidController.setOutputRange(kMinOutput, lowVoltage);
-        PIDTarget = rpm;
-        m_pidController.setReference(rpm, ControlType.kVelocity,0);
         setCompressor(false);
+        m_pidController.setOutputRange(kMinOutput, lowVoltage);
+        if(rpm > 3400){
+            rpm = rpm * 24.0/36.0;
+            PIDTarget = rpm;
+            m_pidController.setReference(rpm, ControlType.kVelocity,0);
+        }else{      
+            rpm = rpm * 24.0/36.0; 
+            PIDTarget = rpm;     
+            m_pidController.setReference(rpm, ControlType.kVelocity,1);
+            
+        }
+        
     }
 
     public void PowerCheck(){
@@ -138,7 +160,7 @@ public class shooter {
         rpm = Math.abs(m_encoder.getVelocity() * (36.0/24.0));
         rpm2 = Math.abs(m_encoder2.getVelocity() * (36.0/24.0));
         IAccum = m_pidController.getIAccum();
-        if ((Math.abs(PIDTarget*(36.0/24.0)-rpm)) < 50){
+        if ((Math.abs(PIDTarget*(36.0/24.0)-rpm)) < 100){
             Stabalizer++;
         }else{
             Stabalizer = 0;

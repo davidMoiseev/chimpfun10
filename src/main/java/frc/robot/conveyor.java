@@ -59,7 +59,7 @@ public class conveyor {
         conveyorMotor = new VictorSPX(Calibrations.CAN_ID.conveyor);
         powerPannel = new PowerDistributionPanel();
         carouselMotor.setNeutralMode(NeutralMode.Brake);
-        conveyorMotor.setNeutralMode(NeutralMode.Coast);
+        conveyorMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     public boolean isFull() {

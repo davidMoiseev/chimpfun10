@@ -30,10 +30,21 @@ public class Calibrations
      }
     public class shooter_PID{
         public final static double kP = 1.1e-3; 
-        public final static double kI = 3e-6;
+        public final static double kI = 3.1e-6;
         public final static double kD = 2e-7; 
         public final static double kIz = 200; 
+        //public final static double kFF = 0;
         public final static double kFF = 0.000137862*1.6; 
+        public final static double kMaxOutput = 1; 
+        public final static double kMinOutput = -0.15;
+    }
+    public class shooter2_PID{
+        public final static double kP = 0.5e-3; 
+        public final static double kI = 1.0e-6;
+        public final static double kD = 0; 
+        public final static double kIz = 100; 
+        //public final static double kFF = 0;
+        public final static double kFF = 0.000137862*1.2; 
         public final static double kMaxOutput = 1; 
         public final static double kMinOutput = -0.15;
     }
@@ -89,7 +100,7 @@ public class Calibrations
         public static final double packagedAngle = 90;  
         public static final double trenchShotAngle = 63;
         public static final double autoShotAngle = 62;
-        public static final double wallShotAngle = 25;
+        public static final double wallShotAngle = 0;
         public static final double groundPickupAngle = 0.1;
         public static final double wofAngle = 59.45; //7015 tiks
         public static final double maxTicks = 7600; //7700 is max
