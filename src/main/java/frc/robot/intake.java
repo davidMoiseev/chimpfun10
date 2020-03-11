@@ -2,12 +2,14 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class intake {
 
     private TalonSRX lifterMotor;
     private TalonSRX intake_1;
-    private TalonSRX intake_2;
+    private CANSparkMax intake_2;
     private int reverseTime_1 = 0;
     private int reverseTime_2 = 0;
     private int groundPosition = 50;
@@ -15,13 +17,11 @@ public class intake {
         lifterMotor = new TalonSRX(Calibrations.CAN_ID.intakeLifter);
         intake_1 = new TalonSRX(Calibrations.CAN_ID.intakeMotor1);
         intake_1.setInverted(true);
-        intake_2 = new TalonSRX(Calibrations.CAN_ID.intakeMotor2);
+        intake_2 = new CANSparkMax(Calibrations.CAN_ID.intakeMotor2,MotorType.kBrushless);
         intake_1.configPeakCurrentLimit(50);
         intake_1.configPeakCurrentDuration(500);
         intake_1.configContinuousCurrentLimit(30);
-        intake_2.configPeakCurrentLimit(50);
-        intake_2.configPeakCurrentDuration(500);
-        intake_2.configContinuousCurrentLimit(30);
+        intake_2.setSmartCurrentLimit(20);
         lifterMotor.configPeakCurrentLimit(45, 10); //Limit of 45 amps
         lifterMotor.configPeakCurrentDuration(500, 10); //For 500ms
         lifterMotor.configContinuousCurrentLimit(30, 10); //Limit of 30 amps cont
@@ -78,9 +78,9 @@ public class intake {
             intake_1.set(ControlMode.PercentOutput, power); 
         }
         if(reverseTime_2 > 0){
-            intake_2.set(ControlMode.PercentOutput, -power); 
+            intake_2.set(power); 
         }else{
-            intake_2.set(ControlMode.PercentOutput, power); 
+            intake_2.set(-power); 
         }
 
     }

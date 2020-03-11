@@ -1,10 +1,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.MedianFilter;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.hotutilites.hotlogger.HotLogger;
 
@@ -43,8 +48,13 @@ public class conveyor {
     DigitalInput pos4Sensor;
     DigitalInput pos5Sensor;
     DigitalInput IntakeSensor;
-    VictorSPX conveyorMotor;
-    VictorSPX carouselMotor;
+    CANSparkMax conveyorMotor;
+    CANSparkMax carouselMotor;
+    CANEncoder conveyorEncoder;
+    CANEncoder carouselEncoder;
+    MedianFilter conveyorSmooth;
+    MedianFilter carouselSmooth;
+    private double CarouselAverageCurrent;
     private boolean IntakeOn;
     private int StatusLightState;
 
@@ -55,11 +65,19 @@ public class conveyor {
         pos3Sensor = new DigitalInput(3);
         pos4Sensor = new DigitalInput(2);
         pos5Sensor = new DigitalInput(1);
-        carouselMotor = new VictorSPX(Calibrations.CAN_ID.carousel);
-        conveyorMotor = new VictorSPX(Calibrations.CAN_ID.conveyor);
+        carouselMotor = new CANSparkMax(Calibrations.CAN_ID.carousel,MotorType.kBrushless);
+        conveyorMotor = new CANSparkMax(Calibrations.CAN_ID.conveyor,MotorType.kBrushless);
+        CarouselAverageCurrent = 0;
+        conveyorEncoder = new CANEncoder(conveyorMotor);
+        carouselEncoder = new CANEncoder(carouselMotor);
+        conveyorMotor.setSmartCurrentLimit(20);
+        carouselMotor.setSmartCurrentLimit(20);
+        conveyorSmooth = new MedianFilter(10);
+        carouselSmooth = new MedianFilter(10);
         powerPannel = new PowerDistributionPanel();
-        carouselMotor.setNeutralMode(NeutralMode.Brake);
-        conveyorMotor.setNeutralMode(NeutralMode.Brake);
+        carouselMotor.setIdleMode(IdleMode.kBrake);
+        conveyorMotor.setIdleMode(IdleMode.kBrake);
+        conveyorMotor.setInverted(true);
     }
 
     public boolean isFull() {
@@ -334,12 +352,14 @@ public class conveyor {
     }
 
     public void antiJam(){
-        if(powerPannel.getCurrent(7) > 20 ){
+        double conveyorMedian = conveyorSmooth.calculate(conveyorMotor.getOutputCurrent());
+        double carouselMedian = carouselSmooth.calculate(carouselMotor.getOutputCurrent());
+        if(conveyorMedian >= 25 && conveyorEncoder.getVelocity() < 150){
             reverseTime_1 = 75;
         }else{
             reverseTime_1--;
         }
-        if(powerPannel.getCurrent(6) > 30){
+        if(carouselMedian >= 25 && carouselEncoder.getVelocity() < 250){
             reverseTime_2 = 75;
         }else{
             reverseTime_2--;
@@ -382,8 +402,8 @@ public class conveyor {
 
 
     public void runMotors(){
-        carouselMotor.set(ControlMode.PercentOutput, -carouselOutPut);
-        conveyorMotor.set(ControlMode.PercentOutput, conveyorOutPut);
+        carouselMotor.set(-carouselOutPut);
+        conveyorMotor.set(conveyorOutPut);
     }
 
 

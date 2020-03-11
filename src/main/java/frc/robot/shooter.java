@@ -21,7 +21,7 @@ public class shooter {
     public Solenoid hood2;
     public CANSparkMax m_motor;
     public CANSparkMax m_mator;
-    public VictorSPX m_feeder;
+    public CANSparkMax m_feeder;
     public CANEncoder m_encoder;
     public CANEncoder m_encoder2;
     public CANPIDController m_pidController;
@@ -66,8 +66,9 @@ public class shooter {
 
         m_motor = new CANSparkMax(Calibrations.CAN_ID.shooter1, MotorType.kBrushless);
         m_mator = new CANSparkMax(Calibrations.CAN_ID.shooter2, MotorType.kBrushless);
-        m_feeder = new VictorSPX(Calibrations.CAN_ID.indexer);
-        m_feeder.setInverted(Calibrations.hardware.indexerInvert);
+        m_feeder = new CANSparkMax(Calibrations.CAN_ID.indexer,MotorType.kBrushless);
+        m_feeder.setSmartCurrentLimit(20);
+        m_feeder.setInverted(!Calibrations.hardware.indexerInvert);
         m_encoder = m_motor.getEncoder();
         m_encoder2 = m_mator.getEncoder();
         m_pidController = m_motor.getPIDController();
@@ -152,7 +153,7 @@ public class shooter {
     }
 
     public void indexPower(double pwr){
-        m_feeder.set(ControlMode.PercentOutput,pwr);
+        m_feeder.set(pwr);
     }
 
     public void read(){
