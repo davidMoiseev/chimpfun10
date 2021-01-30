@@ -1,25 +1,65 @@
 package frc.robot;
 
-import javax.swing.text.Position;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
-import org.hotutilites.hotInterfaces.IHotSensedActuator;
-
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.hotutilites.hotInterfaces.IHotSensedActuator;
 
 public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvider, Integer> {
     RobotState robotState;
     climberController leftClimber;
     climberController rightClimber;
 
+    public Climber(RobotState state) {
+        this.robotState = state;
+        leftClimber = new climberController(Calibrations.CAN_ID.leftClimber);
+        rightClimber = new climberController(Calibrations.CAN_ID.rightClimber);
+    }
+
+    public void performAction(RobotCommandProvider commander, RobotState state) {
+        if (commander.isLeftClimberActivate() || commander.isRightClimberActivate()) {
+            leftClimber.setPower(-commander.getLeftClimberDelta());
+            rightClimber.setPower(-commander.getRightClimberDelta());
+        } else {
+            leftClimber.setPower(0);
+            rightClimber.setPower(0);
+        }
+
+    }
+
+    @Override
+    public void updateState() {
+        SmartDashboard.putNumber("RobotRoll", (int) robotState.getRoll());
+        SmartDashboard.putNumber("LeftClimberStatus", leftClimber.statusColor);
+        SmartDashboard.putNumber("RightClimberStatus", rightClimber.statusColor);
+
+        if (leftClimber.getCurrentHeight() > rightClimber.getCurrentHeight()) {
+            robotState.setHighestClimberPos(leftClimber.getCurrentHeight());
+        } else {
+            robotState.setHighestClimberPos(rightClimber.getCurrentHeight());
+        }
+
+    }
+
+    @Override
+    public void zeroSensor() {
+        leftClimber.reset();
+        rightClimber.reset();
+    }
+
+    @Override
+    public void setSensorValue(Integer value) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void setRobotState(RobotState robotState) {
+        this.robotState = robotState;
+    }
+
     private class climberController {
-        private TalonFX motor;
+        private final TalonFX motor;
         private int statusColor;
         private boolean enabled;
         private boolean released;
@@ -57,7 +97,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
             this.enabled = enabled;
         }
 
-        public double getCommandedOutput(){
+        public double getCommandedOutput() {
             return motor.getMotorOutputPercent();
         }
 
@@ -78,55 +118,9 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
         }
 
 
-        public double getCurrentHeight(){
+        public double getCurrentHeight() {
             return position;
         }
     }
-    
-    public Climber(RobotState state){
-        this.robotState = state;
-        leftClimber = new climberController(Calibrations.CAN_ID.leftClimber);
-        rightClimber = new climberController(Calibrations.CAN_ID.rightClimber);
-    }
-    
-    
 
-    public void performAction(RobotCommandProvider commander, RobotState state){  
-        if(commander.isLeftClimberActivate() || commander.isRightClimberActivate()){
-            leftClimber.setPower(-commander.getLeftClimberDelta());
-            rightClimber.setPower(-commander.getRightClimberDelta());
-        }else{
-            leftClimber.setPower(0);
-            rightClimber.setPower(0);
-        }
-
-    }
-
-    @Override
-    public void updateState() {
-        SmartDashboard.putNumber("RobotRoll", (int)robotState.getRoll());
-        SmartDashboard.putNumber("LeftClimberStatus", leftClimber.statusColor);
-        SmartDashboard.putNumber("RightClimberStatus", rightClimber.statusColor);
-
-        if(leftClimber.getCurrentHeight() > rightClimber.getCurrentHeight()){
-            robotState.setHighestClimberPos(leftClimber.getCurrentHeight());
-        }else{
-            robotState.setHighestClimberPos(rightClimber.getCurrentHeight());
-        }
-        
-    }
-    @Override
-    public void zeroSensor() {
-        leftClimber.reset();
-        rightClimber.reset();
-    }
-    @Override
-    public void setSensorValue(Integer value) {
-        // TODO Auto-generated method stub
-    }
-    @Override
-    public void setRobotState(RobotState robotState) {
-        this.robotState = robotState;
-    }
-  
 }  

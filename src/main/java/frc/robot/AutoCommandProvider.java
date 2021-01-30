@@ -17,17 +17,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AutoRoutineRunner;
 
 
-
 public class AutoCommandProvider extends RobotCommandProvider {
 
-    private AutoRoutineRunner autoRunner;
-    private RobotState robotState;
+    private final AutoRoutineRunner autoRunner;
+    private final RobotState robotState;
     private boolean driveYawCorrectionEnabled;
     private double driveYawCorrection;
 
     public AutoCommandProvider(RobotState robotState) {
         this.robotState = robotState;
-        
+
         autoRunner = new AutoRoutineRunner(robotState);
 
     }
@@ -97,96 +96,95 @@ public class AutoCommandProvider extends RobotCommandProvider {
     @Override
     public void chooseBallCommand() {
 
-        
+
         if (autoRunner.shooting) {
             setBallSupervisorState(BallSupervisorState.shoot);
-        }else if (autoRunner.primeAutoShot) { // config for autoshot
+        } else if (autoRunner.primeAutoShot) { // config for autoshot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(3040);
             setHoodPosition(hoodPos.autoshot);
             setArmPosition(ArmPositions.autoshot);
-        }else if (autoRunner.primeTrenchShot) {// config for trench shot
+        } else if (autoRunner.primeTrenchShot) {// config for trench shot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(5300);
             setHoodPosition(hoodPos.trench);
             setArmPosition(ArmPositions.trenchshot);
-        }else if (autoRunner.primeWallshot) { // Prime for wallshot
+        } else if (autoRunner.primeWallshot) { // Prime for wallshot
             setBallSupervisorState(BallSupervisorState.prime);
             robotState.setShooterTargetRPM(2400);
             setHoodPosition(hoodPos.wallShot);
             setArmPosition(ArmPositions.wallshot);
-        }else if (autoRunner.intake) {
+        } else if (autoRunner.intake) {
             setBallSupervisorState(BallSupervisorState.intakeIn);
             setArmPosition(ArmPositions.ground);
             setHoodPosition(hoodPos.goingUnder);
-        }else if (autoRunner.ballReset) {
+        } else if (autoRunner.ballReset) {
             setBallSupervisorState(BallSupervisorState.reset);
-        }else if (autoRunner.initConveyer){
+        } else if (autoRunner.initConveyer) {
             setBallSupervisorState(BallSupervisorState.confirm);
             setHoodPosition(hoodPos.goingUnder);
             // setArmPosition(ArmPositions.ground);//
             setArmPosition(ArmPositions.autoshot);
-        }
-        else{
+        } else {
             setBallSupervisorState(BallSupervisorState.intakeStop);
             setHoodPosition(hoodPos.goingUnder);
             robotState.setShooterTargetRPM(0);
             setArmPosition(ArmPositions.ground);
-            
+
         }
     }
 
-	@Override
-	public boolean getManualMode() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean getManualMode() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public boolean isLowPowerMode() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isLowPowerMode() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public boolean isLeftClimberActivate() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isLeftClimberActivate() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public boolean isRightClimberActivate() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isRightClimberActivate() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	@Override
-	public double getLeftClimberDelta() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public double getLeftClimberDelta() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public double getRightClimberDelta() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public double getRightClimberDelta() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public void setLowPowerMode() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setLowPowerMode() {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void lockManualMode(boolean mode) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public void lockManualMode(boolean mode) {
+        // TODO Auto-generated method stub
+
+    }
 
     @Override
     public boolean getDriveYawCorrectionEnabled() {
         return autoRunner.driveYawCorrectionEnabled;
     }
-    
+
 }

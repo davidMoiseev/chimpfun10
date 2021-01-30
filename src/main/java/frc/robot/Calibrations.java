@@ -1,10 +1,9 @@
 package frc.robot;
 
-public class Calibrations
-{
-    public final static boolean isCompBot=true;
+public class Calibrations {
+    public final static boolean isCompBot = true;
 
-    public class auton{
+    public class auton {
         public static final boolean trench = true;
     }
 
@@ -27,41 +26,45 @@ public class Calibrations
         public final static int leftClimber = 7;
         public final static int rightClimber = 8;
 
-     }
-    public class shooter_PID{
-        public final static double kP = 1.1e-3; 
+    }
+
+    public class shooter_PID {
+        public final static double kP = 1.1e-3;
         public final static double kI = 3.1e-6;
-        public final static double kD = 2e-7; 
-        public final static double kIz = 200; 
+        public final static double kD = 2e-7;
+        public final static double kIz = 200;
         //public final static double kFF = 0;
-        public final static double kFF = 0.000137862*1.6; 
-        public final static double kMaxOutput = 1; 
+        public final static double kFF = 0.000137862 * 1.6;
+        public final static double kMaxOutput = 1;
         public final static double kMinOutput = -0.15;
     }
-    public class shooter2_PID{
-        public final static double kP = 0.5e-3; 
+
+    public class shooter2_PID {
+        public final static double kP = 0.5e-3;
         public final static double kI = 1.0e-6;
-        public final static double kD = 0; 
-        public final static double kIz = 100; 
+        public final static double kD = 0;
+        public final static double kIz = 100;
         //public final static double kFF = 0;
-        public final static double kFF = 0.000137862*1.2; 
-        public final static double kMaxOutput = 1; 
+        public final static double kFF = 0.000137862 * 1.2;
+        public final static double kMaxOutput = 1;
         public final static double kMinOutput = -0.15;
     }
-    public class intake_PID{
-        public final static double kP = 1e-3; 
+
+    public class intake_PID {
+        public final static double kP = 1e-3;
         public final static double kI = 3e-6;
-        public final static double kD = 2e-7; 
-        public final static double kIz = 225; 
-        public final static double kFF = 0.000137862*1.08; 
-        public final static double kMaxOutput = 1; 
+        public final static double kD = 2e-7;
+        public final static double kIz = 225;
+        public final static double kFF = 0.000137862 * 1.08;
+        public final static double kMaxOutput = 1;
         public final static double kMinOutput = -0.5;
         public final static int packagePosition = 500;
         public final static int groundPosition = 0;
         public final static int limelitePosition = 250;
         public final static int middlePosition = 350;
     }
-    public class ballSuperviserVals{
+
+    public class ballSuperviserVals {
         public final static int shooterCurrentLimit = 40;
         public final static int intakeArmCurrentLimit = 30;
         public final static double intakeStandardPower = 0.75;
@@ -69,6 +72,7 @@ public class Calibrations
         public final static double ledCycleTime = 15;
         public final static double ledDutyCycle = 0.5;
     }
+
     public class Vision {
         public static final double kP = 0.027;
         public static final double kI = 0.06;
@@ -77,27 +81,28 @@ public class Calibrations
         public static final double kIDistance = 0;
         public static final double kDistance = 0;
         public static final double kLimelightDistanceFromFront = 0; // In recording distance minus distance by how far back limelight is from front of robot
-        public static final double deadband = .04; 
+        public static final double deadband = .04;
         public static final double kHeight = (2.7114 - .17); // Height of Target - Height of Camera
         public static final double kMountedAngle = 41.1;
     }
-    public class climberCals{
+
+    public class climberCals {
         public static final int rachetID = 4;
         public static final double kP = 0.05;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kF = 0;
         public static final int kIZ = 0;
-        public static final int acc = 1600/2;
-        public static final int vel = 1600/2;
+        public static final int acc = 1600 / 2;
+        public static final int vel = 1600 / 2;
         public static final double ticksPerInch = 118;
         public static final double upperLimit = 70; //Upper Hight Limit    
         public static final double maxDelta = 12; //Max Target Change
-        
+
     }
 
-    public class ArmPositions{
-        public static final double packagedAngle = 90;  
+    public class ArmPositions {
+        public static final double packagedAngle = 90;
         public static final double trenchShotAngle = 63;
         public static final double autoShotAngle = 62;
         public static final double wallShotAngle = 0;
@@ -109,9 +114,10 @@ public class Calibrations
     public class DRIVE_CONSTANTS {  //6.5 gear ratio
         public static final double ticksPerMeter = 38825; //38449.2;
         public static final double trackWidth = 0.5925;   //meters
-		public static final double YawCorrection_kP = 0.025;
+        public static final double YawCorrection_kP = 0.025;
     }
-            //wheel diameter 0.0127
+
+    //wheel diameter 0.0127
     public class AUTO_CONTROLLERS {
         public static final double velocityPIDkp = 0.0; //0.000183 ; 
         public static final double velocityPIDki = 0.0;
@@ -122,14 +128,15 @@ public class Calibrations
         public static final double ffkS = 0.276; //0.577;
         public static final double ffkV = 0.276; //2.36;        //2.36 * 10 *1023 * 0.0635 *2 *pi /6.5 / 12 /4096
         public static final double ffkA = 0.0391; //0.196;
-		public static final double voltagekP = 3.72; //3.72;
-		public static final double voltagekI = 0;
-		public static final double voltagekD = 0;
-	
-}
-    public class ARM{
+        public static final double voltagekP = 3.72; //3.72;
+        public static final double voltagekI = 0;
+        public static final double voltagekD = 0;
+
+    }
+
+    public class ARM {
         public static final double kP = 1.5;
-        public static final double kI = 0.01  * 2 /3;
+        public static final double kI = 0.01 * 2 / 3;
         public static final double kD = 0;
         public static final double kF = 0;
         public static final int kIZ = 480;
@@ -144,10 +151,10 @@ public class Calibrations
         public static final double lengthOfArmToLimelight = 0.62;
     }
 
-    public class hardware{
-        public static final boolean longPistonExtend = isCompBot?false:true;
+    public class hardware {
+        public static final boolean longPistonExtend = !isCompBot;
         public static final boolean shortPistonExtend = isCompBot;
-        public static final boolean indexerInvert = isCompBot?false:true;
+        public static final boolean indexerInvert = !isCompBot;
     }
 
 

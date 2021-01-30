@@ -10,9 +10,9 @@ package frc.robot.Autos;
 
 public abstract class AutoRoutineBase {
 
-    public abstract class state1{
+    public abstract class state1 {
         //fisrt robot state
-        
+
     }
-    
+
 }

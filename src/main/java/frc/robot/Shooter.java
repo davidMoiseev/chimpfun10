@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class Shooter {
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     public double lP, lI, lD, lIz, lFF, lMaxOutput, lMinOutput, lmaxRPM;
-    private boolean inFault = false;
+    private final boolean inFault = false;
     public Compressor compressor;
     public Solenoid hood1;
     public Solenoid hood2;
@@ -38,17 +38,16 @@ public class Shooter {
 
     public Shooter() {
 
-        
+
         compressor = new Compressor(Calibrations.CAN_ID.pcm);
         compressor.setClosedLoopControl(true);
         hood1 = new Solenoid(6);
-        
-        if(Calibrations.isCompBot) {
-			 hood2 = new Solenoid(5);
-			 }
-        else {
-			 hood2 = new Solenoid(7);
-			 }
+
+        if (Calibrations.isCompBot) {
+            hood2 = new Solenoid(5);
+        } else {
+            hood2 = new Solenoid(7);
+        }
         powerPannel = new PowerDistributionPanel();
         kP = Calibrations.shooter_PID.kP;
         kI = Calibrations.shooter_PID.kI;
@@ -66,49 +65,41 @@ public class Shooter {
 
         m_motor = new CANSparkMax(Calibrations.CAN_ID.shooter1, MotorType.kBrushless);
         m_mator = new CANSparkMax(Calibrations.CAN_ID.shooter2, MotorType.kBrushless);
-        m_feeder = new CANSparkMax(Calibrations.CAN_ID.indexer,MotorType.kBrushless);
+        m_feeder = new CANSparkMax(Calibrations.CAN_ID.indexer, MotorType.kBrushless);
         m_feeder.setSmartCurrentLimit(20);
         m_feeder.setInverted(!Calibrations.hardware.indexerInvert);
         m_encoder = m_motor.getEncoder();
         m_encoder2 = m_mator.getEncoder();
         m_pidController = m_motor.getPIDController();
         m_pidController.setFeedbackDevice(m_encoder);
-        m_pidController.setP(kP,0);
-        m_pidController.setI(kI,0);
-        m_pidController.setD(kD,0);
-        m_pidController.setIZone(kIz,0);
-        m_pidController.setFF(kFF,0);
+        m_pidController.setP(kP, 0);
+        m_pidController.setI(kI, 0);
+        m_pidController.setD(kD, 0);
+        m_pidController.setIZone(kIz, 0);
+        m_pidController.setFF(kFF, 0);
 
-        m_pidController.setP(lP,1);
-        m_pidController.setI(lI,1);
-        m_pidController.setD(lD,1);
-        m_pidController.setIZone(lIz,1);
-        m_pidController.setFF(lFF,1);
+        m_pidController.setP(lP, 1);
+        m_pidController.setI(lI, 1);
+        m_pidController.setD(lD, 1);
+        m_pidController.setIZone(lIz, 1);
+        m_pidController.setFF(lFF, 1);
         m_pidController.setOutputRange(kMinOutput, kMaxOutput);
         m_motor.setInverted(false);
         m_mator.follow(m_motor, true);
     }
 
-    public void manual(double pwr){
+    public void manual(double pwr) {
         m_pidController.setReference(pwr, ControlType.kDutyCycle);
         PIDTarget = 0;
     }
 
 
     public boolean isInFault() {
-        if(lowVoltage < 0.95){
-            return true;
-        }else{
-            return false;
-        }
+        return lowVoltage < 0.95;
     }
 
-    public void setCompressor(boolean enabled){
-        if(enabled){
-            compressor.setClosedLoopControl(true);
-        }else{
-            compressor.setClosedLoopControl(false);
-        }
+    public void setCompressor(boolean enabled) {
+        compressor.setClosedLoopControl(enabled);
     }
 
     public void stopPIDMotor() {
@@ -117,127 +108,125 @@ public class Shooter {
         m_pidController.setOutputRange(0, kMaxOutput);
         setCompressor(true);
     }
-    
-    public void PIDmotor(double rpm){ 
+
+    public void PIDmotor(double rpm) {
         setCompressor(false);
         m_pidController.setOutputRange(kMinOutput, lowVoltage);
-        if(rpm > 3400){
-            rpm = rpm * 24.0/36.0;
+        if (rpm > 3400) {
+            rpm = rpm * 24.0 / 36.0;
             PIDTarget = rpm;
-            m_pidController.setReference(rpm, ControlType.kVelocity,0);
-        }else{      
-            rpm = rpm * 24.0/36.0; 
-            PIDTarget = rpm;     
-            m_pidController.setReference(rpm, ControlType.kVelocity,1);
-            
+            m_pidController.setReference(rpm, ControlType.kVelocity, 0);
+        } else {
+            rpm = rpm * 24.0 / 36.0;
+            PIDTarget = rpm;
+            m_pidController.setReference(rpm, ControlType.kVelocity, 1);
+
         }
-        
+
     }
 
-    public void PowerCheck(){
-        if(powerPannel.getVoltage() < 9.5){
-			lowVoltageCnt = (powerPannel.getVoltage() - 7.4) / 2.2;
-			if(lowVoltageCnt < lowVoltage){
+    public void PowerCheck() {
+        if (powerPannel.getVoltage() < 9.5) {
+            lowVoltageCnt = (powerPannel.getVoltage() - 7.4) / 2.2;
+            if (lowVoltageCnt < lowVoltage) {
                 lowVoltage = lowVoltageCnt;
-            }else{
+            } else {
                 lowVoltage = lowVoltage + 0.05;
             }
-		}else{
+        } else {
             lowVoltage = lowVoltage + 0.05;
-        }      
-        if(lowVoltage >= 1) lowVoltage = 1;
+        }
+        if (lowVoltage >= 1) lowVoltage = 1;
     }
 
-    public boolean isShooterStable(){        
+    public boolean isShooterStable() {
         return Ready;
     }
 
-    public void indexPower(double pwr){
+    public void indexPower(double pwr) {
         m_feeder.set(pwr);
     }
 
-    public void read(){
+    public void read() {
         this.PowerCheck();
-        rpm = Math.abs(m_encoder.getVelocity() * (36.0/24.0));
-        rpm2 = Math.abs(m_encoder2.getVelocity() * (36.0/24.0));
+        rpm = Math.abs(m_encoder.getVelocity() * (36.0 / 24.0));
+        rpm2 = Math.abs(m_encoder2.getVelocity() * (36.0 / 24.0));
         IAccum = m_pidController.getIAccum();
-        if ((Math.abs(PIDTarget*(36.0/24.0)-rpm)) < 100){
+        if ((Math.abs(PIDTarget * (36.0 / 24.0) - rpm)) < 100) {
             Stabalizer++;
-        }else{
+        } else {
             Stabalizer = 0;
         }
-        if(Stabalizer > 10){
-            Ready = true;
-        }else{
-            Ready = false;
-        }
+        Ready = Stabalizer > 10;
     }
-    public enum HoodPosition{
+
+    public enum HoodPosition {
         goingUnder,
         trench,
         wallShot,
         oneBotBack,
         autoshot
     }
-    public void setHood(HoodPosition pos){
-        switch(pos){
+
+    public void setHood(HoodPosition pos) {
+        switch (pos) {
             case goingUnder: //trench
                 hood1.set(Calibrations.hardware.shortPistonExtend); //short extened
                 hood2.set(Calibrations.hardware.longPistonExtend); //long extented
-            break;
+                break;
             case trench:
                 hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(!Calibrations.hardware.longPistonExtend); //long
-            break;
+                break;
             case wallShot:
                 hood1.set(Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(Calibrations.hardware.longPistonExtend); //long
-            break;
+                break;
             case oneBotBack:
                 hood1.set(Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(!Calibrations.hardware.longPistonExtend); //long
-            break;
+                break;
             case autoshot:
-            if (Calibrations.isCompBot) {
-                hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
-                hood2.set(Calibrations.hardware.longPistonExtend); //long
-            }else{
-                hood1.set(Calibrations.hardware.shortPistonExtend); //short 
-                hood2.set(!Calibrations.hardware.longPistonExtend); //long
-            }
-            break;
+                if (Calibrations.isCompBot) {
+                    hood1.set(!Calibrations.hardware.shortPistonExtend); //short
+                    hood2.set(Calibrations.hardware.longPistonExtend); //long
+                } else {
+                    hood1.set(Calibrations.hardware.shortPistonExtend); //short
+                    hood2.set(!Calibrations.hardware.longPistonExtend); //long
+                }
+                break;
         }
     }
 
-    public void updateStatus(){
+    public void updateStatus() {
         HotLogger.Log("Target Speed", PIDTarget);
-        HotLogger.Log("Shooter PowerOutput",m_motor.getAppliedOutput());
+        HotLogger.Log("Shooter PowerOutput", m_motor.getAppliedOutput());
         HotLogger.Log("shooter speed", rpm);
-        HotLogger.Log("Battery Voltage",powerPannel.getVoltage());
+        HotLogger.Log("Battery Voltage", powerPannel.getVoltage());
         HotLogger.Log("Current Current Draw", powerPannel.getTotalCurrent());
         int status = 0;
-        if(lowVoltage < 0.9){
+        if (lowVoltage < 0.9) {
             status = 0;
-        }else if(Ready && PIDTarget != 0){
+        } else if (Ready && PIDTarget != 0) {
             status = 3;
-        }else if(PIDTarget != 0){
+        } else if (PIDTarget != 0) {
             status = 2;
-        }else{
+        } else {
             status = 1;
         }
         SmartDashboard.putNumber("ShooterOutputStatus", status);
     }
 
-    public void Display(){
+    public void Display() {
         SmartDashboard.putNumber("I accumlator", IAccum);
-        SmartDashboard.putNumber("Amp Draw",m_motor.getOutputCurrent());
+        SmartDashboard.putNumber("Amp Draw", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Voltage Modfyer", lowVoltage);
         SmartDashboard.putNumber("Encoder Position", m_encoder.getPosition());
         SmartDashboard.putNumber("Encoder Velocity", rpm);
         SmartDashboard.putNumber("Encoder Velocity2", rpm2);
-        SmartDashboard.putNumber("Combined Velocity", (rpm+rpm2)/2);
+        SmartDashboard.putNumber("Combined Velocity", (rpm + rpm2) / 2);
         SmartDashboard.putNumber("Encoder Velocity Difference", rpm - rpm2);
-        SmartDashboard.putNumber("PID Error",(PIDTarget*(36.0/24.0))-rpm);
+        SmartDashboard.putNumber("PID Error", (PIDTarget * (36.0 / 24.0)) - rpm);
         SmartDashboard.putNumber("OutPut Power", m_motor.getAppliedOutput());
         SmartDashboard.putBoolean("Ready?", Ready);
     }
