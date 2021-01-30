@@ -103,7 +103,7 @@ public class conveyor {
     public void conveyorAutoFeed() {
         //This is the conveyor run logic that determins when it is the correct time to run the conveyor
         if (inConveyor == 1 && carouselFull){
-            if (pos5Sensor.get() == true){
+            if (pos5Sensor.get()){
                 conveyorOutPut = 0;
                 conveyorBounceBack = false;
                 IntakeCountLockout = false;
@@ -121,7 +121,7 @@ public class conveyor {
                 }
             }
         }else if(inConveyor >= 2 && carouselFull){
-            if (pos4Sensor.get() == true){
+            if (pos4Sensor.get()){
                 conveyorOutPut = 0;
             }else{
                 conveyorOutPut = conveyorPower; 
@@ -135,7 +135,7 @@ public class conveyor {
         }
     }
     public void carouselState(){
-        if(((carouselPos <= 0 && pos1Sensor.get()) || (inConveyor >= 3)) && (shouldStage == false)){
+        if(((carouselPos <= 0 && pos1Sensor.get()) || (inConveyor >= 3)) && (!shouldStage)){
             carouselFull = true;
         }else{
             carouselFull = false;
@@ -146,7 +146,7 @@ public class conveyor {
         boolean staging = true;
         switch(carouselPos){
             case 2:
-                if(pos3Sensor.get() == false){
+                if(!pos3Sensor.get()){
                     carouselOutPut = carouselPower;
                 }else{
                     carouselPos--;
@@ -155,7 +155,7 @@ public class conveyor {
                 }
             break;
             case 1:
-                if(pos2Sensor.get() == false){
+                if(!pos2Sensor.get()){
                     carouselOutPut = carouselPower;
                 }else{
                     carouselPos--;
@@ -178,7 +178,7 @@ public class conveyor {
                 }
             break;
             case -1:
-                if(pos3Sensor.get() == false){
+                if(!pos3Sensor.get()){
                     carouselOutPut = -carouselPower;
                 }else{
                     carouselPos = 1;
@@ -186,7 +186,7 @@ public class conveyor {
                 }
             break;
         }
-        if(staging == false){
+        if(!staging){
             carouselOutPut = 0;
             Edgecounter = 0;
         }
@@ -194,7 +194,7 @@ public class conveyor {
     }
 
     public void carouselPrime(){
-        if(pos1Sensor.get() == false){
+        if(!pos1Sensor.get()){
             carouselOutPut = carouselPower;
             conveyorOutPut = conveyorPower;
         }else{
@@ -204,7 +204,7 @@ public class conveyor {
     }
 
     public void carouselStageCheck(){
-        if ((pos4Sensor.get() && inConveyor > 0 && (carouselFull == false))){
+        if ((pos4Sensor.get() && inConveyor > 0 && (!carouselFull))){
             shouldStage = true;
         }
         if (shouldStage){
@@ -239,7 +239,7 @@ public class conveyor {
 
     public void shotFired(){
         if(pos1Sensor.get() != Pos1lastState){
-            if(pos1Sensor.get() != true){
+            if(!pos1Sensor.get()){
                 ballStored--;
                 inCarousel--;
             }
@@ -378,16 +378,16 @@ public class conveyor {
 
     public void count(boolean direction){
         if (direction){
-            if(IntakeSensor.get() != IntakelastState && IntakeCountLockout == false){
-                if(IntakeSensor.get() == true){
+            if(IntakeSensor.get() != IntakelastState && !IntakeCountLockout){
+                if(IntakeSensor.get()){
                     ballStored++;
                     inConveyor++;
                 }
                 IntakelastState = IntakeSensor.get();
             }
         }else{
-            if(IntakeSensor.get() != IntakelastState && IntakeCountLockout == false){
-                if(IntakeSensor.get() == true){
+            if(IntakeSensor.get() != IntakelastState && !IntakeCountLockout){
+                if(IntakeSensor.get()){
                     ballStored--;
                     inConveyor--;
                 }
@@ -410,7 +410,7 @@ public class conveyor {
     public void display(){
         if(warning || critical){
             StatusLightState = 0;
-        }else if(pos1Sensor.get() == true && ballStored > 1){
+        }else if(pos1Sensor.get() && ballStored > 1){
             StatusLightState = 3;
         }else if(conveyorOutPut != 0 || carouselOutPut != 0){
             StatusLightState = 2;

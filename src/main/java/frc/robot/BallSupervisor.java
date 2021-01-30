@@ -36,7 +36,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
         }else if(robotState.isManual()){
             robotState.setLEDColorState(2);
             robotState.setLEDFlash(true); 
-        }else if(robotState.isRobotEnabled() == false){
+        }else if(!robotState.isRobotEnabled()){
             robotState.setLEDColorState(4);
             robotState.setLEDFlash(false);
         }else if(alreadyShooting && (conveyor.inWarning() || conveyor.inCritical())){
@@ -96,7 +96,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
             case shootNstuck:
                 robotState.setLEDColorState(3);
                 robotState.setLEDFlash(true);
-                if (shooter.isShooterStable() == true || alreadyShooting) {
+                if (shooter.isShooterStable() || alreadyShooting) {
                     conveyor.stage(feedModes.reject);
                     shooter.indexPower(Calibrations.ballSuperviserVals.indexerPower);
                     alreadyShooting = true;
@@ -180,7 +180,7 @@ public class BallSupervisor implements IHotSensedActuator <RobotState, RobotComm
                 robotState.setLEDColorState(3);
                 robotState.setLEDFlash(true);
                 robotState.setTurnOnLimeLiteLight(true);
-                if (shooter.isShooterStable() == true || alreadyShooting) {
+                if (shooter.isShooterStable() || alreadyShooting) {
                     conveyor.stage(feedModes.shoot);
                     shooter.indexPower(Calibrations.ballSuperviserVals.indexerPower);
                     alreadyShooting = true;
