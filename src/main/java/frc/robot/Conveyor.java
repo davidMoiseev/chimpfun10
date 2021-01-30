@@ -13,7 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.hotutilites.hotlogger.HotLogger;
 
-public class conveyor {
+public class Conveyor {
     private boolean wasStage;
     private boolean frontPorch = false;
     private boolean frontPorchSkip = false;
@@ -58,7 +58,7 @@ public class conveyor {
     private boolean IntakeOn;
     private int StatusLightState;
 
-    public conveyor() {
+    public Conveyor() {
         IntakeSensor = new DigitalInput(0);
         pos1Sensor = new DigitalInput(5);
         pos2Sensor = new DigitalInput(4);

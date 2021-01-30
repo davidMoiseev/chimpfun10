@@ -4,13 +4,13 @@ import org.hotutilites.hotcontroller.HotController;
 import org.hotutilites.hotlogger.HotLogger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.conveyor.feedModes;
-import frc.robot.shooter.HoodPosition;
+import frc.robot.Conveyor.feedModes;
+import frc.robot.Shooter.HoodPosition;
 
 public class BallSupervisor implements IHotSensedActuator <RobotState, RobotCommandProvider, Double> {
-    shooter shooter = new shooter();
+    Shooter shooter = new Shooter();
     intake intake = new intake();
-    conveyor conveyor = new conveyor();
+    Conveyor conveyor = new Conveyor();
     private HotController operator;
     private RobotState robotState;
     private boolean wasInManual;

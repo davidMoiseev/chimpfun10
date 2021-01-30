@@ -38,11 +38,10 @@ public class Robot extends TimedRobot {
    private LEDController lEDController;
    private Arm arm;
    private Limelight limelite;
-  private int disabledCounter = 0;
+   private int disabledCounter = 0;
 
   @Override
   public void robotInit() {
-    
     driver = new HotController(0, false);
     operator = new HotController(1, false);
     robotState = new RobotState();

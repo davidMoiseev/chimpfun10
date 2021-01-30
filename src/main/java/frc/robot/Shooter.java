@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 
-public class shooter {
+public class Shooter {
     public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
     public double lP, lI, lD, lIz, lFF, lMaxOutput, lMinOutput, lmaxRPM;
     private boolean inFault = false;
@@ -36,7 +36,7 @@ public class shooter {
     public double lowVoltageCnt;
     public double lowVoltageLockout;
 
-    public shooter() {
+    public Shooter() {
 
         
         compressor = new Compressor(Calibrations.CAN_ID.pcm);
