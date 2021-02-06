@@ -28,9 +28,9 @@ public class BallSupervisor implements IHotSensedActuator<RobotState, RobotComma
     }
 
     @Override
-    public void updateState() {
+    public void updateState() { // Runs if the robot is whenever the robot is enabled or not
         shooter.read();
-        shooter.Display();
+        shooter.display();
         conveyor.display();
         if (robotState.isLowPower()) {
             robotState.setLEDColorState(0);
@@ -84,7 +84,7 @@ public class BallSupervisor implements IHotSensedActuator<RobotState, RobotComma
 
     @Override
     public void performAction(final RobotCommandProvider commander, final RobotState robotState) {
-        shooter.Display();
+        shooter.display();
         conveyor.display();
         conveyor.updateStatusLight();
         shooter.updateStatus();

@@ -86,12 +86,12 @@ public class Shooter {
         m_mator.follow(m_motor, true);
     }
 
-    public void manual(double pwr) {
+    public void manual(double pwr) { // Allow manual control of the motor
         m_pidController.setReference(pwr, ControlType.kDutyCycle);
         PIDTarget = 0;
     }
 
-    public boolean isInFault() {
+    public boolean isInFault() { // Make the cool dashboard light go red when voltage power modifier drops too low
         return lowVoltage < 0.95;
     }
 
@@ -99,14 +99,14 @@ public class Shooter {
         compressor.setClosedLoopControl(enabled);
     }
 
-    public void stopPIDMotor() {
-        m_pidController.setReference(0, ControlType.kDutyCycle);
+    public void stopPIDMotor() { // Stop motor integrated pid control instead of setting RPM to zero which would still
+        m_pidController.setReference(0, ControlType.kDutyCycle); // leave motor powered
         PIDTarget = 0;
         m_pidController.setOutputRange(0, kMaxOutput);
         setCompressor(true);
     }
 
-    public void PIDmotor(double rpm) {
+    public void PIDmotor(double rpm) { // Motor PID control
         setCompressor(false);
         m_pidController.setOutputRange(kMinOutput, lowVoltage);
         if (rpm > 3400) {
@@ -122,7 +122,7 @@ public class Shooter {
 
     }
 
-    public void PowerCheck() {
+    public void PowerCheck() { // Reduce shooter power if voltage begins to drop below min value to prevent hard brownout
         if (powerPannel.getVoltage() < 9.5) {
             lowVoltageCnt = (powerPannel.getVoltage() - 7.4) / 2.2;
             if (lowVoltageCnt < lowVoltage) {
@@ -136,7 +136,7 @@ public class Shooter {
         if (lowVoltage >= 1) lowVoltage = 1;
     }
 
-    public boolean isShooterStable() {
+    public boolean isShooterStable() { // Never finished
         return Ready;
     }
 
@@ -144,7 +144,7 @@ public class Shooter {
         m_feeder.set(pwr);
     }
 
-    public void read() {
+    public void read() { // Update telemetry values every control cycle
         this.PowerCheck();
         rpm = Math.abs(m_encoder.getVelocity() * (36.0 / 24.0));
         rpm2 = Math.abs(m_encoder2.getVelocity() * (36.0 / 24.0));
@@ -194,7 +194,7 @@ public class Shooter {
         }
     }
 
-    public void updateStatus() {
+    public void updateStatus() { // Update the status light, and hotlog
         HotLogger.Log("Target Speed", PIDTarget);
         HotLogger.Log("Shooter PowerOutput", m_motor.getAppliedOutput());
         HotLogger.Log("shooter speed", rpm);
@@ -213,7 +213,7 @@ public class Shooter {
         SmartDashboard.putNumber("ShooterOutputStatus", status);
     }
 
-    public void Display() {
+    public void display() { // Update data to the Hot dashboard
         SmartDashboard.putNumber("I accumlator", IAccum);
         SmartDashboard.putNumber("Amp Draw", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Voltage Modfyer", lowVoltage);
