@@ -37,8 +37,6 @@ public class Shooter {
     public double lowVoltageLockout;
 
     public Shooter() {
-
-
         compressor = new Compressor(Calibrations.CAN_ID.pcm);
         compressor.setClosedLoopControl(true);
         hood1 = new Solenoid(6);
@@ -92,7 +90,6 @@ public class Shooter {
         m_pidController.setReference(pwr, ControlType.kDutyCycle);
         PIDTarget = 0;
     }
-
 
     public boolean isInFault() {
         return lowVoltage < 0.95;
@@ -170,6 +167,7 @@ public class Shooter {
 
     public void setHood(HoodPosition pos) {
         switch (pos) {
+            case wallShot:
             case goingUnder: //trench
                 hood1.set(Calibrations.hardware.shortPistonExtend); //short extened
                 hood2.set(Calibrations.hardware.longPistonExtend); //long extented
@@ -177,10 +175,6 @@ public class Shooter {
             case trench:
                 hood1.set(!Calibrations.hardware.shortPistonExtend); //short 
                 hood2.set(!Calibrations.hardware.longPistonExtend); //long
-                break;
-            case wallShot:
-                hood1.set(Calibrations.hardware.shortPistonExtend); //short 
-                hood2.set(Calibrations.hardware.longPistonExtend); //long
                 break;
             case oneBotBack:
                 hood1.set(Calibrations.hardware.shortPistonExtend); //short 
@@ -195,6 +189,8 @@ public class Shooter {
                     hood2.set(!Calibrations.hardware.longPistonExtend); //long
                 }
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + pos);
         }
     }
 
@@ -204,7 +200,7 @@ public class Shooter {
         HotLogger.Log("shooter speed", rpm);
         HotLogger.Log("Battery Voltage", powerPannel.getVoltage());
         HotLogger.Log("Current Current Draw", powerPannel.getTotalCurrent());
-        int status = 0;
+        int status;
         if (lowVoltage < 0.9) {
             status = 0;
         } else if (Ready && PIDTarget != 0) {

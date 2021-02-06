@@ -34,11 +34,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
         SmartDashboard.putNumber("LeftClimberStatus", leftClimber.statusColor);
         SmartDashboard.putNumber("RightClimberStatus", rightClimber.statusColor);
 
-        if (leftClimber.getCurrentHeight() > rightClimber.getCurrentHeight()) {
-            robotState.setHighestClimberPos(leftClimber.getCurrentHeight());
-        } else {
-            robotState.setHighestClimberPos(rightClimber.getCurrentHeight());
-        }
+        robotState.setHighestClimberPos(Math.max(leftClimber.getCurrentHeight(), rightClimber.getCurrentHeight()));
 
     }
 
@@ -58,7 +54,7 @@ public class Climber implements IHotSensedActuator<RobotState, RobotCommandProvi
         this.robotState = robotState;
     }
 
-    private class climberController {
+    private static class climberController {
         private final TalonFX motor;
         private int statusColor;
         private boolean enabled;
