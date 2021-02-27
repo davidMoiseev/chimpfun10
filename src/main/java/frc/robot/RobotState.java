@@ -4,7 +4,7 @@ import org.hotutilites.hotlogger.HotLogger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Arm.ArmStates;
 
-public class RobotState {
+public class RobotState {  // One stop shop for what the robot is doing
     private double theta; // Degrees
     private double driveDistanceLeft; // Meters
     private double driveDistanceRight; // Meters

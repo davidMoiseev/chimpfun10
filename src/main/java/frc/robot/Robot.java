@@ -71,6 +71,13 @@ public class Robot extends TimedRobot {
         climber.updateState();
     }
 
+
+    @Override
+    public void disabledInit() {
+        arm.setArmReset(true);
+    }
+
+
     @Override
     public void disabledPeriodic() {
         disabledCounter++;
@@ -80,11 +87,6 @@ public class Robot extends TimedRobot {
         robotState.setRobotEnabled(false);
     }
 
-    @Override
-    public void disabledInit() {
-        arm.setArmReset(true);
-
-    }
 
     @Override
     public void autonomousInit() {

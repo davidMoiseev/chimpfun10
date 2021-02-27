@@ -19,7 +19,6 @@ public class BallSupervisor implements IHotSensedActuator<RobotState, RobotComma
 
     public BallSupervisor(final RobotState robotState) {
         this.robotState = robotState;
-
     }
 
     @Override
